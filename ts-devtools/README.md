@@ -1,4 +1,6 @@
-# TS-devtools
+# sc-tsc
+
+**SuiteCommerce TypeScript Compiler and Developer tools**
 
 Transform TypeScript projects into valid JavaScript AMD projects compatible with SuiteCommerce extensions and SuiteCommerce Advanced. 
 
@@ -80,6 +82,7 @@ Notes on important APIs and implementation:
 
  # TODO
 
+ * change folder name to sc-tsc (the project name)
  * watch mode so it compiles .ts files on change (WIP)
  * config.nsPackageJson so all other resources like .tpl, .scss, etc declared there are copied to output JS project ?
    * or generate ns.package.json ?
