@@ -35,7 +35,7 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
-    "misc-utils-of-mine": "../../misc-utils-of-mine",
+    "misc-utils-of-mine": "0.0.4",
     "ts-simple-ast": "^20.0.0"
   }
 }

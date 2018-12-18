@@ -32,7 +32,7 @@
     "license": "MIT",
     "homepage": "https://github.com/cancerberoSgx/suitecommerce-types",
     "dependencies": {
-        "misc-utils-of-mine": "file:../../misc-utils-of-mine",
+        "misc-utils-of-mine": "0.0.4",
         "sc-types-frontend": "file:../sc-types-frontend"
     },
     "devDependencies": {
