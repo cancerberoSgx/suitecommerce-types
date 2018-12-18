@@ -8,7 +8,7 @@ import ReactLike from './ReactLike';
  * 
  * Optionally, if `ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes` I have partial support for function attributes (like event handlers). 
  */
-export default class JSXView<Model extends BackboneModel, Context extends TemplateContext> extends BackboneView<Model, Context> {
+export default class JSXView<Model extends BackboneModel = BackboneModel, Context extends TemplateContext = TemplateContext> extends BackboneView<Model, Context> {
   
   template = (...args: any[]) => `<div></div>`
 

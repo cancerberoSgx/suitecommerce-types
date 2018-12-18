@@ -1,0 +1,25 @@
+{
+  "name": "jss-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sc-types-frontend": "file:../../sc-types-frontend",
+    "sc-types-frontend-extras": "file:../../sc-types-frontend-extras"
+  },
+  "devDependencies": {
+    "@types/jss": "^9.5.7",
+    "@types/node": "^10.12.18",
+    "jss": "^9.8.7",
+    "jss-preset-default": "^10.0.0-alpha.7",
+    "ts-node": "^7.0.1",
+    "tslib": "^1.9.3",
+    "typescript": "^3.2.2"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "lib": [
+      "es6", "dom"
+    ],
+    "outDir": "./dist",
+    "rootDir": ".",
+
+    "strict": true,
+    "noStrictGenericChecks": true,
+    // "strictBindCallApply": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+
+    
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "jsx": "react",
+    "jsxFactory": "ReactLike.createElement"
+  },
+  "include":["src", "spec"],
+  "exclude": ["node_modules", "dist"],
+}
