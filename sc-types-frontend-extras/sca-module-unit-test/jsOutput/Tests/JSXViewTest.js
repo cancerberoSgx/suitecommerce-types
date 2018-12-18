@@ -1,5 +1,5 @@
 define('JSXViewTest', ['Backbone', 'Backbone', 'Backbone.Model', 'jQuery', 'JSXView', 'ReactLike', "tslib", 'Backbone.View.Plugin.DebugTemplateName'], function(FormEvent, MouseEvent, BackboneModel, jQuery, JSXView, ReactLike, tslib_1) {
-    return describe('JSXView', function() {
+    return describe('JSXView alone', function() {
         var Model1 = /** @class */ (function(_super) {
             tslib_1.__extends(Model1, _super);
             function Model1() {

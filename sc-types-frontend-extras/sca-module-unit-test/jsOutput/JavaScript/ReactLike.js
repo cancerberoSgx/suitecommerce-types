@@ -10,7 +10,14 @@ define('ReactLike', [], function () {
             for (var _i = 2; _i < arguments.length; _i++) {
                 children[_i - 2] = arguments[_i];
             }
-            var element = document.createElement(tag);
+            var element;
+            if (typeof tag === 'string') {
+                element = document.createElement(tag);
+            }
+            else {
+                element = tag(attrs);
+                attrs = {}; // custom tags cannot declare html attirbutes, only ther own props, so we are removing them in order not to add them as html attrs in the following code
+            }
             for (var name_1 in attrs) {
                 if (name_1 && attrs.hasOwnProperty(name_1)) {
                     var value = attrs[name_1];
@@ -26,21 +33,31 @@ define('ReactLike', [], function () {
                             element.setAttribute(name_1, "(" + value.toString() + ").apply(this, arguments)");
                         }
                     }
-                    else if (value !== false && value != null) {
+                    else if (value !== false && value != null && typeof value !== 'object') {
                         if (name_1 === 'className') {
                             name_1 = 'class';
                         }
                         element.setAttribute(name_1, value.toString());
                     }
+                    // else {
+                    //   console.log('ignoring attribute type ', typeof value, value);
+                    // }
                 }
             }
             children.filter(function (c) { return c; }).forEach(function (child) {
-                if (typeof child === 'string') {
-                    element.appendChild(document.createTextNode(child.toString()));
+                if (child.nodeType) {
+                    element.appendChild(child);
+                }
+                else if (Array.isArray(child)) {
+                    child.forEach(function (c) {
+                        // if (!c.nodeType) {
+                        //   debugger
+                        // }
+                        element.appendChild(c);
+                    });
                 }
                 else {
-                    var asArray = Array.isArray(child) ? child : [child];
-                    asArray.forEach(function (c) { return element.appendChild(c); });
+                    element.appendChild(document.createTextNode(child.toString()));
                 }
             });
             return element;

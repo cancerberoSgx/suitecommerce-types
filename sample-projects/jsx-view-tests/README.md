@@ -1,3 +1,5 @@
+IMPORTANT: this is proof of concept of how to use TSX/JSX without react in SCA module. Use sc-types-frontend-extras , class JSXView for the now "official" API.
+
 ## Using TSX / JSX (react like syntax but no framework) to write view's templates
 
  * build file: [build.sh](build.sh)

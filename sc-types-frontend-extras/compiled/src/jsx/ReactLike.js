@@ -14,8 +14,17 @@ define('ReactLike', [], function () {
                 element = document.createElement(tag);
             }
             else {
-                element = tag(attrs);
-                attrs = {}; // custom tags cannot declare html attirbutes, only ther own props, so we are removing them in order not to add them as html attrs in the following code
+                if (tag.prototype && tag.prototype.render) {
+                    // support for class elements (react-component like)
+                    element = new tag(attrs).render();
+                }
+                else {
+                    // support for function elements (react-stateless like)
+                    element = tag(attrs);
+                }
+                // custom tags cannot declare html attributes, only their own props, so we are removing them 
+                // in order not to add them as html attrs in the following code
+                attrs = {};
             }
             for (var name_1 in attrs) {
                 if (name_1 && attrs.hasOwnProperty(name_1)) {

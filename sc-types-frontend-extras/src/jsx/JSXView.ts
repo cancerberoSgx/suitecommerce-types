@@ -1,11 +1,18 @@
 import { BackboneModel, BackboneView, PluginContainer, TemplateContext } from 'sc-types-frontend';
 import ReactLike from './ReactLike';
 
+/**
+ * I'm a BackboneView that supports JSX templates with attribute `jsxTemplate` instead of the normal `template` one. 
+ * 
+ * I'm not a react-like component, I just render `jsxTemplate` and that's it, all the other logic like events, model, binding, etc is implemented by the normal BackboneView technologies. 
+ * 
+ * Optionally, if `ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes` I have partial support for function attributes (like event handlers). 
+ */
 export default class JSXView<Model extends BackboneModel, Context extends TemplateContext> extends BackboneView<Model, Context> {
   
   template = (...args: any[]) => `<div></div>`
 
-  jsxTemplate: JSXTemplate<Context>
+   jsxTemplate: JSXTemplate<Context>
 
   supportsFunctionAttributes?: boolean = false
   

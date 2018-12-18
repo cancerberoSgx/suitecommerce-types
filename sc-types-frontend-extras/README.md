@@ -1,33 +1,209 @@
-# Usage
+# SuiteCommerce Types FrontEnd extra functionality
 
-Please use sc-types-frontend instead this one directly. 
+adds extra functionality to sc-types-frontend-core
 
-Declares global variables defined or used by SuiteCommerce code - some are libraries and other just globals
+Right now it adds supports for JSX React HTML-like syntax (TSX) https://www.typescriptlang.org/docs/handbook/jsx.html
 
-Most of this types are just interfaces and types so they really dont add any payload to the application. 
+See [sample](./sca-module-unit-test) for an example of a TypeScript project containing .tsx files implementing views using this syntax for markup.
 
- * SuiteCommerce core API
- * SuiteCommerce extensibility API and components
- * SuiteCommerce Advanced high level APIs like View, PluginContainer, Application, Layout
- * SuiteCommerce core libraries API like jQuery, underscore, backbone
+Why? 
 
-TODO: which SC version supports ? 
+ * Type checking in templates
 
-# design notes
+What ? 
 
-This library is mostly types - this means that it does't implement stuff just delivers types that **doesn't add any payload to the final application**
+# JSXView
 
-Note: in so there are some special cases when there are also class declarations which are needed since users might extend them:
+## setup 
 
- * BackboneView
- * BackboneModel
- * BackboneRouter
- * BackboneCollection
- * TODO the rest
+in tsconfig.json: 
 
-When you require these, they will be replaced with SC native objects, for example "BackboneView" will bring "Backbone.View" SCA module
+```
+    "noStrictGenericChecks": true,
+    "strictBindCallApply": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "jsx": "react",
+    "jsxFactory": "ReactLike.createElement",
+
+```
+
+
+in package.json
+
+```
+    "dependencies": {
+        "sc-types-frontend": "file:../../sc-types-frontend",
+        "sc-types-frontend-extras": "file:../../sc-types-frontend-extras"
+    },
+    "devDependencies": {
+        "sc-tsc": "file:../../ts-devtools",
+        "@types/react": "^16.7.18",
+        "tslib": "^1.9.3",
+        "typescript": "^3.2.2"
+    }
+```
+
+
+## Build
+
+Use sc-tsc like any other project, see [build.sh script](./build.sh)
+
+
+## Simple JSXView example:
+
+Example of a View using a TSX template:
+
+```ts
+import { JSXView, ReactLike } from 'sc-types-frontend-extras';
+
+class Model1 extends BackboneModel {
+}
+
+interface Context1 extends TemplateContext {
+  name: string
+}
+
+class ViewJSXAndBackboneEvents extends JSXView<Model1, Context1> {
+
+  jsxTemplate = context => <div>
+    <div className="view1">Name: {context.name}</div>
+    <button className="clickme1">clickme1</button>
+    <button className="clickme2">clickme2</button>
+  </div>
+
+  events() {
+    return {
+      'click .clickme1': this.clickme1.bind(this)
+    }
+  }
+
+  clickme1(e: MouseEvent) {
+    e.preventDefault()
+  }
+
+  getContext(): Context1{
+    return {name: 'seba'}
+  }
+}
+  ```
+
+
+## Example of creating reusable custom JSX tags
+
+Create reusable custom JSX tags so view's template are simpler and strongly type checked:
+
+```ts
+import { JSXView, ReactLike } from 'sc-types-frontend-extras';
+class ViewJSXAndBackboneEvents extends JSXView<BackboneModel, Context1> {
+
+  jsxTemplate = (context: Context1) => <div>
+    {context.persons.map(p =>
+      <Person name={p.name} age={p.age} contacts={p.contacts}></Person>
+    )}
+    <br />
+    <button className="clickme1">clickme1</button>
+  </div>
+
+  context: Context1 = { persons: [] }
+
+  events() {
+    return {
+      'click .clickme1': this.clickme1.bind(this)
+    }
+  }
+
+  getContext() {
+    return this.context
+  }
+
+  clickme1(e: MouseEvent) {
+    e.preventDefault()
+    console.log('clickme1')
+  }
+}
+
+interface Context1 extends TemplateContext {
+  persons: Person[]
+}
+
+const Name = (props: { name: string }) =>
+  <span className="name" style={{ border: '2px sold pink' }}>{props.name}</span>
+
+const Age = (props: { age: number }) =>
+  <span className="age">{props.age}</span>
+
+const Person = (props: Person) =>
+  <div className="person">
+    <Name name={props.name}></Name>
+    <Age age={props.age}></Age>
+    {props.contacts.map(a =>
+      <Contact addresses={a.addresses} phone={a.phone}></Contact>)}
+  </div>
+
+const Address = (props: Address) => <span>
+  {props.name} number: {props.number}
+</span>
+
+const Contact = (a: Contact) => <div>
+  Addresses: {a.addresses.map(ad =>
+    <div>Street 1: <Address name={ad.name} number={ad.number}></Address></div>)}
+  </div>
+
+interface Contact {
+  addresses: Address[]
+  phone: string
+}
+
+interface Address {
+  name: string,
+  number: number
+}
+interface Person {
+  name: string,
+  age: number
+  contacts: Contact[]
+}
+
+
+```
+
+
+## Partial support for function attributes (event handlers)
+
+Not recommended yet, but optional support for function attributes for event handlers:
+
+```ts
+class ViewWithEventAttributesReferencingThisDontWork extends JSXView<Model1, Context1> {
+
+  // IMPORTANT : needs to be true in order to support function attributes
+  supportsFunctionAttributes = true
+
+  jsxTemplate = context => <div>
+    <button className="b" onClick={e => {
+      e.preventDefault()
+      console.log('clicked', e.button, e.clientX, this.cid);
+    }}>click handler inline as JSX attribute</button>
+    <input onInput={e => this.changed(e)} placeholder="input handler calling a view method"></input>
+  </div>
+
+  clicked1(e: MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    console.log('clicked', e.button, e.clientX, this.cid);
+  }
+
+  changed(e: FormEvent<HTMLInputElement>) {
+    console.log('changed', e.currentTarget.value, this.cid);
+  }
+}
+```
+
+
 
 # TODO
 
- * SCA module with unit tests testing *core APIs
- * issue to deftyped/backbone because Router routes property should be a ,ethod (it needs to be in the prottype for it to work at least on our backbone.js version) .  Just like View events() is a method - I think is the same thing...
+* define custom tags with classes for state: JSX.ElementClass  - as https://www.typescriptlang.org/docs/handbook/jsx.html

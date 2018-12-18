@@ -12,9 +12,11 @@
         "copy": "cp -r spec/support_js dist/spec/support",
         "clean": "rm -rf dist tmp",
         "generateHelp": "sh scripts/generateHelp.sh",
-        "test": "ts-node node_modules/jasmine/bin/jasmine",
         "all": "npm run clean && npm run build && npm run test",
-        "prepare": "cd spec/fixtures/project1 && npm i && cd ../projectMine && npm i && cd ../tsxTest && npm i && cd ../../../../sample-projects/frontend-simple1 && npm i && cd ../jsx-view-tests && npm i && cd ../projectMine && npm i && cd ../tsx-test && npm i "
+        "prepare": "npm run build",
+        "test-run": "ts-node node_modules/jasmine/bin/jasmine",
+        "test": "npm run test-install && npm run test-run",
+        "test-install": "cd spec/fixtures/project1 && npm i && cd ../projectMine && npm i && cd ../using-sc-types-frontend-extras && npm i && cd ../tsxTest && npm i && cd ../../../../sample-projects/frontend-simple1 && npm i && cd ../jsx-view-tests && npm i && cd ../projectMine && npm i && cd ../tsx-test && npm i"
     },
     "repository": {
         "type": "git",
