@@ -1,6 +1,6 @@
 import { ImportDeclaration, SourceFile, Statement, SyntaxKind, TypeGuards } from "ts-simple-ast"
 import { getDefaultExportValue, _getDefaultExportValueReset } from "./getDefaultExportValue"
-import { Import2DefineConfig, Import2DefineResult } from "./import2define"
+import { Import2DefineConfig, Import2DefineResult, ignoreFile } from "./import2define"
 import { defaultCustomImportSpecifiers, defaultIgnoreImportSpecifiers } from "./import2defineDefaults"
 import { memorizeSourceFile, namedImportReferenceIsType, _namedImportReferenceIsTypeReset } from "./namedImportReferenceIsType";
 
@@ -10,8 +10,20 @@ export function _import2defineOneReset() {
   _getDefaultExportValueReset()
 }
 
+
 export function import2defineOne(config: Import2DefineConfig, sourceFile: SourceFile, result: Import2DefineResult): Import2DefineOneResult | undefined {
 
+  if(ignoreFile(sourceFile)){
+    return  {
+      exportName: sourceFile.getBaseNameWithoutExtension(),
+      imports: [],
+      exportValue: undefined,
+      sourceFile,
+      body: '',
+      importsToIgnore: [],
+      statementOutsideHandler: sourceFile.getFullText()
+    }
+  }
   memorizeSourceFile(sourceFile)
 
   function postError(m: string): undefined {

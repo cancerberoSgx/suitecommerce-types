@@ -5,14 +5,14 @@ import { Discoverer, DiscovererConfig } from './discoverer';
 
 export default class PageDiscover implements Discoverer<PageInterest> {
   // private visitedPages: PageInterest[]
-  private type: InterestType
-  private  manager: Manager
+  private type!: InterestType
+  private  manager!: Manager
 
   setup(config: DiscovererConfig): this {
     this.manager = config.manager
     // this.visitedPages = []
     this.type = {
-      scope: this.manager.getInterestScope('page'),
+      scope: this.manager.getInterestScopeOrThrow('site'),
       name: 'Visited page',
       id: 'visited-page',
       description: 'TODO'
@@ -36,7 +36,7 @@ export default class PageDiscover implements Discoverer<PageInterest> {
         return 'TODO'
       },
       load(s: string): PageInterest {
-        return null
+        throw new Error()
       },
       equals(i: PageInterest){
         return this.url===i.url && this.name===IDBCursor.name

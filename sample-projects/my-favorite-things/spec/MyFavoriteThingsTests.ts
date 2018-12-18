@@ -1,10 +1,4 @@
 import MyFavoriteThingsModuleTest from './MyFavoriteThingsModuleTest';
+import PageDiscovererTest from './PageDiscovererTest';
 
-// import JSXViewTest from './JSXViewTest';
-// import JSXAndBackboneEventsTest from './JSXAndBackboneEventsTest';
-// import JSXReusingTest from './JSXReusingTest';
-// import JSXComponentClassTest from './JSXComponentClassTest';
-
-// export default[JSXViewTest, JSXAndBackboneEventsTest, JSXReusingTest, JSXComponentClassTest]
-
-export default [MyFavoriteThingsModuleTest]
+export default [MyFavoriteThingsModuleTest, PageDiscovererTest]

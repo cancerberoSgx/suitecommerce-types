@@ -7,15 +7,15 @@
       "es6", "dom"
     ],
     "outDir": "./dist",        
-    "noImplicitAny": false,
-    "noImplicitThis": false,
-    "strictNullChecks": false,
-    "strictFunctionTypes": false,
+    // "noImplicitAny": false,
+    // "noImplicitThis": false,
+    // "strictNullChecks": false,
+    // "strictFunctionTypes": false,
     "rootDir": ".",
-    "strict": false,
+    "strict": true,
     "esModuleInterop": true,
-    "checkJs": false,
-    "allowJs": false,
+    // "checkJs": false,
+    // "allowJs": false,
     "sourceMap": true,
     "declaration": true,
     // "skipDefaultLibCheck": true,
@@ -25,6 +25,6 @@
     
     
   },
-  "include":["src", "spec"], 
-  "exclude": ["node_modules", "dist"]
+  "include":["src", "spec"]
+  // "exclude": ["node_modules", "dist"]
 }

@@ -1,51 +1,20 @@
 {
   "compilerOptions": {
-    // "target": "es2018",
-    // "module": "commonjs",
-    // "moduleResolution":"node",
-    // "lib": [
-    //   "es6", "dom"
-    // ],
-    // "outDir": "./dist",        
-    // "noImplicitAny": false,
-    // "noImplicitThis": false,
-    // "strictNullChecks": false,
-    // "strictFunctionTypes": false,
-    // "rootDir": ".",
-    // "strict": false,
-    // "esModuleInterop": true,
-    // "checkJs": false,
-    // "allowJs": false,
-    // "sourceMap": true,
-    // "declaration": true,
-    // // "skipDefaultLibCheck": true,
-    // // "skipLibCheck": true,
-    // // "emitDeclarationOnly": true,
-    // // "noEmit": true,
-
-    "target": "es5",
+    "target": "es2018",
     "module": "commonjs",
+    "moduleResolution":"node",
     "lib": [
       "es6", "dom"
     ],
     "outDir": "./dist",
     "rootDir": ".",
     "strict": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
     "noEmitHelpers": true,
     "importHelpers": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
     "jsx": "react",
     "jsxFactory": "ReactLike.createElement",
     "declaration": true
   },
   "include":["src"],
-  "exclude": ["node_modules", "dist", "compiled"]
-    
-    
-  // },
-  // "include":["src", "spec"], 
-  // "exclude": ["node_modules", "dist"]
+  "exclude": ["dist", "compiled"]
 }

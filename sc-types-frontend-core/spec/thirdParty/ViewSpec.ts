@@ -31,7 +31,7 @@ describe('View', () => {
     expectType<BackboneView<Model1, View1Context>>(new View1());
     expectType<View1Context>(new View1().getContext());
     expectType<Model1>(new View1().model);
-    expectType<number>(await new View1().customValidation(null));
+    expectType<number>(await new View1().customValidation());
     done()
   })
 
@@ -67,12 +67,12 @@ describe('View', () => {
 
     xit('initialize with options', async done => {
       class Model3 extends BackboneModel {
-        initialize(attributes, options) {
+        initialize(attributes:any, options:any) {
           super.initialize(attributes, options)
         }
       }
       class View3 extends BackboneView<Model3>{
-        initialize(options) {
+        initialize(options:any) {
           super.initialize(options)
         }
       }
@@ -89,10 +89,10 @@ describe('View', () => {
         foo(arg0: number): any {
           this.model.set('foo', arg0)
         }
-        initialize(options) {
+        initialize(options: any) {
           super.initialize(options)
           // this.model=new BackboneModel({foo: 5})
-          this.model.on('change', function (model, ) {
+          this.model.on('change', function () {
             debugger
           })
         }

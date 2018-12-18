@@ -28,7 +28,7 @@ export class BackboneCollectionView<CustomContext extends TemplateContext = Temp
     throw new Error("Method not implemented.");
   }
 
-  childCells: BackboneView[]
+  childCells: BackboneView[] = []
 }
 
 export interface BackboneCollectionViewContext<m extends BackboneModel=BackboneModel> extends TemplateContext {

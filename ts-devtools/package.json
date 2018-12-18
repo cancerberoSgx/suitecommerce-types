@@ -11,7 +11,7 @@
         "build-watch": "tsc -w",
         "copy": "cp -r spec/support_js dist/spec/support",
         "clean": "rm -rf dist tmp",
-        "generateHelp": "sh scripts/generateHelp.sh",
+        "generateHelp": "sh scripts/generateHelp.sh && sh scripts/generateCliUsageMd.sh",
         "all": "npm run clean && npm run build && npm run test",
         "test-run": "ts-node node_modules/jasmine/bin/jasmine",
         "test": "npm run build && npm run test-install && npm run test-run",

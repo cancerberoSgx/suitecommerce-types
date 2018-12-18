@@ -1,4 +1,4 @@
-import { MouseEvent } from 'react';
+// import { MouseEvent } from 'react';
 import { BackboneModel, jQuery, TemplateContext } from 'sc-types-frontend';
 import { JSXView, ReactLike } from 'sc-types-frontend-extras';
 

@@ -28,29 +28,12 @@ const style2: MyStyle2 = {
 const allStyles = {...style1, ...style2}
 type AllStylesType = keyof (typeof allStyles)
 
-const generateClassName: GenerateClassName<AllStylesType> = (rule: Rule, sheet?: StyleSheet<AllStylesType>)=>{
-  // rule.
-  // console.log(rule.className, rule.selector, rule.prop('key'));
-  
-  return (rule as any).key + '-seba'
+const generateClassName: GenerateClassName<AllStylesType> = (rule: Rule, sheet?: StyleSheet<AllStylesType>)=>{  
+  return (rule as any).key
 }
-
 const sheet = jss.createStyleSheet(allStyles, {generateClassName, })
+sheet.addRule('myButton', {'@extends .dsds': '--sc-sass-extends'} as any)
 
-// // Compile styles, apply plugins.
-// const sheet = jss.createStyleSheet({...style1, ...style2}, {classNamePrefix: 'sgx', })
-// sheet.addRule('myButton2', {
-//   color: 'red'
-// }, {className: 'foo'})
-
-
-// console.log(sheet.classes);
-
-
-// // If you want to render on the client, insert it into DOM.
-// sheet.attach()
-
-// If you want to render server-side, get the CSS text.
 const s = sheet.toString()
 
 console.log(s);

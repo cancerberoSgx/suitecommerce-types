@@ -9,13 +9,13 @@ import ReactLike from './ReactLike';
  * Optionally, if `ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes` I have partial support for function attributes (like event handlers). 
  */
 export default class JSXView<Model extends BackboneModel = BackboneModel, Context extends TemplateContext = TemplateContext> extends BackboneView<Model, Context> {
-  
-  template = (...args: any[]) => `<div></div>`
 
-   jsxTemplate: JSXTemplate<Context>
+  template = (...args: any[]) => `<div>JSXView: template not implemented</div>`
+
+  jsxTemplate: JSXTemplate<Context> = c => { throw new Error('jsxTemplate not implemented') }
 
   supportsFunctionAttributes?: boolean = false
-  
+
   initialize(options: any) {
     super.initialize(options)
     if (!this.preRenderPlugins) {
@@ -26,7 +26,7 @@ export default class JSXView<Model extends BackboneModel = BackboneModel, Contex
       execute($fragment, view) {
         if (isJSXView(view)) {
           const rendered = view.jsxTemplate(view.getContext());
-          if(ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes){            
+          if (ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes) {
             (rendered as any).__this = view
           }
           ReactLike.renderJQuery($fragment, rendered)

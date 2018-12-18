@@ -7,11 +7,11 @@ export class SCAUnitTestHelper {
   constructor(options: SCAUnitTestHelperOptions) {
 
   }
-  application: Application
+  application!: Application
 
-  is_started: boolean
-  layout: Layout
-  initialization_completed: boolean
+  is_started: boolean=false
+  layout!: Layout
+  initialization_completed: boolean=false
 
   /** examle: 
    * ```
@@ -29,7 +29,7 @@ helper.testRoute(CartRouter, {
   /*
 test that given Backbone.Model validation works as expected
 */
-  testModelValidations(model: Model, test: SCAUnitTestHelperModelValidationsTest, test_description): void {
+  testModelValidations(model: Model, test: SCAUnitTestHelperModelValidationsTest, test_description: string): void {
     throw new Error('Not Implemented')
   }
 

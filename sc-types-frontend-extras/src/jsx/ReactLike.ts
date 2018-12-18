@@ -79,7 +79,7 @@ const ReactLike_ = {
     parent.append(jQuery(el as any))
   },
 
-  _searchForThisView: function (el: HTMLElement) {
+  _searchForThisView: function (el: HTMLElement|null): any {
     return el && ((el as any).__this || ReactLike_._searchForThisView(el.parentElement))
   },
 

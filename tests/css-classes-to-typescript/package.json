@@ -1,0 +1,26 @@
+{
+    "name": "css-classes-to-typescript",
+    "version": "1.0.0",
+    "private": true,
+    "description": "given a css / sass project it will generate a typescript type definition collecting all css/sass class names found on it",
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
+    "typings": "dist/src/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "build-watch": "tsc -w",
+        "clean": "rm -rf dist tmp"
+    },
+    "keywords": [],
+    "author": "sg",
+    "license": "ISC",
+    "dependencies": {
+    },
+    "devDependencies": {
+        "@types/node": "^10.12.18",
+        "@types/shelljs": "^0.8.1",
+        "shelljs": "^0.8.3",
+        "ts-simple-ast": "^20.0.0",
+        "typescript": "^3.2.2"
+    }
+}

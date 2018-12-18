@@ -8,14 +8,14 @@
     ],
     "outDir": "./dist",
     "rootDir": ".",
-    // "strict": true,
+    "strict": true,
     // "strictNullChecks": false,
     // "noImplicitAny": false,
     
-    "noStrictGenericChecks": true,
-    "strictBindCallApply": false,
-    "strictNullChecks": false,
-    "strictFunctionTypes": false,
+    // "noStrictGenericChecks": true,
+    // "strictBindCallApply": false,
+    // "strictNullChecks": false,
+    // "strictFunctionTypes": false,
 
 
     "noEmitHelpers": true,

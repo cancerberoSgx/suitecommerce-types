@@ -1,20 +1,22 @@
 import { Deferred, VisualComponent } from "../..";
+import { on } from "cluster";
+import { CancelableMethod } from "../CancelableEvents";
 
 /**
  * The ProductDetails component let's the user interact with most important aspect of the Product Details Page, like setting options, changing quantity, and obtain item's related information. An instance of this component can obtained by calling `container.getComponent("PDP")`
  */
 export interface ProductDetailsComponent extends VisualComponent {
-      /**
-     * Name of the PDP main full view. Please use this name to reference views in methods like {@link addChildViews}, {@link addToViewContextDefinition}, etc
-     */
-    PDP_FULL_VIEW :'ProductDetails.Full.View'
+  /**
+ * Name of the PDP main full view. Please use this name to reference views in methods like {@link addChildViews}, {@link addToViewContextDefinition}, etc
+ */
+  PDP_FULL_VIEW: 'ProductDetails.Full.View'
 
-    
-    /**
-     * Name of the PDP quick-view. Please use this name to reference views in methods like {@link addChildViews}, {@link addToViewContextDefinition}, etc
-     */
-    PDP_QUICK_VIEW :'ProductDetails.QuickView.View'
-  
+
+  /**
+   * Name of the PDP quick-view. Please use this name to reference views in methods like {@link addChildViews}, {@link addToViewContextDefinition}, etc
+   */
+  PDP_QUICK_VIEW: 'ProductDetails.QuickView.View'
+
 
   /**
    * Sets an option of the current PDP. It will only work if the current view is a Product Details Page
@@ -24,7 +26,7 @@ export interface ProductDetailsComponent extends VisualComponent {
    * @fires ProductDetailsComponent#afterOptionSelection
    * @fires ProductDetailsComponent#beforeOptionSelection
    */
-  setOption (cart_option_id:string, value:string) :Deferred<boolean>
+  setOption(cart_option_id: string, value: string): Deferred<boolean>
 
   /**
    * Set the quantity of the current PDP. If the current View is a PDP
@@ -33,13 +35,13 @@ export interface ProductDetailsComponent extends VisualComponent {
    * @fires ProductDetailsComponent#beforeQuantityChange
    * @fires ProductDetailsComponent#afterQuantityChange
    */
-  setQuantity (quantity:number):Deferred<boolean>
+  setQuantity(quantity: number): Deferred<boolean>
 
   /**
    * If the current View is a PDP it will return a representation of the transaction line represented in the current pdp, null otherwise. Notice that there could be some dynamic - user - configured extra fields.
    * @return {ItemInfo}
    */
-  getItemInfo ():ItemInfo 
+  getItemInfo(): ItemInfo
 
   /**
    * Filters all the child items that apply for the passed in matrix_options or the current item selection.
@@ -48,56 +50,58 @@ export interface ProductDetailsComponent extends VisualComponent {
    * @param {MatrixOptionSelection} matrix_options Options to filter matrix child items
    * @return {MatrixChildItemInfo[]} All the children of a matrix that complies with the current or passed in selection
    */
-  getSelectedMatrixChilds (matrix_options:MatrixOptionSelection): MatrixChildItemInfo[]
+  getSelectedMatrixChilds(matrix_options: MatrixOptionSelection): MatrixChildItemInfo[]
 
   /**
    * Returns all the matrix child of the matrix item
    * @return {MatrixChildItemInfo[]} All the children of a matrix item
    */
-  getAllMatrixChilds (): MatrixChildItemInfo[]
+  getAllMatrixChilds(): MatrixChildItemInfo[]
 
   /**
    * Returns the information available about the stock of the item.
    * If it is an Inventory Item will return the stock quantity available.
    * Depending on the current matrix options selection, it returns the sum of the stock available of all the matrix item childs.
    */
-  getStockInfo ():ItemStockInfo
+  getStockInfo(): ItemStockInfo
 
 
   // TODO: create types for each callback and document them using the events jsdoc below
 
-  on(name:'beforeOptionSelection', callback:(optionCartId:string,value:string)=>Deferred|void):void
-  on(name:'afterOptionSelection', callback:(optionCartId:string,value:string)=>Deferred|void):void
+  on(name: 'beforeOptionSelection', callback: (optionCartId: string, value: string) => Deferred | void): void
+  on(name: 'afterOptionSelection', callback: (optionCartId: string, value: string) => Deferred | void): void
 
-  cancelableOn(name:'beforeOptionSelection', callback:(optionCartId:string,value:string)=>Deferred|void):void
-  cancelableOn(name:'afterOptionSelection', callback:(optionCartId:string,value:string)=>Deferred|void):void
+  cancelableOn(name: 'beforeOptionSelection', callback: (optionCartId: string, value: string) => Deferred | void): void
+  cancelableOn(name: 'afterOptionSelection', callback: (optionCartId: string, value: string) => Deferred | void): void
 
-  cancelableTrigger(name:'beforeOptionSelection', optionCartId:string,value:string):Deferred
-  cancelableTrigger(name:'afterOptionSelection', optionCartId:string,value:string):Deferred
-
-
-
-  on(name:'beforeQuantityChange', callback:(q:number)=>Deferred|void):void
-  on(name:'afterQuantityChange', callback:(currentIndex:number)=>void):void
-
-  cancelableOn(name:'beforeQuantityChange', callback:(q:number)=>Deferred|void):void
-  cancelableOn(name:'afterQuantityChange', callback:(currentIndex:number)=>void):void
-
-  cancelableTrigger(name:'beforeQuantityChange', q:number):Deferred
-  cancelableTrigger(name:'afterQuantityChange', currentIndex:number):Deferred
+  cancelableTrigger(name: 'beforeOptionSelection', optionCartId: string, value: string): Deferred
+  cancelableTrigger(name: 'afterOptionSelection', optionCartId: string, value: string): Deferred
 
 
 
-  on(name:'beforeImageChange', callback:(currentIndex:number,nextIndex:number)=>Deferred|void):void
-  on(name:'afterImageChange', callback:(currentIndex:number)=>void):void
+  on(name: 'beforeQuantityChange', callback: (q: number) => Deferred | void): void
+  on(name: 'afterQuantityChange', callback: (currentIndex: number) => void): void
 
-  cancelableOn(name:'beforeImageChange', callback:(currentIndex:number,nextIndex:number)=>Deferred|void):void
-  cancelableOn(name:'afterImageChange', callback:(currentIndex:number)=>void):void
+  cancelableOn(name: 'beforeQuantityChange', callback: (q: number) => Deferred | void): void
+  cancelableOn(name: 'afterQuantityChange', callback: (currentIndex: number) => void): void
 
-  cancelableTrigger(name:'beforeImageChange', currentIndex:number,nextIndex:number):Deferred
-  cancelableTrigger(name:'afterImageChange', currentIndex:number):Deferred
+  cancelableTrigger(name: 'beforeQuantityChange', q: number): Deferred
+  cancelableTrigger(name: 'afterQuantityChange', currentIndex: number): Deferred
 
 
+
+  on(name: 'beforeImageChange', callback: (currentIndex: number, nextIndex: number) => Deferred | void): void
+  on(name: 'afterImageChange', callback: (currentIndex: number) => void): void
+
+  cancelableOn(name: 'beforeImageChange', callback: (currentIndex: number, nextIndex: number) => Deferred | void): void
+  cancelableOn(name: 'afterImageChange', callback: (currentIndex: number) => void): void
+
+  cancelableTrigger(name: 'beforeImageChange', currentIndex: number, nextIndex: number): Deferred
+  cancelableTrigger(name: 'afterImageChange', currentIndex: number): Deferred
+
+
+  on(...args: Parameters<CancelableMethod>): ReturnType<CancelableMethod>
+  cancelableOn(...args: Parameters<CancelableMethod>): ReturnType<CancelableMethod>
 }
 
 /**
@@ -152,9 +156,9 @@ type ItemInfo = {
   location?: number;
   fulfillmentChoice?: string;
   item?: {
-      internalid?: string;
-      type?: string;
-      onlinecustomerprice_detail?: string;
+    internalid?: string;
+    type?: string;
+    onlinecustomerprice_detail?: string;
   };
 };
 
@@ -231,13 +235,13 @@ type MatrixChildItemInfo = {
   keyMapping_stockDescription: string;
   keyMapping_stockDescriptionClass: string;
   keyMapping_thumbnail: {
-      url?: string;
-      altimagetext?: string;
+    url?: string;
+    altimagetext?: string;
   };
   keyMapping_url: string;
   onlinecustomerprice_detail: {
-      onlinecustomerprice_formatted?: string;
-      onlinecustomerprice?: number;
+    onlinecustomerprice_formatted?: string;
+    onlinecustomerprice?: number;
   };
 };
 

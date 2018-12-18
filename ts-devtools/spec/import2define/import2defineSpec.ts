@@ -1,6 +1,6 @@
 import { mkdir, rm, test } from "shelljs";
 import { Project } from "ts-simple-ast";
-import { import2define, import2defineProject } from "../../src/import2define/import2define";
+import { import2define, import2defineProject, ignoreFile } from "../../src/import2define/import2define";
 import { import2DefineOnePrintResult } from "../../src/import2define/import2DefineOnePrintResult";
 import { getPathRelativeToProjectFolder } from "../../src/util/misc";
 import { expectCodeEquals, printFileOutput } from '../testUtil';
@@ -208,6 +208,19 @@ define('c', [], function(){
     })
 
 
+
+    fit('ignoreFile', () => {
+      const f1 = new Project().createSourceFile('t.ts', 'const a ')
+      const f2 = new Project().createSourceFile('t.ts', `
+// @sc-tsc-ignore-file
+import * as ts from 'typescript'
+`)
+      expect(ignoreFile(f1)).toBe(false)
+      expect(ignoreFile(f2)).toBe(true)
+    })
+
+    
+
     it('import a .tsx file', () => {
       const project = new Project()
       project.createSourceFile('foo/bar/boo/a.ts', `import b from '../../bb/b' ; export default const a = b`)
@@ -222,10 +235,12 @@ export interface CoolFeature56MainViewContext {
   name: string;
 }
 `)
+
       const result = import2defineProject({
         tsconfigFilePath: '',
         project
       })
+      
       // debugger
       expect(result.errors).toEqual([])
 

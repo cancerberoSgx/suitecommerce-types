@@ -7,7 +7,7 @@ import * as Backbone from 'backbone';
 
 export class BackboneView<VModel extends Backbone.Model = BackboneModel, Context extends TemplateContext = TemplateContext> extends Backbone.View<VModel> implements View<VModel, Context> {
 
-  template: Template<Context>
+  template: Template<Context>|undefined
 
   /** Declaration of double binding between DOM input els with this.model attributes.
    *
@@ -61,10 +61,10 @@ class MyFormView extends BackboneView {
   preRenderPlugins?: PluginContainer<JQuery<HTMLElement>, [BackboneView]>
 
   /** internal unique id for this view instance */
-  cid: string
+  cid!: string
 
   // @property {String} errorMessage Default error message, usually overwritten by server response on error
-  errorMessage: string
+  errorMessage!: string
 
   /**
   @param dont_scroll preserve current scroll after showing the view
@@ -147,7 +147,7 @@ class MyFormView extends BackboneView {
   }
 
   /**  title this view title. The default behavior is to set the document's title using view.title when calling view.showContent() */
-  title: string
+  title: string|undefined
   /** returns a text describing the page this view is implemented in the case is rendered as a main view with Layout.showContent()*/
   getPageDescription(): string {
     throw new Error("Method not implemented.")
@@ -160,7 +160,7 @@ class MyFormView extends BackboneView {
 
   contextData: {
     [contextName: string]: any
-  }
+  }|undefined
 
 
   getContextData(contextNames: string[]): {
@@ -292,7 +292,7 @@ class MyFormView extends BackboneView {
     
     @param  event_selector Selector to be validates
      */
-  protected static _isEventSelectorValid(event_selector): boolean {
+  protected static _isEventSelectorValid(event_selector: string): boolean {
     throw new Error("Method not implemented.")
   }
 }

@@ -15,7 +15,8 @@ export function cssClassesToType(config: Config) {
   writeFileSync(config.outputFile, s)
 }
 function stringArrayToTsType(a: string[], typeName: string): string {
-  return `type ${typeName} = ${a.map(s => `'${s}'`).join(' | ')}; `
+  return `/** file automatically generated with css-classes-to-typescript */
+export type ${typeName} = ${a.map(s => `'${s}'`).join(' | \n  ')}; `
 }
 
 function extractAllSassClasses(targetDistroFolder: string): string[] {

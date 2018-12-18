@@ -15,10 +15,10 @@
     "author": "sg",
     "license": "ISC",
     "dependencies": {
-        "sc-tsc": "file:../../ts-devtools",
         "sc-types-frontend": "file:../../sc-types-frontend"
     },
     "devDependencies": {
+        "sc-tsc": "file:../../ts-devtools",
         "@types/jasmine": "^3.3.5",
         "@types/react": "^16.7.18",
         "tslib": "^1.9.3",

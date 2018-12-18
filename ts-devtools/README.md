@@ -28,7 +28,10 @@ npx sc-tsc --tsconfigFilePath my/typescript/project/tsconfig.json --outputFolder
  * `breakOnFirstError` (`boolean`): optional - if true will abort on any error
  * `skipLinkInputProjectFiles` (`boolean`): optional - if outputFolder is declared then all input project files like node_modules, package.json, etc need to be present in the new project for it work. Set this to true to not do it so.
  * `debug` (`boolean`): optional - 
- * `addTslibJsInFolder` (`string`): optional - if set, it will add tslib.js (AMD module) in given path that must be relative to \`tsconfigJsonPath\`
+ * `dependencyPrefix` (`string`): optional - If specified all dependency names will be prefixed with it. 
+This way, one can make sure AMD dependency names don't collide with other modules so it's possible to use 
+simple file names like \`Manager.ts\`. Also output .js file names will be prefixed
+ * `addTslibJsInFolder` (`string`): optional - if set, it will add tslib.js (AMD module) and other extra modules, in given path. If path is relative it will be  relative to \`tsconfigJsonPath\`. If you don't pass the argument the value will be 'src'. Passing value '0' won't add any file (internal use)
  * `outputFolder` (`string`): mandatory - 
  * `formatJsOutput` (`boolean`): optional - if true it will format generated .js output files using TypeScript formatting API
  * `addExtraAmdDependendenciesForSCAUnitTests` (`string`): optional - comma separated of extra SCA AMD dependencies that will be added to the end of the list on each file. This is a workaround so SCA gulp local and gulp unit-test works since SCA issue regarding not requiring necessary dependencies automatically
@@ -36,17 +39,33 @@ npx sc-tsc --tsconfigFilePath my/typescript/project/tsconfig.json --outputFolder
  * `ignoreImportSpecifiers` (`IgnoreImportSpecifier[]`): optional - 
 
 
-
-
 ### Command line build script example
 
 See https://github.com/cancerberoSgx/suitecommerce-types/blob/master/sample-projects/backbone-simple/build.sh for a build script supporting both SCA and SC extensions deploys, local and unit-tests gulp commands
 
-## API
-
-TODO - not really important to document I think
 
 
+## JavaScript API
+
+TODO - This is not really importat since is more useful as a CLI tool. However it has a js API to run the tool or parts of it programmatically in node.js. See spec/ folders and design section below. 
+
+
+# Input TypeScript syntax limitations 
+
+While the idea of this project is for the user to be able to write TypeScript projects freely as if it were any other TS project, this devtools have some restrictions on the input TypeScript code syntax, particularly in how import and export are declared: 
+
+ * import or require() `npm install`ed packages is not supported yet
+ * you can import or export several type declarations like interfaces or type alias
+ * you only can export / import an valued thing (like a variable, function, or class) only using the `default` mode, ie: `import SomeClass from './somewhere'` or `export default class {}`.
+ * The previous statement doesn't apply to values imported from `sc-types-frontend-*` packages
+ * you can instruct the tools to ignore a .ts file by adding the following comment at the top of the file: `// @sc-tsc-ignore-file`
+
+# Input project configuration requirements:
+
+ * npm i -D tslib
+ * 
+
+ 
 # status
 
  * Supports SCA: `gulp deploy`, `gulp local`, `gulp unit-test`
@@ -83,7 +102,7 @@ Notes on important APIs and implementation:
  # TODO
 
  * change folder name to sc-tsc (the project name)
- * make output js files and module names unique - user can use simple names in its code and the compiler adds a prefix to all user's project module names. 
+ * dont run fix-all-ts-errors if ignoreFile()===true
  * embedd images / resources (import icon from './icon.svg)
  * 'npm install some-lib' and maintain its dependency in package.json.
  * watch mode so it compiles .ts files on change (WIP)

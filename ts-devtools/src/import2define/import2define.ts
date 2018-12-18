@@ -1,7 +1,7 @@
 import { dirname, join, resolve } from 'path'
 import { config as shellConfig, cp, mkdir } from 'shelljs'
 import { fixSourceFileErrors } from 'ts-fix-all-errors'
-import { ImportDeclaration, Project } from 'ts-simple-ast'
+import { ImportDeclaration, Project, SourceFile } from 'ts-simple-ast'
 import { AbstractConfig, AbstractResult } from '../compileAndFix/compileAndFix'
 import { linkInputProjectFiles } from '../util/linkInputProjectFiles'
 import { import2defineOne, Import2DefineOneResult, _import2defineOneReset } from './import2defineOne'
@@ -121,4 +121,9 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
         return r
       })
   return result
+}
+
+
+export function ignoreFile(f: SourceFile): boolean{
+  return !!f.getFullText().trim().match(/^\/\/\s*\@sc\-tsc\-ignore\-file/)
 }

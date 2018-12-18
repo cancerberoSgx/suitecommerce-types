@@ -1,20 +1,14 @@
-import { FormEvent, MouseEvent } from 'react';
-import { BackboneModel, jQuery, TemplateContext } from 'sc-types-frontend';
-import { JSXView, ReactLike } from 'sc-types-frontend-extras';
+import { BackboneModel,  TemplateContext } from 'sc-types-frontend';
+import { JSXView, ReactLike, FormEvent, MouseEvent } from 'sc-types-frontend-extras';
 import Manager, { InterestDiscoveredListener } from '../manager/Manager';
 import { Interest } from '../types';
 
-class Model1 extends BackboneModel {
-
-}
-
-
-export default class DiscovererView extends JSXView<Model1, Context> implements InterestDiscoveredListener {
+export default class DiscovererView extends JSXView<BackboneModel, Context> implements InterestDiscoveredListener {
 
   supportsFunctionAttributes = true
 
   jsxTemplate = (context: Context) => <div>
-    <div className="view1">Name: {context.name}</div>
+    <div className="view1" data-test-id="DiscovererView">Name: {context.name}</div>
     <button className="functionAttributeMethodCall1" onClick={e => this.clicked1(e)}>
       click me
     </button>
@@ -35,7 +29,7 @@ export default class DiscovererView extends JSXView<Model1, Context> implements 
     </ul>
   </div>
   
-  newInterests: Interest[];
+  newInterests: Interest[] = [];
 
   constructor(options?: any) {
     super(options)

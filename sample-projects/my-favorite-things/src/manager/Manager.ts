@@ -4,8 +4,7 @@ import { Favorite, Interest, InterestType, InterestScope } from '../types';
 import PageDiscover from '../discoverer/PageDiscoverer';
 
 export default class Manager {
-
-  private static instance: Manager
+   private static instance: Manager
   static setup(application: Application): void {
     Manager.instance = new Manager(application);
   }
@@ -14,22 +13,21 @@ export default class Manager {
   }
 
   protected interests: Interest[]
-  getInterests(): Interest[]{
+  getInterests(): Interest[] {
     return this.interests
   }
-  protected currentView: View
+  protected currentView: View | undefined
 
   private constructor(protected application: Application) {
     this.handleAfterAppendViewCb = this.handleAfterAppendView.bind(this)
     this.handleCurrentViewRenderedCb = this.handleCurrentViewRendered.bind(this)
     this.application.getLayout().on('afterAppendView', this.handleAfterAppendViewCb)
     this.interests = []
-    this.addDiscoverers([
-      new PageDiscover().setup({manager: this}), 
-    ])
+    this.addDefaultInterestScopes()
+    this.addDefaultDiscoverers()
   }
-  protected handleAfterAppendViewCb: () => {}
-  protected handleCurrentViewRenderedCb: () => {}
+  protected handleAfterAppendViewCb: () => void
+  protected handleCurrentViewRenderedCb: () => void
   /** called from module registered in app */
   protected handleAfterAppendView() {
     if (this.currentView) {
@@ -42,7 +40,7 @@ export default class Manager {
   protected handleCurrentViewRendered() {
     this.discover()
   }
-  getApplication(): Application{
+  getApplication(): Application {
     return this.application
   }
   protected discover() {
@@ -50,7 +48,7 @@ export default class Manager {
     this.discoverers.forEach(d => {
       newI = newI.concat(d.discover().filter(i => !this.interests.find(ii => ii.equals(i))))
     })
-    this.interests =this.interests.concat(newI)
+    this.interests = this.interests.concat(newI)
     this.interestsDiscoverListeners.forEach(l => l.handle(newI))
   }
 
@@ -71,11 +69,17 @@ export default class Manager {
   addInterestTypes(interestTypes: InterestType[]) {
     this.interestTypes = this.interestTypes.concat(interestTypes) // TODO: dedup
   }
+
+  getInterestScopeOrThrow(id: string): InterestScope {
+    const i = this.getInterestScope(id)
+    if (!i) { throw new Error('getInterestScopeOrThrow') }
+    return i
+  }
   getInterestType(id: string): InterestType | undefined {
     return this.interestTypes.find(t => t.id == id)
   }
   getInterestOfType<T extends Interest = Interest>(type: InterestType): T[] {
-    return this.interests.filter(i=>i.type===type) as T[]
+    return this.interests.filter(i => i.type === type) as T[]
   }
 
   private interestScopes: InterestScope[] = []
@@ -96,6 +100,22 @@ export default class Manager {
   }
   private interestsDiscoverListeners: InterestDiscoveredListener[] = []
 
+
+  private addDefaultInterestScopes(): any {
+    this.addInterestScopes([
+      {
+        id: 'site', name: 'site', description: 'interests at the website level'
+      },
+      {
+        id: 'page', name: 'page', description: 'interests at a particular page level'
+      }
+    ])
+  }
+  private addDefaultDiscoverers(): any {
+    this.addDiscoverers([
+      new PageDiscover().setup({ manager: this }),
+    ])
+  }
 }
 
 export interface ManagerListener<T extends any[]= any[]> {

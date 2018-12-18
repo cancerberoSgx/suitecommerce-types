@@ -5,10 +5,10 @@ import { BackboneView, Deferred } from "../thirdParty";
  */
 export class WizardModule extends BackboneView {
 
-  errors: string[]
+  errors: string[] = []
 
   /**current module error if any */
-  error: WizardModuleError
+  error: WizardModuleError|undefined
 
 	/**
 	 * General method to disable the module interface called at the moment of submitting the step

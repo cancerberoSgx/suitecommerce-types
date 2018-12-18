@@ -2,7 +2,7 @@
 import *  as Backbone from 'backbone'
 
 export class BackboneModel extends Backbone.Model {
-  validation: {[propertyName: string]: BackboneModelValidation}
+  validation?: {[propertyName: string]: BackboneModelValidation}
 }
 
 export interface BackboneModelValidation {

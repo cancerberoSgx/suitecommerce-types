@@ -1,14 +1,9 @@
 define('ReactLike', [], function () {
-    var ReactLike_ = {
+    const ReactLike_ = {
         /**
          * React-like createElement function so we can use JSX in our TypeScript/JavaScript code.
          */
-        createElement: function (tag, attrs) {
-            if (attrs === void 0) { attrs = {}; }
-            var children = [];
-            for (var _i = 2; _i < arguments.length; _i++) {
-                children[_i - 2] = arguments[_i];
-            }
+        createElement(tag, attrs = {}, ...children) {
             var element;
             if (typeof tag === 'string') {
                 element = document.createElement(tag);
@@ -26,39 +21,40 @@ define('ReactLike', [], function () {
                 // in order not to add them as html attrs in the following code
                 attrs = {};
             }
-            for (var name_1 in attrs) {
-                if (name_1 && attrs.hasOwnProperty(name_1)) {
-                    var value = attrs[name_1];
+            for (let name in attrs) {
+                if (name && attrs.hasOwnProperty(name)) {
+                    var value = attrs[name];
                     if (value === true) {
-                        element.setAttribute(name_1, name_1);
+                        element.setAttribute(name, name);
                     }
                     else if (typeof value === 'function') {
                         if (ReactLike_.supportFunctionAttributes) {
                             // see JSXView.render if supportsFunctionAttributes=== true there could be some parent that could have the _this view context as property. 
-                            var innerApply = "(function(){(" + value.toString() + ").apply(__this__, arguments)}).apply(__this__, arguments); ";
-                            element.setAttribute(name_1, "var __this__ = ReactLike._searchForThisView(this) || this;  \n            return " + innerApply);
+                            const innerApply = `(function(){(${value.toString()}).apply(__this__, arguments)}).apply(__this__, arguments); `;
+                            element.setAttribute(name, `var __this__ = ReactLike._searchForThisView(this) || this;  
+            return ${innerApply}`);
                         }
                         else {
-                            element.setAttribute(name_1, "(" + value.toString() + ").apply(this, arguments)");
+                            element.setAttribute(name, `(${value.toString()}).apply(this, arguments)`);
                         }
                     }
                     else if (value !== false && value != null && typeof value !== 'object') {
-                        if (name_1 === 'className') {
-                            name_1 = 'class';
+                        if (name === 'className') {
+                            name = 'class';
                         }
-                        element.setAttribute(name_1, value.toString());
+                        element.setAttribute(name, value.toString());
                     }
                     // else {
                     //   console.log('ignoring attribute type ', typeof value, value);
                     // }
                 }
             }
-            children.filter(function (c) { return c; }).forEach(function (child) {
+            children.filter(c => c).forEach(child => {
                 if (child.nodeType) {
                     element.appendChild(ReactLike_._transformElementToAppend(child));
                 }
                 else if (Array.isArray(child)) {
-                    child.forEach(function (c) {
+                    child.forEach(c => {
                         if (!c.nodeType) {
                             throw new Error('Child is not a node: ' + c + ', tag: ' + tag + ', attrs: ' + attrs);
                         }
@@ -71,10 +67,10 @@ define('ReactLike', [], function () {
             });
             return element;
         },
-        renderDOM: function (parent, el) {
+        renderDOM(parent, el) {
             parent.appendChild(el);
         },
-        renderJQuery: function (parent, el) {
+        renderJQuery(parent, el) {
             parent.append(jQuery(el));
         },
         _searchForThisView: function (el) {
@@ -90,16 +86,16 @@ define('ReactLike', [], function () {
         // registerTextTransform(transform: TextTransform): void {
         //   textTransforms.push(transform)
         // },
-        _transformText: function (s) {
-            var ss = s;
+        _transformText(s) {
+            let ss = s;
             //   textTransforms.forEach(t=>{ss=t(ss)})
             return ss;
         },
         // registerElementTransform(transform: ElementTransform): void {
         //   elementTransforms.push(transform)
         // },
-        _transformElementToAppend: function (s) {
-            var ss = s;
+        _transformElementToAppend(s) {
+            let ss = s;
             //   elementTransforms.forEach(t=>{ss=t(ss)})
             return ss;
         }

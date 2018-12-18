@@ -9,7 +9,7 @@ export class CustomContentTypeBaseView<Settings=any, ContextData=any> extends Ba
   /**
    * Contains the current settings of this CCT - Settings are configured by SMT user. This is an object which properties are named the same as the Custom Record type field ids defined fot this CCT settings, for example, ```this.settings.custrecord_acme_cct1_main_color```
    */
-  settings: Settings
+  settings!: Settings
 
 	/**
 	 * This method is called the first time a CCT is dragged from the admin panel to the application. It indicates when does the CCT instance has finished making all the Ajax call that are necessary for rendering. Also it initializes the CCT settings. If the CCT needs to do some async initialization, for example doing ajax first or other logic, this method should be overridden and and return a {@link Deferred}. Any error that cause that the CustomContentType object could not be installed, means that the CCT will be removed from the DOM and destroyed

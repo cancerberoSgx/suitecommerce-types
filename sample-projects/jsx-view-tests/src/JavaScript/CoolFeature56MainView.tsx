@@ -21,6 +21,7 @@ export default class extends JSXView<BackboneModel, CoolFeature56MainViewContext
     }
   }
   model = new CoolFeature56Model()
+  e: Forme
   async customValidation(e?: MouseEvent): Promise<number> {
     const r = await this.model.fetch('')
     await this.render()

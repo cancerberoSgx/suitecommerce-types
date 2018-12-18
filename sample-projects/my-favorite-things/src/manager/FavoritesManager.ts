@@ -22,9 +22,9 @@ export default class FavoritesManager {
     return FavoritesManager.instance;
   }
 
-  private favorites: Favorite[]
-  private constructor(protected manager: Manager) {
+  private favorites: Favorite[] = []
 
+  private constructor(protected manager: Manager) {
   }
 
   getFavorites<F extends Favorite = Favorite>(config: FavoritesQuery): F[] {

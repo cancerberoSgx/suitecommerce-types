@@ -1,18 +1,18 @@
-define('JSXComponent', ['Backbone'], function (ReactNode) {
-    return /** @class */ (function () {
-        function JSXComponent(props) {
+define('JSXComponent', [], function () {
+    return class JSXComponent {
+        constructor(props) {
+            this.state = {};
             this.refs = null;
             this.props = props;
         }
-        JSXComponent.prototype.render = function () {
+        render() {
             throw new Error('Not Implemented');
-        };
-        JSXComponent.prototype.setState = function (state, callback) {
+        }
+        setState(state, callback) {
             this.state = state;
-        };
-        JSXComponent.prototype.forceUpdate = function (callBack) {
+        }
+        forceUpdate(callBack) {
             throw new Error('Not Implemented');
-        };
-        return JSXComponent;
-    }());
+        }
+    };
 });

@@ -7,9 +7,8 @@
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
-        "build": "cd .. && npx tsc && npm run sc-tsc && cd sca-module-unit-test && sh build.sh ",
-        "build-watch": "tsc -w",
-        "clean": "rm -rf dist"
+        "build": "npm run clean && sh build.sh ",
+        "clean": "rm -rf dist tmp*"
     },
     "keywords": [],
     "author": "sg",
@@ -21,7 +20,6 @@
     "devDependencies": {
         "sc-tsc": "file:../../ts-devtools",
         "@types/jasmine": "^3.3.5",
-        "@types/react": "^16.7.18",
         "tslib": "^1.9.3",
         "typescript": "^3.2.2"
     }

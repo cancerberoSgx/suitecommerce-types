@@ -1,6 +1,6 @@
-import { FormEvent, MouseEvent } from 'react';
+// import { FormEvent, MouseEvent } from 'react';
 import { BackboneModel, jQuery, TemplateContext } from 'sc-types-frontend';
-import { JSXView, ReactLike } from 'sc-types-frontend-extras';
+import { JSXView, ReactLike, MouseEvent, FormEvent } from 'sc-types-frontend-extras';
 
 export default describe('JSXView alone', () => {
 

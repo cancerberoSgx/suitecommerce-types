@@ -4,7 +4,7 @@ import {ReactLike} from 'sc-types-frontend-extras'
 import DiscovererView from './ui/DiscovererView'
 
 class Module implements ModuleEntryPoint {
-  view: DiscovererView
+  view: DiscovererView|undefined
   mountToApp(app: Application) {
     Manager.setup(app)
     ReactLike.supportFunctionAttributes=true

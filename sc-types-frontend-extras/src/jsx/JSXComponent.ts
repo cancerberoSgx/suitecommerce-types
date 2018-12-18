@@ -1,9 +1,11 @@
-import { ReactNode } from 'react';
+import { ReactNode } from './domElementDeclarations';
+
+// import { ReactNode } from 'react';
 
 export default class JSXComponent<P={}, S={}> {
   context: any
 
-  state: Readonly<S>
+  state: Readonly<S> = {} as S
   
   refs: any = null
   

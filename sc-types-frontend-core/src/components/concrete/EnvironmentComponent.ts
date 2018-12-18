@@ -45,7 +45,7 @@ export interface EnvironmentComponent extends BaseComponent {
 
 export type TranslationEntry = {
   key: string;
-  value: string;s
+  value: string;
 };
 
 export type Session = {

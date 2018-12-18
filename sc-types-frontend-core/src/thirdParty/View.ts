@@ -21,7 +21,7 @@ export interface View<Model extends Backbone.Model = BackboneModel, Context exte
 	 * If it is a string an AMD module with that name is tried to be loaded.
 	 * If it is undefined the view will be rendered without errors as an empty string
 	 */
-  template: Template<Context>
+  template?: Template<Context>
 
   /** Declaration of double binding between DOM input els with this.model attributes. 
    * 
@@ -103,8 +103,8 @@ class MyFormView extends BackboneView {
   /** @returns the document's title to show when this view is active. */
   getTitle(): string
 
-  /**  title this view title. The default behavior is to set the document's title using view.title when calling view.showContent() */
-  title: string
+  // /**  title this view title. The default behavior is to set the document's title using view.title when calling view.showContent() */
+  // title: string
 
   /** returns a text describing the page this view is implemented in the case is rendered as a main view with Layout.showContent()*/
   getPageDescription(): string
@@ -151,7 +151,7 @@ class MyFormView extends BackboneView {
   getChildViewInstance(childViewName: string): BackboneView | undefined
 
   setChildViewIndex(container_name: string, view_name: string, index: number, render: boolean): Deferred
-  contextData: { [contextName: string]: any }
+  contextData?: { [contextName: string]: any }
 
   getContextData(contextNames: string[]): { [contextName: string]: any }
   /**
