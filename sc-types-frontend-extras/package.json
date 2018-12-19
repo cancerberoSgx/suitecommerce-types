@@ -11,7 +11,7 @@
         "clean": "rm -rf dist compiled compiled_ts",
         "test-run-js": "npm run build && node dist/spec",
         "test-sca-module-unit-test-build": "npm run build && cd sca-module-unit-test && npm i && npm run build",
-        "test-run": "npx ts-node spec",
+        "test-run": "npx tsc && npx ts-node spec",
         "test": "npm run test-run && npm run test-run-js && npm run test-sca-module-unit-test-build",
         "sc-tsc": "npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder compiled  --addTslibJsInFolder --debug"
     },
