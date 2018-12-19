@@ -4,18 +4,13 @@ import { Interest, InterestType } from '../types';
 import { Discoverer, DiscovererConfig } from './discoverer';
 
 export default class PageDiscover implements Discoverer<PageInterest> {
-  private visitedPages: PageInterest[]
+  // private visitedPages: PageInterest[]
   private type: InterestType
   private  manager: Manager
 
-  // public constructor(config: DiscovererConfig) {
-  // }
-
   setup(config: DiscovererConfig): this {
-
     this.manager = config.manager
-    // this.manager.addUserNavigateListener(this)
-    this.visitedPages = []
+    // this.visitedPages = []
     this.type = {
       scope: this.manager.getInterestScope('page'),
       name: 'Visited page',
@@ -42,17 +37,16 @@ export default class PageDiscover implements Discoverer<PageInterest> {
       },
       load(s: string): PageInterest {
         return null
+      },
+      equals(i: PageInterest){
+        return this.url===i.url && this.name===IDBCursor.name
       }
     }
-    return [page];
-    // 
+    return [this.manager.getInterestOfType(this.type).find(i=>i.equals(page)) as PageInterest || page]
   }
+  dispose(){
 
-  dispose(){}
-  // discover(): PageInterest[] {
-  //   return []
-  // }
-
+  }
 }
 
 export interface PageInterest extends Interest {

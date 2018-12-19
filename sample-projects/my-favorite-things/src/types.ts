@@ -9,6 +9,7 @@ export interface Interest extends Base {
   creationDate: Date
   save(i: Interest): string
   load(s: string): Interest
+  equals(i: Interest): boolean
 }
 
 /** an interest that user added to one of its lists */

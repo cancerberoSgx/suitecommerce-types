@@ -4,6 +4,7 @@ import { Favorite, Interest, InterestType, InterestScope } from '../types';
 import PageDiscover from '../discoverer/PageDiscoverer';
 
 export default class Manager {
+
   private static instance: Manager
   static setup(application: Application): void {
     Manager.instance = new Manager(application);
@@ -13,6 +14,9 @@ export default class Manager {
   }
 
   protected interests: Interest[]
+  getInterests(): Interest[]{
+    return this.interests
+  }
   protected currentView: View
 
   private constructor(protected application: Application) {
@@ -44,8 +48,9 @@ export default class Manager {
   protected discover() {
     let newI: Interest[] = []
     this.discoverers.forEach(d => {
-      newI = newI.concat(d.discover().filter(i => this.interests.find(ii => ii !== i && ii.id !== i.id)))
+      newI = newI.concat(d.discover().filter(i => !this.interests.find(ii => ii.equals(i))))
     })
+    this.interests =this.interests.concat(newI)
     this.interestsDiscoverListeners.forEach(l => l.handle(newI))
   }
 
@@ -69,7 +74,9 @@ export default class Manager {
   getInterestType(id: string): InterestType | undefined {
     return this.interestTypes.find(t => t.id == id)
   }
-
+  getInterestOfType<T extends Interest = Interest>(type: InterestType): T[] {
+    return this.interests.filter(i=>i.type===type) as T[]
+  }
 
   private interestScopes: InterestScope[] = []
   addInterestScopes(interestScopes: InterestScope[]) {
