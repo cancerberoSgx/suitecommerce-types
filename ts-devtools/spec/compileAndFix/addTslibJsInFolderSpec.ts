@@ -1,13 +1,13 @@
 import { readFileSync } from "fs";
 import { dirname, join } from "path";
-import { cd, exec, pwd, rm, config } from "shelljs";
+import { cd, exec, pwd, rm, config, ls } from "shelljs";
 import { getPathRelativeToProjectFolder } from "../../src/util/misc";
 
 describe('addTslibJsInFolder', () => {
 
   describe('--addTslibJsInFolder cli', () => {
     
-    let cwd: string, tslibOutputFolder: string, p: any, outputFolder: string
+    let cwd: string, tslibOutputFolder: string, p: any, outputFolder: string, files: string[]
 
     beforeAll(() => {
       cwd = pwd()
@@ -20,6 +20,7 @@ describe('addTslibJsInFolder', () => {
       config.silent=false
       const cmd = `npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder ${outputFolder} --addTslibJsInFolder ${tslibOutputFolder} --debug`
       p = exec(cmd)
+      files = ls('-R', tslibOutputFolder)
     })
 
     afterAll(() => {
@@ -40,8 +41,9 @@ describe('addTslibJsInFolder', () => {
     })
 
     it('Should add sc-types-frontend-extras modules', () => {
-      expect(readFileSync(join(tslibOutputFolder, 'ReactLike.js')).toString()).toContain(`define('ReactLike'`)
-      expect(readFileSync(join(tslibOutputFolder, 'JSXView.js')).toString()).toContain(`define('JSXView'`)
+      files.find(f=>f.endsWith('ReactLike.js'))
+      expect(readFileSync(join(tslibOutputFolder, files.find(f=>f.endsWith('ReactLike.js')))).toString()).toContain(`define('ReactLike'`)
+      expect(readFileSync(join(tslibOutputFolder, files.find(f=>f.endsWith('jsx/JSXView.js')))).toString()).toContain(`define('JSXView'`)
     })
 
     it('should handle sc-types-frontend types correctly', ()=>{

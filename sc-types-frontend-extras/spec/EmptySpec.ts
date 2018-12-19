@@ -1,6 +1,6 @@
 import { expectType } from 'tsd-check';
 
-describe('empty', () => {
+xdescribe('empty', () => {
   it('empty spec', () => {
     interface I { a: number }
     interface J extends I { b: string }

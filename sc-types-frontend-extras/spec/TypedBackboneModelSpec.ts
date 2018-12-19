@@ -71,10 +71,3 @@ describe('TypedBackboneModel typings', () => {
 
 
 })
-
-// import {TypedBackboneModel} from '../src'
-// // import {TypedBackboneModel} from '.'
-// interface A {name:string}
-// class M extends TypedBackboneModel<A>{}
-// const m = new M()
-// m.setAttributes({foo:1})

@@ -209,7 +209,7 @@ define('c', [], function(){
 
 
 
-    fit('ignoreFile', () => {
+    it('ignoreFile', () => {
       const f1 = new Project().createSourceFile('t.ts', 'const a ')
       const f2 = new Project().createSourceFile('t.ts', `
 // @sc-tsc-ignore-file

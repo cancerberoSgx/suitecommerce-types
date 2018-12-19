@@ -6,14 +6,16 @@
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
-        "build": "npm run clean && tsc && tsc -p ./tsconfig-spec.json && npm run sc-tsc",
+        "build": "npm run clean && tsc && npm run test-build && npm run sc-tsc",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist compiled compiled_ts",
         "test-run-js": "npm run build && node dist/spec",
+        "test-build": "tsc -p ./tsconfig-spec.json",
         "test-sca-module-unit-test-build": "npm run build && cd sca-module-unit-test && npm i && npm run build",
-        "test-run": "npx tsc && npx ts-node -p ./tsconfig-spec.json spec",
+        "test-run": "npx tsc && npx ts-node --project ./tsconfig-spec.json spec",
         "test": "npm run test-run && npm run test-run-js && npm run test-sca-module-unit-test-build",
-        "sc-tsc": "npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder compiled  --addTslibJsInFolder --debug"
+        "sc-tsc": "npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder compiled  --addTslibJsInFolder --debug",
+        "all": "npm run clean && npm run build && npm test"
     },
     "repository": {
         "type": "git",
