@@ -48,32 +48,43 @@ describe('View', () => {
     it('constructor', async done => {
       class View2 extends BackboneView {
         constructor(foo: number) {
-          super()
+          super(foo as any)
           this.model = new BackboneModel({ foo })
+          // this.model.set('foo', 2)
+          // return this
         }
       }
-      expect(new View2(2).model.get('foo')).toBe(2)
-      done()
-    })
-    it('initialize', async done => {
-      class View3 extends BackboneView {
-        initialize() {
-          this.model = new BackboneModel({ foo: 3 })
-        }
-      }
-      expect(new View3().model.get('foo')).toBe(3)
+      const v = new View2(2)
+      expect(v.model.get('foo')).toBe(2)
       done()
     })
 
-    xit('initialize with options', async done => {
-      class Model3 extends BackboneModel {
-        initialize(attributes:any, options:any) {
-          super.initialize(attributes, options)
+    it('initialize', async done => {
+      class View3 extends BackboneView {
+        // constructor(option?:any){
+        //   super(option)
+        // }
+        initialize(option?:any) {
+          // super.initialize(option)
+          this.model = new BackboneModel({ foo: 3 })
+          // this.model.set('foo', 3)
         }
       }
+      const v = new View3()
+      expect(v.model.get('foo')).toBe(3)
+      done()
+    })
+
+    it('initialize with options', async done => {
+      class Model3 extends BackboneModel {
+        // initialize(attributes:any, options:any) {
+        //   super.initialize(attributes, options)
+        // }
+      }
       class View3 extends BackboneView<Model3>{
-        initialize(options:any) {
-          super.initialize(options)
+        initialize(m:Model3) {
+          // super.initialize(options)
+          this.model = m
         }
       }
       expect(new View3(new Model3({ foo: 5 })).model.get('foo')).toBe(5)
@@ -81,28 +92,26 @@ describe('View', () => {
     })
   })
 
-  xdescribe('events', () => {
+  describe('events', () => {
     it('model events', async done => {
-      let f: string
-      // debugger
       class View5 extends BackboneView<BackboneModel>{
         foo(arg0: number): any {
-          this.model.set('foo', arg0)
+          setTimeout(() => {
+            this.model.set('foo', arg0)
+          }, 100);
         }
         initialize(options: any) {
           super.initialize(options)
-          // this.model=new BackboneModel({foo: 5})
           this.model.on('change', function () {
-            debugger
+            expect(v.model.get('foo')).toBe(6)
+            done()
           })
         }
       }
       const v = new View5({ model: new BackboneModel({ foo: 5 }) })
       expect(v.model.get('foo')).toBe(5)
       v.foo(6)
-
-      // expect(v.model.get('foo')).toBe(5)
-      // done()
+      expect(v.model.get('foo')).toBe(5)
     })
   })
 })

@@ -137,7 +137,7 @@ describe('fixSourceFileErrors', ()=>{
 
 
 
-  fit('problem with new()', ()=>{
+  it('problem with new()', ()=>{
     const code = `
     function f(){}
     var C = f()
@@ -153,7 +153,7 @@ var C = f()
     // console.log();
   })
 
-  fit('problem in compiled with any and new()', ()=>{
+  xit('problem in compiled with any and new()', ()=>{
     // const code = `
     // function f(){}
     // var C = f()

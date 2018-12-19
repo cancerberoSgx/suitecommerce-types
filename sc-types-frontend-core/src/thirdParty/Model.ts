@@ -6,13 +6,13 @@ import *  as Backbone from 'backbone'
 export interface ModelAttributes {}
 export class BackboneModel<Attributes extends ModelAttributes = {[name: string]: any}> extends Backbone.Model {
   validation?: {[propertyName: string]: BackboneModelValidation}
-  attributes: Attributes = {} as Attributes
+  attributes!: Attributes
   // set(a: ModelAttributes|string, b?: any|Backbone.ModelSetOptions): BackboneModel<Attributes> {
   //   return super.set(a, b)
   // }
-  constructor(attributes?: Attributes, options?: any){
-    super(attributes, options)
-  }
+  // constructor(attributes?: Attributes, options?: any){
+  //   super(attributes, options)
+  // }
 }
 
 export interface BackboneModelValidation {

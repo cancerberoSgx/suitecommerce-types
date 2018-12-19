@@ -7,6 +7,14 @@ import * as Backbone from 'backbone';
 
 export class BackboneView<VModel extends Backbone.Model = BackboneModel, Context extends TemplateContext = TemplateContext> extends Backbone.View<VModel> implements View<VModel, Context> {
 
+
+  // constructor(options?: Backbone.ViewOptions<VModel>){
+  //   super(options)
+  // }
+  // initialize(options?: Backbone.ViewOptions<VModel>): void{
+  //   super.initialize(options)
+  // }
+
   template: Template<Context>|undefined
 
   /** Declaration of double binding between DOM input els with this.model attributes.
