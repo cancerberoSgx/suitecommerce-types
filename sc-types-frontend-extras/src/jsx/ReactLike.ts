@@ -51,22 +51,24 @@ const ReactLike_ = {
         // }
       }
     }
-
   
     children.filter(c => c).forEach(child => {
       if (isNode(child)) {
-        element.appendChild(ReactLike_.transformElementToAppend(tag, originalAttrs, element, child))
+        const toAppend = ReactLike_.transformChild(tag, originalAttrs, element, child)
+        ReactLike_.addChild(tag, attrs, element, toAppend)
       }
       else if (Array.isArray(child)) {
         child.forEach(c => {
           if (!isNode(c)) {
             throw new Error('Child is not a node: ' + c + ', tag: ' + tag + ', originalAttrs: ' + originalAttrs)
           }
-          element.appendChild(ReactLike_.transformElementToAppend(tag, originalAttrs, element, c))
+          const toAppend = ReactLike_.transformChild(tag, originalAttrs, element, c)
+          ReactLike_.addChild(tag, attrs, element, toAppend)
         })
       }
       else {
-        element.appendChild(document.createTextNode(ReactLike_._transformText(child.toString())))
+        const toAppend = document.createTextNode(ReactLike_.transformText(tag, originalAttrs, element, child, child.toString()))
+        ReactLike_.addChild(tag, attrs, element, toAppend)
       }
     })
     return element
@@ -92,26 +94,61 @@ const ReactLike_ = {
    * */
   supportFunctionAttributes: false,
 
-  // registerTextTransform(transform: TextTransform): void {
-  //   textTransforms.push(transform)
-  // },
-  _transformText(s: string): string {
-    let ss = s
-    //   textTransforms.forEach(t=>{ss=t(ss)})
-    return ss
+  globalTextTransformers: [] as TextTransformer[],
+
+  registerTextTransformer(transform: TextTransformer): void {
+    ReactLike_.globalTextTransformers.push(transform)
   },
+
+  /**
+   * Converts all TextNodes, first applies the global TextTransformer s registered with ReactLike.globalTextTransformers() and then if the tag is a TextTransformer also that
+   */
+  transformText(tag: any, attrs: any, parent: HTMLElement, child: Node, text: string): string {
+    ReactLike_.globalTextTransformers.forEach(t=>{
+      text = t.transformText(tag, attrs, parent, child, text)
+    })
+    if(isTextTransformer(tag)){
+      text = tag.transformText(tag, attrs, parent, child, text)
+    }
+    return text
+  },
+  
   // registerElementTransform(transform: ElementTransform): void {
   //   elementTransforms.push(transform)
   // },
-  transformElementToAppend(tag: any, attrs: any, parent: HTMLElement, child: Node): Node {
-    if(tag.transformChild && isHTMLElement(child)){
+  transformChild(tag: any, attrs: any, parent: HTMLElement, child: Node): Node {
+    if(tag.transformChild){
       child = tag.transformChild(tag, attrs, parent, child)
     }
     //   elementTransforms.forEach(t=>{ss=t(ss)})
     return child
-  }
+  },
+
+  // TODO: ChildAdder just like ChildTransformer, TextTransformer - a parent might want to cancel child append for some reason...
+  addChild(tag: any, attrs: any, element: HTMLElement, toAppend: Node):void{
+    element.appendChild(toAppend)
+  },
+
 };
 
+export interface TextTransformer {
+  transformText(tag: any, attrs: any, parent: HTMLElement, child: Node, text: string): string
+}
+function isTextTransformer(n: any): n is TextTransformer {
+  return n && n.transformText
+}
+export interface ChildTransformer {
+  transformChild(tag: any, attrs: any, parent: HTMLElement, child: Node): Node
+}
+function isChildTransformer(n: any): n is ChildTransformer {
+  return n && n.transformChild
+}
+export interface ChildAdder {
+  addChild(tag: any, attrs: any, element: HTMLElement, toAppend: Node):void
+}
+function isChildAdder(n: any): n is ChildAdder {
+  return n && n.transformChild
+}
 // const textTransforms: TextTransform[] = []
 // const elementTransforms: ElementTransform[] = []
 
@@ -133,8 +170,5 @@ const ReactLike_ = {
 export default ReactLike_;
 
 function isNode(n: any): n is Node {
-  return n && !!n.nodeType
-}
-function isHTMLElement(n : any){
-  return n && n.nodeType===1 && n.outerHTML
+  return n && n.nodeType
 }
