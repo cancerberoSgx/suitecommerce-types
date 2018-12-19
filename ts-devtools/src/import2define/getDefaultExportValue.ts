@@ -16,7 +16,7 @@ export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfi
     //  means file doesn't have any default export, however, is valid for exporting only types. 
     return {
       exportValue: 'undefined',
-      exportName: DUMMY_MODULE_FLAG + (_counter++)
+      exportName: DUMMY_MODULE_FLAG
     }
   }
 
@@ -95,7 +95,7 @@ function checkNonDefaultExportedValueNodes(f: SourceFile): string | undefined {
 }
 
 
-let _counter = 0
+// let _counter = 0
 export function _getDefaultExportValueReset() {
-  _counter = 0
+  // _counter = 0
 }

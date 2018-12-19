@@ -27,7 +27,9 @@ function isValidIdentifier(s: string): boolean {
   return s && !!s.match(/^[a-z0-9_]+$/i);
 }
 
+// TODO: workaround for an import2defineOne issue - DUMMy modules should never come here.
 function getDependencyName(imp: Import2DefineOneResultImport): string {
   let name = imp.moduleSpecifier || imp.name
+  // return name
   return name.includes(DUMMY_MODULE_FLAG) ? 'Backbone' : name
 }

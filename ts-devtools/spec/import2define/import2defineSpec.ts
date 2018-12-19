@@ -4,6 +4,7 @@ import { import2define, import2defineProject } from "../../src/import2define/imp
 import { import2DefineOnePrintResult } from "../../src/import2define/import2DefineOnePrintResult";
 import { getPathRelativeToProjectFolder } from "../../src/util/misc";
 import { expectCodeEquals, printFileOutput } from '../testUtil';
+import { DUMMY_MODULE_FLAG } from "../../src/import2define/getDefaultExportValue";
 
 describe('import2define', () => {
 
@@ -189,7 +190,7 @@ define('c', [], function(){
       // debugger
       expectCodeEquals(types, `
       import { Application } from 'sc-types-frontend'
-      define('Dummy0', [], function(){
+      define('${DUMMY_MODULE_FLAG}', [], function(){
         ;
         return undefined
       })

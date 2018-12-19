@@ -4,6 +4,7 @@ import { import2defineOne, _import2defineOneReset } from "../../src/import2defin
 import { import2DefineOnePrintResult } from "../../src/import2define/import2DefineOnePrintResult";
 import { expectCodeEquals, expectCodeToContain } from '../testUtil';
 import { _namedImportReferenceIsTypeReset } from "../../src/import2define/namedImportReferenceIsType";
+import { DUMMY_MODULE_FLAG } from "../../src/import2define/getDefaultExportValue";
 
 describe('import2defineOne', () => {
   function test(source: string, expectedOutput: string, expectedErrors: string[] | number, fileName: string = 'test3.ts') {
@@ -241,7 +242,7 @@ export class C{}
 export type f = any
 export interface I {}
             `, `import { Application } from 'sc-types-frontend'
-            define('Dummy0', [], function(){
+            define('${DUMMY_MODULE_FLAG}', [], function(){
               
               return undefined
             })
