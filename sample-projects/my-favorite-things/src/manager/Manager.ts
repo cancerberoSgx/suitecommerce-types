@@ -1,80 +1,99 @@
-import { BackboneView, Application } from 'sc-types-frontend';
+import { BackboneView, Application, View } from 'sc-types-frontend';
 import { Discoverer } from '../discoverer/discoverer';
-import { Favorite, Interest } from '../types';
+import { Favorite, Interest, InterestType, InterestScope } from '../types';
+import PageDiscover from '../discoverer/PageDiscoverer';
 
 export default class Manager {
-
+  private static instance: Manager
   static setup(application: Application): void {
-    instance = new Manager(application);
+    Manager.instance = new Manager(application);
+  }
+  static getInstance(): Manager {
+    return Manager.instance;
   }
 
-  static getInstance(): Manager {
-    return instance;
+  protected interests: Interest[]
+  protected currentView: View
+
+  private constructor(protected application: Application) {
+    this.handleAfterAppendViewCb = this.handleAfterAppendView.bind(this)
+    this.handleCurrentViewRenderedCb = this.handleCurrentViewRendered.bind(this)
+    this.application.getLayout().on('afterAppendView', this.handleAfterAppendViewCb)
+    this.interests = []
+    this.addDiscoverers([
+      new PageDiscover().setup({manager: this}), 
+    ])
+  }
+  protected handleAfterAppendViewCb: () => {}
+  protected handleCurrentViewRenderedCb: () => {}
+  /** called from module registered in app */
+  protected handleAfterAppendView() {
+    if (this.currentView) {
+      this.currentView.off('afterCompositeViewRender', this.handleCurrentViewRenderedCb)
+    }
+    this.currentView = this.application.getLayout().getCurrentView()
+    this.currentView.on('afterCompositeViewRender', this.handleCurrentViewRenderedCb)
+    this.discover()
+  }
+  protected handleCurrentViewRendered() {
+    this.discover()
+  }
+  getApplication(): Application{
+    return this.application
+  }
+  protected discover() {
+    let newI: Interest[] = []
+    this.discoverers.forEach(d => {
+      newI = newI.concat(d.discover().filter(i => this.interests.find(ii => ii !== i && ii.id !== i.id)))
+    })
+    this.interestsDiscoverListeners.forEach(l => l.handle(newI))
+  }
+
+  dispose() {
+    this.application.getLayout().off('afterAppendView', this.handleAfterAppendViewCb)
+    if (this.currentView) {
+      this.currentView.off('afterCompositeViewRender', this.handleCurrentViewRenderedCb)
+    }
+    this.discoverers.forEach(d => d.dispose())
   }
 
   protected discoverers: Discoverer[] = []
-
-  private constructor(protected application: Application) {
-    application.getLayout().on('afterAppendView', this.handleAfterAppendView.bind(this))
+  public addDiscoverers(d: Discoverer[]): void {
+    this.discoverers = this.discoverers.concat(d)// TODO: dedup
   }
 
-  /** called from module registered in app */
-  handleAfterAppendView(view: BackboneView) {
-    this.discoverers.forEach(d => d.discover())
+  private interestTypes: InterestType[] = []
+  addInterestTypes(interestTypes: InterestType[]) {
+    this.interestTypes = this.interestTypes.concat(interestTypes) // TODO: dedup
+  }
+  getInterestType(id: string): InterestType | undefined {
+    return this.interestTypes.find(t => t.id == id)
   }
 
-  registerDiscoverer(d: Discoverer): void {
-    this.discoverers.push(d)
+
+  private interestScopes: InterestScope[] = []
+  addInterestScopes(interestScopes: InterestScope[]) {
+    this.interestScopes = this.interestScopes.concat(interestScopes) // TODO: dedup
+  }
+  getInterestScope(id: string): InterestScope | undefined {
+    return this.interestScopes.find(t => t.id == id)
   }
 
-  getFavorites<F extends Favorite = Favorite>(config: FavoritesQuery): F[] {
-    return []
-  }
+
 
   addInterestsDiscoverListener(l: InterestDiscoveredListener): void {
     this.interestsDiscoverListeners.push(l)
   }
-
   removeInterestsDiscoverListener(l: InterestDiscoveredListener): void {
     this.interestsDiscoverListeners = this.interestsDiscoverListeners.filter(ll => ll !== l)
   }
+  private interestsDiscoverListeners: InterestDiscoveredListener[] = []
 
-  addUserNavigateListener(l: UserNavigateListener): void {
-    this.userNavigateListeners.push(l)
-  }
-
-  removeUserNavigateListener(l: InterestDiscoveredListener): void {
-    this.interestsDiscoverListeners = this.interestsDiscoverListeners.filter(ll => ll !== l)
-  }
-
-  interestsDiscoverListeners: InterestDiscoveredListener[] = []
-
-  userNavigateListeners: UserNavigateListener[] = []
 }
 
 export interface ManagerListener<T extends any[]= any[]> {
-  handleUserNavigate(...args: T): void
+  handle(...args: T): void
 }
 
 export interface InterestDiscoveredListener extends ManagerListener<[Interest[]]> {
-  handleUserNavigate(interests: Interest[]): void
 }
-
-export interface UserNavigateListener extends ManagerListener<[Application]> {
-  handleUserNavigate(application: Application): void
-}
-
-/** a query for favorites configuration object. if empty object will reference all known favorites */
-export interface FavoritesQuery {
-  /** true: only saved, false: only not saved, undefined: all */
-  saved?: boolean
-  /** true: get me the current things, current item favorites, current page, current catalog, etc, false: only not current things (discovered items other than current, previous visited pages, etc). undefined: all */
-  current?: boolean
-  /** if defined it will get only those explicit favorites */
-  ids?: string[]
-  /**  */
-  scope?: string
-}
-
-
-let instance: Manager

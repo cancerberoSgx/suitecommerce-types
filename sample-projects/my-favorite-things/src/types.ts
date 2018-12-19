@@ -6,8 +6,9 @@ export interface Base {
 
 export interface Interest extends Base {
   type: InterestType
-  save(): string
-  load(s: string): void
+  creationDate: Date
+  save(i: Interest): string
+  load(s: string): Interest
 }
 
 /** an interest that user added to one of its lists */
