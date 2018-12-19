@@ -17,7 +17,7 @@ describe('compileAndFix', () => {
             outputFolder, tsconfigFilePath,
             breakOnFirstError: true,
             addTslibJsInFolder: `src`,
-            debug: true,
+            // debug: true,
             formatJsOutput: true,
         }
         const result = compileAndFix(config)

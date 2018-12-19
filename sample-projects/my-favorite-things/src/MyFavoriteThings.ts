@@ -6,8 +6,7 @@ export default {
   async mountToApp(app: Application) {
     await Manager.setup(app)
     app.getLayout().on('afterAppendView', () => {
-      const discovererView = new DiscovererView()
-      discovererView.render()
+      new DiscovererView().render()
     })
   }
 }

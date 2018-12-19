@@ -125,7 +125,8 @@ define('c', [], function(){
       project.createSourceFile('user.ts', `import {Apple, Orange} from './model`)
       const result = import2defineProject({
         tsconfigFilePath: '',
-        project, debug: true
+        project, 
+        // debug: true
       })
       expect(result.errors).toEqual([])
     })

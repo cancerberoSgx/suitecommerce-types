@@ -80,6 +80,21 @@ define('test3', ['foo', 'foo'], function(a: any, b: any){
       [])
 
   })
+  it('dependency name prefix', () => {
+
+    test(`
+import { a, b } from 'foo' 
+export default const bar = 1
+    `, `
+import { Application } from 'sc-types-frontend'
+define('test3', ['foo', 'foo'], function(a: any, b: any){
+  const bar = 1
+  return bar
+})
+    `,
+      [])
+
+  })
 
 
   it('exporting jsx', () => {

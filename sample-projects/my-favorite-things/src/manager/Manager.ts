@@ -14,7 +14,6 @@ export default class Manager {
 
   protected discoverers: Discoverer[] = []
 
-
   private constructor(protected application: Application) {
     application.getLayout().on('afterAppendView', this.handleAfterAppendView.bind(this))
   }
@@ -22,7 +21,6 @@ export default class Manager {
   /** called from module registered in app */
   handleAfterAppendView(view: BackboneView) {
     this.discoverers.forEach(d => d.discover())
-    // console.log('handle!')
   }
 
   registerDiscoverer(d: Discoverer): void {

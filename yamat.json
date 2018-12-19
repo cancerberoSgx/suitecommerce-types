@@ -18,5 +18,9 @@
     {
         "name": "ts-devtools",
         "path": "./ts-devtools"
+    },
+    {
+        "name": "sc-types-frontend-extras",
+        "path": "./sc-types-frontend-extras"
     }
 ]

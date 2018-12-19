@@ -93,8 +93,12 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     importsToIgnore.push("import { Application } from 'sc-types-frontend'")
   }
   const response = {
-    exportName, imports, exportValue, sourceFile,
-    body: sourceFile.getText(), importsToIgnore,
+    exportName, 
+    imports, 
+    exportValue, 
+    sourceFile,
+    body: sourceFile.getText(), 
+    importsToIgnore,
     statementOutsideHandler: statementOutsideHandler.join('\n')
   }
   if (config.debug) {

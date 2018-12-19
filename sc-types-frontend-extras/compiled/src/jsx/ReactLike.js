@@ -79,7 +79,8 @@ define('ReactLike', [], function () {
         _searchForThisView: function (el) {
             return el && (el.__this || ReactLike_._searchForThisView(el.parentElement));
         },
-        /** partial support for JSX attribute functions like event handlers.
+        /**
+         * Partial support for JSX attribute functions like event handlers.
          * Experimental!, not recommended, set it to falsy to disable at all, or just use backbone's view events.
          * If true, handlers will only have access to attributes and this, but they won't be able to reference
          * other variables in the scope of the JSX. Also there could be some performance impact on event handling.
