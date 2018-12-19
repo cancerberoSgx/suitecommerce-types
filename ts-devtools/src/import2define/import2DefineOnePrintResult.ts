@@ -12,10 +12,13 @@ ${r.imports.map(i => `type ${i.name}${Type}`).join('\n')}
 ${(isValidIdentifier(r.exportName) && (!r.statementOutsideHandler.includes(`type ${r.exportName}`))&& (!r.statementOutsideHandler.includes(`interface ${r.exportName}`))) ? `type ${r.exportName}${Type}` : ''}
 ` : ''}
 ${r.importsToIgnore.join('\n')}
+${r.exportName==='___' ? `` : `
 define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier||imp.name}'`).join(', ')}], function(${r.imports.map(i => `${i.name}: any`).join(', ')}){
   ${r.body}
   return ${r.exportValue}
 })
+`}
+
 ${r.statementOutsideHandler}
 `;
 }

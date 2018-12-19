@@ -1,20 +1,20 @@
+import { shorter } from "misc-utils-of-mine";
 import { Node, SourceFile, Statement, SyntaxKind, TypeGuards } from "ts-simple-ast";
 import { Import2DefineConfig } from "./import2define";
-import { shorter } from "misc-utils-of-mine";
-
 
 export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfig): DefaultExportInfo {
 
   const err1 = checkNonDefaultExportedValueNodes(f)
-  if(err1){
-    return {error: err1}
+  if (err1) {
+    return { error: err1 }
   }
 
   const s = f.getDefaultExportSymbol();
   if (!s) {
     //  means file doesn't have any default export, however, is valid for exporting only types. 
     return {
-      exportValue: 'undefined'
+      exportValue: 'undefined',
+      exportName: 'Dummy' + (_counter++)
     }
   }
 
@@ -53,7 +53,7 @@ export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfi
   }
 
   const exportStatement = s.getDeclarations()
-    // TODO: filter by this file declarations - could be outsie this file dont wantto export those
+    // TODO: filter by this file declarations - could be outside this file dont want to export those
     .filter(d => TypeGuards.isFunctionDeclaration(d) || TypeGuards.isClassDeclaration(d) || TypeGuards.isExportAssignment(d))
     .find(d => (d as any).remove)
   if (!exportStatement) {
@@ -61,10 +61,10 @@ export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfi
   }
   const exportName = f.getBaseNameWithoutExtension();
   const error = (!exportStatement ? 'No default export for class, variable or function found' : undefined) || (!exportValue ? '!exportValue' : undefined) || (!exportName ? '!exportName' : undefined);
-  return { 
-    exportValue, 
-    exportStatement: exportStatement as any as Statement, 
-    exportName, error 
+  return {
+    exportValue,
+    exportStatement: exportStatement as any as Statement,
+    exportName, error
   };
 }
 
@@ -90,4 +90,10 @@ function checkNonDefaultExportedValueNodes(f: SourceFile): string | undefined {
   if (nonDefaultLiteralExported.length) {
     return 'You cannot export a literal value unless as default export. Currently you have: ' + nonDefaultLiteralExported.map(n => n.getParent() || n).map(n => `${n.getKindName()} ${shorter(n.getText(), 20)}`).join(', ')
   }
+}
+
+
+let _counter = 0
+export function _getDefaultExportValueReset() {
+  _counter = 0
 }

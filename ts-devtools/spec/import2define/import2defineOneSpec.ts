@@ -1,8 +1,9 @@
 import { Project } from "ts-simple-ast";
 import { Import2DefineResult } from "../../src/import2define/import2define";
-import { import2defineOne } from "../../src/import2define/import2defineOne";
+import { import2defineOne, _import2defineOneReset } from "../../src/import2define/import2defineOne";
 import { import2DefineOnePrintResult } from "../../src/import2define/import2DefineOnePrintResult";
 import { expectCodeEquals, expectCodeToContain } from '../testUtil';
+import { _namedImportReferenceIsTypeReset } from "../../src/import2define/namedImportReferenceIsType";
 
 describe('import2defineOne', () => {
   function test(source: string, expectedOutput: string, expectedErrors: string[] | number, fileName: string = 'test3.ts') {
@@ -12,6 +13,7 @@ describe('import2defineOne', () => {
       errors: [], perFileResults: []
     }
     let output: string
+    _import2defineOneReset()
     const result = import2defineOne({
       tsconfigFilePath: 'doesntMatter.json',
     }, sourceFile, import2DefineResult)
@@ -25,12 +27,8 @@ describe('import2defineOne', () => {
       output = import2DefineOnePrintResult(result, false)
       expectCodeEquals(output, expectedOutput)
 
-    }
-
+    } 
     return {result, output, project, sourceFile}
-    // else {
-    //   fail('output undefined is an error')
-    // }
   }
 
   //todo: errors, no import, default import, assign import namespace import
@@ -221,13 +219,13 @@ export class C{}
 export type f = any
 export interface I {}
             `, `import { Application } from 'sc-types-frontend'
-            define('test4', [], function(){
+            define('Dummy0', [], function(){
               
               return undefined
             })
             export type f = any
             export interface I {}
-            ` , [], 'test4.ts')
+            ` , [])
             
     // console.log(output);
     

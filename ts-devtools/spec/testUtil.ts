@@ -1,5 +1,5 @@
 import { import2DefineOnePrintResult } from "../src/import2define/import2DefineOnePrintResult";
-import { Import2DefineResult } from "../src";
+import { Import2DefineResult, import2defineProject } from "../src";
 import Project from "ts-simple-ast";
 
 export function expectCodeEquals(a: string, b: string) {
@@ -21,8 +21,22 @@ export function expectCodeNotToContain(a: string, b: string) {
 }
 
 export interface File {name: string, content: string}
-export function import2defineCompileProject(files: File[]):{files: File[], project: Project}{
+export function import2defineCompileProject(files: File[]):{outputFiles: File[],result: Import2DefineResult,  project: Project}{
   const project = new Project()
+  files.forEach(f=>project.createSourceFile(f.name, f.content))
+  const result = import2defineProject({
+    tsconfigFilePath: '',
+    project, 
+    outputFolder: 'tmp2'
+  })
+  const outputFiles: File[] = result.perFileResults.map(r=>{return {name: r.exportName+'.ts', content: import2DefineOnePrintResult(r)}})
+  // expect(result.errors).toEqual([])
+  
+  const diags = project.formatDiagnosticsWithColorAndContext(project.getPreEmitDiagnostics())
+  debugger
+  console.log(diags);
+  
+  return {outputFiles, result, project}
   return null
 }
 

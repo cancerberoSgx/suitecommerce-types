@@ -1,16 +1,11 @@
 import { mkdir, rm, test } from "shelljs";
-import { Project, Statement } from "ts-simple-ast";
-import { getDefaultExportValue } from "../../src/import2define/getDefaultExportValue";
-import { import2define, import2defineProject, Import2DefineResult } from "../../src/import2define/import2define";
-import { import2defineOne } from "../../src/import2define/import2defineOne";
+import { Project } from "ts-simple-ast";
+import { import2define, import2defineProject } from "../../src/import2define/import2define";
 import { import2DefineOnePrintResult } from "../../src/import2define/import2DefineOnePrintResult";
 import { getPathRelativeToProjectFolder } from "../../src/util/misc";
 import { expectCodeEquals, printFileOutput } from '../testUtil';
 
-
 describe('import2define', () => {
-
-
 
   describe('import2defineProject', () => {
 
@@ -114,22 +109,32 @@ define('c', [], function(){
     })
 
 
-    xit('import an index file a la node', ()=>{
+    // xit('testing testutil import2defineCompileProject', ()=>{
+    //   import2defineCompileProject([
+    //     {name: 'tmp/user.ts', content: `import { I2 } from './types'  ; export default class implements I2 {} `}, 
+    //     {name: 'tmp/types.ts', content: `export interface I1 {}; export type T1 = false; export interface I2 extends I1 {}`}
+    //   ])
+    // })
 
+
+    xit('import an index file a la node', () => {
+      const project = new Project()
+      project.createSourceFile('model/apple.ts', `export class Apple {} `)
+      project.createSourceFile('model/orange.ts', `export class Orange {} `)
+      project.createSourceFile('model/index.ts', `export * from './apple; export * from './orange `)
+      project.createSourceFile('user.ts', `import {Apple, Orange} from './model`)
+      const result = import2defineProject({
+        tsconfigFilePath: '',
+        project, debug: true
+      })
+      expect(result.errors).toEqual([])
     })
 
-    xit('export several types', () => { // ISSUE ! user is requiring interfaces! 
-
+    it('export several types and no default value', () => {
       const project = new Project()
       project.createSourceFile('tmp/user.ts', `import { I2 } from './types'  ; export default class implements I2 {} `)
       project.createSourceFile('tmp/types.ts', `export interface I1 {}; export type T1 = false; export interface I2 extends I1 {}`)
-      // project.createSourceFile('foo/cc/c.ts', `export default const c  =3  `)
-      // project.saveSync()
-      // // project.getPreEmitDiagnostics().forEach(d=>{console.log(d.getMessageText())});
-      
-      // project.emitToMemory()
-      // project.getPreEmitDiagnostics()
-  const result = import2defineProject({
+      const result = import2defineProject({
         tsconfigFilePath: '',
         project
       })
@@ -137,27 +142,24 @@ define('c', [], function(){
 
       const types = printFileOutput(result, 'types.ts')
       const user = printFileOutput(result, 'user')
-      debugger
-      
+      // debugger
       expectCodeEquals(types, `
-      define('types', [], function(){
+      import { Application } from 'sc-types-frontend'
+      define('Dummy0', [], function(){
         ;
         return undefined
       })
       export interface I1 {}
       export type T1 = false;
-      export interface I2 implements I1 {}
-         `)    
+      export interface I2 extends I1 {}
+         `)
 
       expectCodeEquals(user, `
       import { I2 } from './types'
-      import { Application } from 'sc-types-frontend'
-      define('user', [], function(y){
-        const b: I2 = {} 
-        return b
-      })
+      define('user', [], function(){  
+        return  class implements I2 {}
+      })      
        `)
-      // debugger
     })
 
 
@@ -183,7 +185,7 @@ export interface CoolFeature56MainViewContext {
       expect(result.errors).toEqual([])
 
       const a2 = import2DefineOnePrintResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'a'))
-            expectCodeEquals(a2, `
+      expectCodeEquals(a2, `
 type _un2_iQu3_<I=any,J=any,K=any,L=any,M=any>=any
 type b<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
 type a<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
@@ -195,7 +197,7 @@ define('a', ['b'], function(b: any){
 })    
       `)
       const b2 = import2DefineOnePrintResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'))
-            expectCodeEquals(b2, `
+      expectCodeEquals(b2, `
 type _un2_iQu3_<I=any,J=any,K=any,L=any,M=any>=any
 type ReactLike<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
 type b<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_

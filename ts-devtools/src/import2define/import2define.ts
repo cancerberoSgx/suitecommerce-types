@@ -4,8 +4,10 @@ import { fixSourceFileErrors } from 'ts-fix-all-errors'
 import { ImportDeclaration, Project } from 'ts-simple-ast'
 import { AbstractConfig, AbstractResult } from '../compileAndFix/compileAndFix'
 import { linkInputProjectFiles } from '../util/linkInputProjectFiles'
-import { import2defineOne, Import2DefineOneResult } from './import2defineOne'
+import { import2defineOne, Import2DefineOneResult, _import2defineOneReset } from './import2defineOne'
+import { _namedImportReferenceIsTypeReset } from "./namedImportReferenceIsType";
 import { import2DefineOnePrintResult } from './import2DefineOnePrintResult'
+import { _getDefaultExportValueReset } from './getDefaultExportValue';
 
 export interface Import2DefineConfig extends AbstractConfig {
   customImportSpecifiers?: CustomImportSpecifier[]
@@ -69,13 +71,16 @@ export function import2define(config: Import2DefineConfig): Import2DefineResult 
   return result
 }
 
-
+export function _import2defineReset() {
+  _import2defineOneReset()
+}
 
 export function import2defineProject(config: Import2DefineConfig & { project: Project }): Import2DefineResult {
   const result: Import2DefineResult = {
     errors: [],
     perFileResults: []
   }
+  _import2defineReset()
   result.perFileResults = 
     config.project.getSourceFiles()
     .filter(f =>
