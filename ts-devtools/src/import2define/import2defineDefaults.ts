@@ -10,14 +10,14 @@ export const defaultCustomImportSpecifiers: CustomImportSpecifier[] = [
 
   // when user import {Foo} from 'sc-types-frontend' it could be two things: just a type in which case we ignore the import by returning undefined, or some special names that really return SC objects
   {
-    predicate: (id: ImportDeclaration, ni: string) => ['sc-types-frontend', 'sc-types-frontend-core'].includes(id.getModuleSpecifier().getLiteralText()),
+    predicate: (id: ImportDeclaration, ni: string) => ['sc-types-frontend', 'sc-types-frontend-core', 'sc-types-frontend-extras'].includes(id.getModuleSpecifier().getLiteralText()),
     getImportSpecifier: (id: ImportDeclaration, ni: string) => suiteCommerceSpecifiers[ni]
   },
 
-  {
-    predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText() === 'sc-types-frontend-extras',
-    getImportSpecifier: (id: ImportDeclaration, ni: string) => ni
-  },  
+  // {
+  //   predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText() === 'sc-types-frontend-extras',
+  //   getImportSpecifier: (id: ImportDeclaration, ni: string) => ni
+  // },  
   
   // user can use react types like ChangeEvent - in that case we import a dummy module
   {
@@ -55,7 +55,9 @@ const suiteCommerceSpecifiers: { [name: string]: string } = {
   'underscore': 'underscore',
   'PluginContainer': 'PluginContainer',
   'SCAUnitTestHelper': 'UnitTestHelper',
-  'SCAUnitTestHelperPreconditions': 'UnitTestHelper.Preconditions'
+  'SCAUnitTestHelperPreconditions': 'UnitTestHelper.Preconditions', 
+
+  'JSXView': 'JSXView'
 }
 
 let  suiteCommerceExtraModules : {name: string, text: string }[]

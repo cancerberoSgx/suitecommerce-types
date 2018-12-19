@@ -2,7 +2,7 @@
 # npx gulp unit-test --modules my-favourites-things --dont-exit
 # OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/my-favourites-things@1.0.0
 OUTPUT_FOLDER=`pwd`/tmp
-EXTRA_SCTSC_PARAMS="--addExtraAmdDependendenciesForSCAUnitTests Backbone.View.Plugin.DebugTemplateName --formatJsOutput"
+EXTRA_SCTSC_PARAMS="--addExtraAmdDependendenciesForSCAUnitTests Backbone.View.Plugin.DebugTemplateName --formatJsOutput --dependencyPrefix MyCompany_"
 
 rm -rf $OUTPUT_FOLDER/* && \
 npm run clean && \

@@ -1,4 +1,4 @@
-define('JSXComponent', [], function () {
+define('JSXComponent', ['Backbone'], function (ReactNode) {
     return /** @class */ (function () {
         function JSXComponent(props) {
             this.refs = null;

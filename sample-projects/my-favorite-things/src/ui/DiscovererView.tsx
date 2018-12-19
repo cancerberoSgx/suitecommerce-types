@@ -16,7 +16,6 @@ export default class DiscovererView extends JSXView<Model1, Context1> implements
 
 
   supportsFunctionAttributes = true
-
   
   jsxTemplate = (context: Context1) => <div>
     <div className="view1">Name: {context.name}</div>

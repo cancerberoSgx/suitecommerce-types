@@ -1,7 +1,7 @@
 {
     "name": "sc-tsc",
-    "version": "2018.1.0",
-    "description": "SuiteCommerce Development Tools to develop new themes or extensions",
+    "version": "0.0.6",
+    "description": "Transform a TypeScript project based on sc-types-frontend-* typings to a valid SuiteCommerce module",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
@@ -14,7 +14,7 @@
         "generateHelp": "sh scripts/generateHelp.sh",
         "all": "npm run clean && npm run build && npm run test",
         "test-run": "ts-node node_modules/jasmine/bin/jasmine",
-        "test": "npm run test-install && npm run test-run",
+        "test": "npm run build && npm run test-install && npm run test-run",
         "test-install": "cd spec/fixtures/project1 && npm i && cd ../projectMine && npm i && cd ../using-sc-types-frontend-extras && npm i && cd ../tsxTest && npm i && cd ../../../../sample-projects/frontend-simple1 && npm i && cd ../jsx-view-tests && npm i && cd ../projectMine && npm i && cd ../tsx-test && npm i"
     },
     "repository": {

@@ -81,6 +81,28 @@ define('test3', ['foo', 'foo'], function(a: any, b: any){
 
   })
 
+  
+  it('sc-types-frontend-extras', () => {
+    test(`
+    import { JSXView } from 'sc-types-frontend-extras'
+    import { BackboneModel, TemplateContext, BackboneView } from 'sc-types-frontend';
+    export default class extends JSXView<BackboneModel, TemplateContext> {
+      child = new BackboneView()
+    }
+            `, `
+    import { TemplateContext } from 'sc-types-frontend' 
+    define('test3', ['JSXView', 'Backbone.Model', 'Backbone.View'], function(JSXView: any, BackboneModel: any, BackboneView: any){ 
+      return class extends JSXView<BackboneModel, TemplateContext> { 
+        child = new BackboneView() 
+      } 
+    }) 
+  `,
+      [])
+
+  })
+
+  
+
 
   it('exporting jsx', () => {
     test(`

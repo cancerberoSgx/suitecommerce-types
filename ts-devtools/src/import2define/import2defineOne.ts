@@ -41,28 +41,29 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     if (!namedImports.length) {
       return postError('not import clause found / not supported 2:' + id.getText())
     }
+    // if (!namedImports.length) {
+    //   debugger
+    // }
+
+    // now we will try to identify those imports that we want to transform into AMD dependencies. 
+    // If the import is explicitly handled by a customImportSpecifier (like sc-types-frontend values) 
+    // it will be transformed to AMD. If it's a type it will not. 
     let importNamesToBeIgnored: string[] = []
-    if (!namedImports.length) {
-      debugger
-    }
     namedImports.forEach(ni => {
       let isType: boolean = namedImportReferenceIsType(id, ni)
-      if (isType) {
-        // if is importing a type we want to keep the import and not include the type as AMD dependency
+      const customImportSpecifier = config.customImportSpecifiers.find(i => i.predicate(id, ni))
+      const importSpecifierBuilder = customImportSpecifier ? customImportSpecifier.getImportSpecifier : defaultImportSpecifierBuilder
+      const finalImportSpecifier = importSpecifierBuilder(id, ni)
+      if (finalImportSpecifier && (!isType || customImportSpecifier)) {
+        // if a custom import specifier builder handled or if it's not a type:
+        imports.push({
+          name: ni,
+          moduleSpecifier: finalImportSpecifier,
+          importSpecifierSourceFile: !id.getModuleSpecifierSourceFile() ? undefined : id.getModuleSpecifierSourceFile()
+        })
+      }
+      else {
         importNamesToBeIgnored.push(ni)
-      } else {
-        const customImportSpecifier = config.customImportSpecifiers.find(i => i.predicate(id, ni))
-        const importSpecifierBuilder = customImportSpecifier ? customImportSpecifier.getImportSpecifier : defaultImportSpecifierBuilder
-        const finalImportSpecifier = importSpecifierBuilder(id, ni)
-        if (finalImportSpecifier) {
-          imports.push({
-            name: ni,
-            moduleSpecifier: finalImportSpecifier,
-            importSpecifierSourceFile: !id.getModuleSpecifierSourceFile() ? undefined : id.getModuleSpecifierSourceFile()
-          })
-        } else {
-          importNamesToBeIgnored.push(ni)
-        }
       }
     })
     if (importNamesToBeIgnored.length) {

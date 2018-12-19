@@ -6,7 +6,7 @@ export function namedImportReferenceIsType(id: ImportDeclaration, ni: string): b
   const sourceFile = id.getSourceFile();
   let targetSourceFile = id.getModuleSpecifierSourceFile();
   if (!targetSourceFile) {
-    const targetPath = resolve(dirname(sourceFile.getFilePath()) + '/' + id.getModuleSpecifierValue() + '.ts');
+    const targetPath = resolve(dirname(sourceFile.getFilePath()) + '/' + id.getModuleSpecifierValue() + sourceFile.getExtension());
     const memory = sourceFileMemory.find(f => f.filePath === targetPath);
     if (!memory) {
       return handleBadProject(id)

@@ -7,11 +7,11 @@ describe('addTslibJsInFolder', () => {
 
   describe('--addTslibJsInFolder cli', () => {
     
-    let cwd: string, tslibOutputFolder: string, p: any
+    let cwd: string, tslibOutputFolder: string, p: any, outputFolder: string
 
     beforeAll(() => {
       cwd = pwd()
-      const outputFolder = getPathRelativeToProjectFolder('tmp/using-sc-types-frontend-extras')
+      outputFolder = getPathRelativeToProjectFolder('tmp/using-sc-types-frontend-extras')
       const tsconfigFilePath = getPathRelativeToProjectFolder(`spec/fixtures/using-sc-types-frontend-extras/tsconfig.json`)
       tslibOutputFolder = getPathRelativeToProjectFolder('tmp/using-sc-types-frontend-extras-tslib')
       rm('-rf', outputFolder)
@@ -19,8 +19,6 @@ describe('addTslibJsInFolder', () => {
       cd(dirname(tsconfigFilePath))
       config.silent=false
       const cmd = `npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder ${outputFolder} --addTslibJsInFolder ${tslibOutputFolder} --debug`
-      console.log(cmd);
-      
       p = exec(cmd)
     })
 
@@ -44,6 +42,13 @@ describe('addTslibJsInFolder', () => {
     it('Should add sc-types-frontend-extras modules', () => {
       expect(readFileSync(join(tslibOutputFolder, 'ReactLike.js')).toString()).toContain(`define('ReactLike'`)
       expect(readFileSync(join(tslibOutputFolder, 'JSXView.js')).toString()).toContain(`define('JSXView'`)
+    })
+
+    it('should handle sc-types-frontend types correctly', ()=>{
+      const f = `${outputFolder}_ts/src/JavaScript/test-extras.ts`
+      const content = readFileSync(f).toString()
+      expect(content).toContain(`define('test-extras', ['JSXView', 'Backbone.Model', 'Backbone.View']`)
+      expect(content.replace(/\s+/gm, '')).not.toContain(`import{JSXView}`)
     })
 
   })
