@@ -13,7 +13,7 @@
             "Tests/**/*.js"
         ],
         "unit-test-entry-point": [
-            "Tests/SCTypesFrontEndCoreTests.js"
+            "Tests/SCTypesCoreSpec_SCTypesFrontEndCoreTests.js"
         ]
     }
 }

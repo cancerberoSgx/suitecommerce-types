@@ -3,5 +3,6 @@ import SCTypesFrontEndCoreBackboneViewTest from './backbone/SCTypesFrontEndCoreB
 import SCTypesFrontEndCoreApplicationTest from './application/SCTypesFrontEndCoreApplicationTest';
 import SCTypesFrontEndCoreBackboneViewTest2 from './backbone/SCTypesFrontEndCoreBackboneViewTest2';
 import SCTypesFrontEndCoreDeferredTest from './application/SCTypesFrontEndCoreDeferredTest';
+import BackboneViewWithBindingsTest from './backbone/BackboneViewWithBindingsTest';
 
-export default [SCTypesFrontEndCoreBackboneViewTest, BackboneRouterTest, SCTypesFrontEndCoreApplicationTest, SCTypesFrontEndCoreBackboneViewTest2, SCTypesFrontEndCoreDeferredTest]
+export default [SCTypesFrontEndCoreBackboneViewTest, BackboneRouterTest, SCTypesFrontEndCoreApplicationTest, SCTypesFrontEndCoreBackboneViewTest2, SCTypesFrontEndCoreDeferredTest, BackboneViewWithBindingsTest]

@@ -14,8 +14,8 @@ export default class JSXView<Model extends BackboneModel = BackboneModel, Contex
 
   jsxTemplate: JSXTemplate<Context> = c => { throw new Error('jsxTemplate not implemented') }
 
-  supportsFunctionAttributes?: boolean = false
-  private options: JSXViewOptions<Model> = {}
+  protected supportsFunctionAttributes?: boolean = false
+  protected options: JSXViewOptions<Model> = {}
 
   initialize(options?: JSXViewOptions<Model>) {
     super.initialize(options as any)

@@ -72,10 +72,9 @@ export default describe('View', () => {
     })
   })
 
-  fdescribe('events', () => {
+  describe('events', () => {
     it('model events', async done => {
       let f: string
-      // debugger
       class View5 extends BackboneView<BackboneModel>{
         template=(context)=>`<div></iv>`
         foo(arg0: number): any {
@@ -83,9 +82,9 @@ export default describe('View', () => {
         }
         initialize(options) {
           super.initialize(options)
-          // this.model=new BackboneModel({foo: 5})
-          this.model.on('change', function (model, ) {
-            debugger
+          this.model.on('change', ()=> {
+            expect(this.model.get('foo')).toBe(6)
+            done()
           })
         }
       }
@@ -93,8 +92,6 @@ export default describe('View', () => {
       expect(v.model.get('foo')).toBe(5)
       v.foo(6)
 
-      // expect(v.model.get('foo')).toBe(5)
-      // done()
     })
   })
 })

@@ -8,6 +8,9 @@ export class BackboneModel<Attributes extends ModelAttributes = ModelAttributes>
   // set(a: ModelAttributes|string, b?: any|Backbone.ModelSetOptions): BackboneModel<Attributes> {
   //   return super.set(a, b)
   // }
+  constructor(attributes?: Attributes, options?: any){
+    super(attributes, options)
+  }
 }
 
 export interface BackboneModelValidation {

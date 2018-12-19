@@ -51,6 +51,7 @@ const suiteCommerceSpecifiers: { [name: string]: string } = {
   'BackboneRouter': 'Backbone.Router',
   'BackboneCachedCollection': 'Backbone.CachedCollection',
   'BackboneCachedModel': 'Backbone.CachedModel',
+  'BackboneFormView': 'Backbone.FormView',
   'jQuery': 'jQuery',
   'underscore': 'underscore',
   'PluginContainer': 'PluginContainer',
