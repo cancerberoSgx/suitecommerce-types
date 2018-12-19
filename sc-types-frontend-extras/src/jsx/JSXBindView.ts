@@ -1,8 +1,11 @@
 import { TemplateContext, BackboneView, BackboneModel, BackboneFormView } from 'sc-types-frontend';
 import  BindView from '../view/BindView';
 import JSXView  from './JSXView';
+import { ReactLikeElement } from '../reactLike';
 /**
- * Mixing of BindView and JSXView using <Bind>
+ * Mixing of BindView and JSXView using <Bind>.
+ * 
+ * TODO: would be awesome if I could bind in a collection / iterating, something
  */
 export default class JSXBindView<Model extends BackboneModel<Context>= BackboneModel<Context>, Context extends TemplateContext = TemplateContext> extends JSXView<Model, Context> {
 
@@ -21,3 +24,4 @@ export default class JSXBindView<Model extends BackboneModel<Context>= BackboneM
   }
 
 }
+

@@ -1,6 +1,6 @@
 import JSXView from '../src/jsx/JSXView'
-import ReactLike from '../src/reactLike/ReactLike' // needed for JSX
-import { BackboneView } from 'sc-types-frontend';
+import ReactLike, { ReactLikeElement } from '../src/reactLike/ReactLike' // needed for JSX
+import { BackboneView, BackboneModel } from 'sc-types-frontend';
 
 describe('JSXViews and JSDOM in node.js', () => {
 
@@ -10,7 +10,7 @@ describe('JSXViews and JSDOM in node.js', () => {
       age: number
     }[]
   }
-  class View1 extends JSXView<Backbone.Model, Context1> {
+  class View1 extends JSXView<BackboneModel, Context1> {
     jsxTemplate = (c: Context1) => <div>
       The people:
       <ul>
@@ -56,7 +56,7 @@ describe('JSXViews and JSDOM in node.js', () => {
   function html(v: BackboneView) {
     return v.$el.html().trim().replace(/\+/g, '')
   }
-  
+
   it('should render', () => {
     v.render()
     expect(html(v)).toBe(`<div>The people:<ul><li><span class="person-name">person0</span> of 1 years old</li></ul><button class="button032">Clickme</button></div>`)
