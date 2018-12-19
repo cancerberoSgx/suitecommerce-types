@@ -35,7 +35,8 @@ define('ReactLike', [], function () {
                     else if (typeof value === 'function') {
                         if (ReactLike_.supportFunctionAttributes) {
                             // see JSXView.render if supportsFunctionAttributes=== true there could be some parent that could have the _this view context as property. 
-                            element.setAttribute(name_1, "var _this = ReactLike._searchForThisView(this) || this; (" + value.toString() + ").apply(_this, arguments)");
+                            var innerApply = "(function(){(" + value.toString() + ").apply(__this__, arguments)}).apply(__this__, arguments); ";
+                            element.setAttribute(name_1, "var __this__ = ReactLike._searchForThisView(this) || this;  \n            return " + innerApply);
                         }
                         else {
                             element.setAttribute(name_1, "(" + value.toString() + ").apply(this, arguments)");

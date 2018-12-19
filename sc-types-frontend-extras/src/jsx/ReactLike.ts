@@ -5,7 +5,7 @@ const ReactLike_ = {
    * React-like createElement function so we can use JSX in our TypeScript/JavaScript code.
    */
   createElement(tag: any, attrs: any = {}, ...children: any[]): HTMLElement {
-    
+
     var element: HTMLElement
     if (typeof tag === 'string') {
       element = document.createElement(tag)
@@ -32,7 +32,9 @@ const ReactLike_ = {
         else if (typeof value === 'function') {
           if (ReactLike_.supportFunctionAttributes) {
             // see JSXView.render if supportsFunctionAttributes=== true there could be some parent that could have the _this view context as property. 
-            element.setAttribute(name, `var _this = ReactLike._searchForThisView(this) || this; (${value.toString()}).apply(_this, arguments)`)
+            const innerApply = `(function(){(${value.toString()}).apply(__this__, arguments)}).apply(__this__, arguments); `
+            element.setAttribute(name, `var __this__ = ReactLike._searchForThisView(this) || this;  
+            return ${innerApply}`)
           }
           else {
             element.setAttribute(name, `(${value.toString()}).apply(this, arguments)`)
@@ -57,7 +59,7 @@ const ReactLike_ = {
       else if (Array.isArray(child)) {
         child.forEach(c => {
           if (!c.nodeType) {
-            throw new Error('Child is not a node: '+c+', tag: '+tag+', attrs: '+attrs)
+            throw new Error('Child is not a node: ' + c + ', tag: ' + tag + ', attrs: ' + attrs)
           }
           element.appendChild(ReactLike_._transformElementToAppend(c))
         })
@@ -92,17 +94,17 @@ const ReactLike_ = {
   // registerTextTransform(transform: TextTransform): void {
   //   textTransforms.push(transform)
   // },
-  _transformText(s:string):string {
+  _transformText(s: string): string {
     let ss = s
-  //   textTransforms.forEach(t=>{ss=t(ss)})
+    //   textTransforms.forEach(t=>{ss=t(ss)})
     return ss
-  },   
+  },
   // registerElementTransform(transform: ElementTransform): void {
   //   elementTransforms.push(transform)
   // },
-  _transformElementToAppend(s: HTMLElement): HTMLElement{
+  _transformElementToAppend(s: HTMLElement): HTMLElement {
     let ss = s
-  //   elementTransforms.forEach(t=>{ss=t(ss)})
+    //   elementTransforms.forEach(t=>{ss=t(ss)})
     return ss
   }
 };

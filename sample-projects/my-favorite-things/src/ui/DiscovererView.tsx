@@ -14,7 +14,6 @@ interface Context1 extends TemplateContext {
 
 export default class DiscovererView extends JSXView<Model1, Context1> implements InterestDiscoveredListener{
 
-
   supportsFunctionAttributes = true
   
   jsxTemplate = (context: Context1) => <div>
