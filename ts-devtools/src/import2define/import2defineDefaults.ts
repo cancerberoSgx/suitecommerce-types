@@ -57,7 +57,8 @@ const suiteCommerceSpecifiers: { [name: string]: string } = {
   'SCAUnitTestHelper': 'UnitTestHelper',
   'SCAUnitTestHelperPreconditions': 'UnitTestHelper.Preconditions', 
 
-  'JSXView': 'JSXView'
+  'JSXView': 'JSXView', 
+  'ReactLike': 'ReactLike'
 }
 
 let  suiteCommerceExtraModules : {name: string, text: string }[]

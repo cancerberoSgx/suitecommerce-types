@@ -139,7 +139,6 @@ define('c', [], function(){
       const apple = printFileOutput(result, 'apple.ts')
       const orange = printFileOutput(result, 'orange.ts')
       const user = printFileOutput(result, 'user.ts')
-
       expectCodeEquals(apple, `
       import { Application } from 'sc-types-frontend'
       define('Fooapple', [], function(){
@@ -154,12 +153,11 @@ define('c', [], function(){
             `)
       expectCodeEquals(user, `
       import { I2 } from './model/types'
-      define('Foouser', ['Fooapple', 'Fooorange'], function(FooApple: any, FooOrange: any){
+      define('Foouser', ['Fooapple', 'Fooorange'], function(Apple: any, Orange: any){
         const apple = new Apple() as I2
         return apple
       })
                   `)
-      var a = 1
     })
 
     xit('import an index file a la node', () => {

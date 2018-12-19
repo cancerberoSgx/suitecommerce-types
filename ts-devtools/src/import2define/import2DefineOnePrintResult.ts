@@ -9,11 +9,11 @@ export function import2DefineOnePrintResult(r: Import2DefineOneResult, addTypes:
 ${addTypes ? `
 type ${PP2}<I=any,J=any,K=any,L=any,M=any>=any
 ${r.imports.map(i => `type ${i.name}${Type}`).join('\n')}
-${(isValidIdentifier(r.exportName) && (!r.statementOutsideHandler.includes(`type ${r.exportName}`))&& (!r.statementOutsideHandler.includes(`interface ${r.exportName}`))) ? `type ${r.exportName}${Type}` : ''}
+${(isValidIdentifier(r.exportName) && (!r.statementOutsideHandler.includes(`type ${r.exportName}`)) && (!r.statementOutsideHandler.includes(`interface ${r.exportName}`))) ? `type ${r.exportName}${Type}` : ''}
 ` : ''}
 ${r.importsToIgnore.join('\n')}
 ${r.exportName ? `
-define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier||imp.name}'`).join(', ')}], function(${r.imports.map(i => `${i.name}: any`).join(', ')}){
+define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier || imp.name}'`).join(', ')}], function(${r.imports.map(i => `${i.variableName || i.name}: any`).join(', ')}){
   ${r.body}
   return ${r.exportValue}
 })

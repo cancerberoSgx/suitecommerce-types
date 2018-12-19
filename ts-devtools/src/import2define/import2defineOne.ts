@@ -96,7 +96,8 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
 
   const response = {
     exportName: (config.dependencyPrefix || '') + exportName,
-    imports: imports.map(i => ({ ...i, name: (config.dependencyPrefix || '') + i.name })),
+    imports: imports.map(i => ({ ...i, name: (config.dependencyPrefix || '') + i.name, variableName: i.name })),
+    // importVariableNames: imports,//.map(i => ({ ...i, name: (config.dependencyPrefix || '') + i.name })),
     exportValue,
     sourceFile,
     body: sourceFile.getText(),
@@ -127,6 +128,7 @@ export interface Import2DefineOneResult {
 
 export interface Import2DefineOneResultImport {
   name: string
+  variableName?: string
   moduleSpecifier: string
   importSpecifierSourceFile: SourceFile | undefined
 }

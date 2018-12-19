@@ -12,7 +12,8 @@ describe('CLI bin', () => {
     const tsconfig = getPathRelativeToProjectFolder('spec/fixtures/project1/tsconfig.json')
     rm('-rf', outputFolder)
     mkdir('-p', outputFolder)
-    const cmd = `node bin/sc-tsc --tsconfigFilePath ${tsconfig} --outputFolder ${outputFolder} --addTslibJsInFolder ${outputFolder}/src`
+    // config.silent = false
+    const cmd = `node bin/sc-tsc --tsconfigFilePath ${tsconfig} --outputFolder ${outputFolder} --addTslibJsInFolder ${outputFolder}/src --debug`
     const p = exec(cmd)
     expect(p.code).toBe(0)
     expect(test('-f',`${outputFolder}/src/FrontEndSimpleEntry.js`)).toBe(true)
