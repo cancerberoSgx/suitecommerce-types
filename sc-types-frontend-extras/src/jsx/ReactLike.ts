@@ -5,7 +5,7 @@ const ReactLike_ = {
    * React-like createElement function so we can use JSX in our TypeScript/JavaScript code.
    */
   createElement(tag: any, attrs: any = {}, ...children: any[]): HTMLElement {
-
+    const originalAttrs = attrs
     var element: HTMLElement
     if (typeof tag === 'string') {
       element = document.createElement(tag)
@@ -13,11 +13,11 @@ const ReactLike_ = {
     else {
       if (tag.prototype && tag.prototype.render) {
         // support for class elements (react-component like)
-        element = new tag(attrs).render()
+        element = new tag({...attrs, children: children}).render()
       }
       else {
         // support for function elements (react-stateless like)
-        element = tag(attrs)
+        element = tag({...attrs, children: children})
       }
       // custom tags cannot declare html attributes, only their own props, so we are removing them 
       // in order not to add them as html attrs in the following code
@@ -52,16 +52,17 @@ const ReactLike_ = {
       }
     }
 
+  
     children.filter(c => c).forEach(child => {
-      if (child.nodeType) {
-        element.appendChild(ReactLike_._transformElementToAppend(child))
+      if (isNode(child)) {
+        element.appendChild(ReactLike_.transformElementToAppend(tag, originalAttrs, element, child))
       }
       else if (Array.isArray(child)) {
         child.forEach(c => {
-          if (!c.nodeType) {
-            throw new Error('Child is not a node: ' + c + ', tag: ' + tag + ', attrs: ' + attrs)
+          if (!isNode(c)) {
+            throw new Error('Child is not a node: ' + c + ', tag: ' + tag + ', originalAttrs: ' + originalAttrs)
           }
-          element.appendChild(ReactLike_._transformElementToAppend(c))
+          element.appendChild(ReactLike_.transformElementToAppend(tag, originalAttrs, element, c))
         })
       }
       else {
@@ -102,10 +103,12 @@ const ReactLike_ = {
   // registerElementTransform(transform: ElementTransform): void {
   //   elementTransforms.push(transform)
   // },
-  _transformElementToAppend(s: HTMLElement): HTMLElement {
-    let ss = s
+  transformElementToAppend(tag: any, attrs: any, parent: HTMLElement, child: Node): Node {
+    if(tag.transformChild && isHTMLElement(child)){
+      child = tag.transformChild(tag, attrs, parent, child)
+    }
     //   elementTransforms.forEach(t=>{ss=t(ss)})
-    return ss
+    return child
   }
 };
 
@@ -128,3 +131,10 @@ const ReactLike_ = {
 // export default ReactLike_ as ReactLike;
 
 export default ReactLike_;
+
+function isNode(n: any): n is Node {
+  return n && !!n.nodeType
+}
+function isHTMLElement(n : any){
+  return n && n.nodeType===1 && n.outerHTML
+}

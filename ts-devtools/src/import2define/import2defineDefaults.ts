@@ -61,7 +61,9 @@ const suiteCommerceSpecifiers: { [name: string]: string } = {
   'JSXView': 'JSXView', 
   'ReactLike': 'ReactLike',
   'JSXComponent': 'JSXComponent',
-  'BindView': 'BindView'
+  'BindView': 'BindView',
+  'JSXBindView': 'JSXBindView',
+  'Bind': 'Bind'
 }
 
 let  suiteCommerceExtraModules : {name: string, text: string }[]

@@ -9,28 +9,33 @@ define('BindView', ['Backbone.View', 'Backbone.Model', 'Backbone.FormView', "tsl
         Object.defineProperty(BindView.prototype, "bindings", {
             // heads up - a getter for this.bindings, because we need to return a new high level object each time
             get: function () {
-                var _this = this;
-                if (!this._bindings) {
-                    var boundAttributes = Object.keys(this.model.attributes);
-                    var b_1 = {};
-                    boundAttributes.forEach(function (a) {
-                        var k = "[" + _this.bindAttribute(a) + "]";
-                        b_1[k] = a;
-                    });
-                    this._bindings = b_1;
-                }
-                return tslib_1.__assign({}, this._bindings);
+                return BindView.buildBindings(this);
             },
             enumerable: true,
             configurable: true
         });
         BindView.prototype.getContext = function () {
-            // this needs to be called each time and this.bindings needs to be high level new object each time that's why the getter
+            var s = _super.prototype.getContext.call(this);
             BackboneFormView.add(this, { noCloneModel: true });
-            return this.model.attributes;
+            return tslib_1.__assign({}, s, this.model.attributes);
         };
         BindView.prototype.bindAttribute = function (name) {
+            return BindView.buildBindAttribute(name + '');
+        };
+        BindView.buildBindAttribute = function (name) {
             return "data-bind=\"" + name + "\"";
+        };
+        BindView.buildBindings = function (view) {
+            if (!view._bindings) {
+                var boundAttributes = Object.keys(view.model.attributes);
+                var b_1 = {};
+                boundAttributes.forEach(function (a) {
+                    var k = "[" + BindView.buildBindAttribute(a) + "]";
+                    b_1[k] = a;
+                });
+                view._bindings = b_1;
+            }
+            return tslib_1.__assign({}, view._bindings);
         };
         return BindView;
     }(BackboneView));

@@ -1,4 +1,4 @@
-define('ReactLike', [], function () {
+define('ReactLike', ["tslib"], function (tslib_1) {
     var ReactLike_ = {
         /**
          * React-like createElement function so we can use JSX in our TypeScript/JavaScript code.
@@ -9,6 +9,7 @@ define('ReactLike', [], function () {
             for (var _i = 2; _i < arguments.length; _i++) {
                 children[_i - 2] = arguments[_i];
             }
+            var originalAttrs = attrs;
             var element;
             if (typeof tag === 'string') {
                 element = document.createElement(tag);
@@ -16,11 +17,11 @@ define('ReactLike', [], function () {
             else {
                 if (tag.prototype && tag.prototype.render) {
                     // support for class elements (react-component like)
-                    element = new tag(attrs).render();
+                    element = new tag(tslib_1.__assign({}, attrs, { children: children })).render();
                 }
                 else {
                     // support for function elements (react-stateless like)
-                    element = tag(attrs);
+                    element = tag(tslib_1.__assign({}, attrs, { children: children }));
                 }
                 // custom tags cannot declare html attributes, only their own props, so we are removing them 
                 // in order not to add them as html attrs in the following code
@@ -54,15 +55,15 @@ define('ReactLike', [], function () {
                 }
             }
             children.filter(function (c) { return c; }).forEach(function (child) {
-                if (child.nodeType) {
-                    element.appendChild(ReactLike_._transformElementToAppend(child));
+                if (isNode(child)) {
+                    element.appendChild(ReactLike_.transformElementToAppend(tag, originalAttrs, element, child));
                 }
                 else if (Array.isArray(child)) {
                     child.forEach(function (c) {
-                        if (!c.nodeType) {
-                            throw new Error('Child is not a node: ' + c + ', tag: ' + tag + ', attrs: ' + attrs);
+                        if (!isNode(c)) {
+                            throw new Error('Child is not a node: ' + c + ', tag: ' + tag + ', originalAttrs: ' + originalAttrs);
                         }
-                        element.appendChild(ReactLike_._transformElementToAppend(c));
+                        element.appendChild(ReactLike_.transformElementToAppend(tag, originalAttrs, element, c));
                     });
                 }
                 else {
@@ -98,10 +99,12 @@ define('ReactLike', [], function () {
         // registerElementTransform(transform: ElementTransform): void {
         //   elementTransforms.push(transform)
         // },
-        _transformElementToAppend: function (s) {
-            var ss = s;
+        transformElementToAppend: function (tag, attrs, parent, child) {
+            if (tag.transformChild && isHTMLElement(child)) {
+                child = tag.transformChild(tag, attrs, parent, child);
+            }
             //   elementTransforms.forEach(t=>{ss=t(ss)})
-            return ss;
+            return child;
         }
     };
     // const textTransforms: TextTransform[] = []
@@ -115,5 +118,11 @@ define('ReactLike', [], function () {
     // export type TextTransform = (s: string)=>string
     // export type ElementTransform = (s: HTMLElement)=>HTMLElement;
     self.ReactLike = ReactLike_;
+    function isNode(n) {
+        return n && !!n.nodeType;
+    }
+    function isHTMLElement(n) {
+        return n && n.nodeType === 1 && n.outerHTML;
+    }
     return ReactLike_;
 });
