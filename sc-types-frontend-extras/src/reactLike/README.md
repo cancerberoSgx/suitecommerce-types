@@ -1,6 +1,6 @@
 # ReactLike : JSX without React
 
-IMPORTANT: everything undere this folder shoould be independent of sc-types-frontend-* so in the future we can separate it to other project.
+IMPORTANT: everything under this folder shoould be independent of sc-types-frontend-* so in the future we can separate it to other project.
 
 
 # TODO

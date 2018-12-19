@@ -73,5 +73,9 @@ export type ReactLikeTransformer = Partial<ReactLikeChildAddTransformer & ReactL
 const ReactLike_: ReactLike = { ...createElementModule, ...render, ...transformers } as ReactLike;
 export interface ReactLike extends ReactLikeCreateElement, ReactLikeRender, Transformers {
 }
-(self as any).ReactLike = ReactLike_;
+
+const _self = typeof self ==='undefined' ? window : self;
+(_self as any).ReactLike = ReactLike_;
 export default ReactLike_ as ReactLike;
+
+export * from './declarations/domElementDeclarations'

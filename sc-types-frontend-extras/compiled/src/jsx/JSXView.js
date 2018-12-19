@@ -29,18 +29,32 @@ define('JSXView', ['Backbone.Model', 'Backbone', 'Backbone.View', 'PluginContain
                 name: 'jsx',
                 execute: function ($fragment, view) {
                     if (isJSXView(view)) {
-                        var rendered = view.jsxTemplate(view.getContext());
-                        if (ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes) {
-                            rendered.__this = view;
-                        }
-                        if (!view.options.dontEmptyContainer) {
-                            $fragment.empty();
-                        }
-                        ReactLike.renderJQuery($fragment, rendered);
+                        view._renderJsx($fragment);
                     }
                     return $fragment;
                 }
             });
+        };
+        JSXView.prototype.render = function () {
+            var notInSC = !_super.prototype.render || !this.preRenderPlugins;
+            if (notInSC) {
+                // we want to support tests in node jsdom
+                this._renderJsx(this.$el);
+                return this;
+            }
+            else {
+                return _super.prototype.render.call(this);
+            }
+        };
+        JSXView.prototype._renderJsx = function ($fragment) {
+            var rendered = this.jsxTemplate(this.getContext());
+            if (ReactLike.supportFunctionAttributes && this.supportsFunctionAttributes) {
+                rendered.__this = this;
+            }
+            if (!this.options.dontEmptyContainer) {
+                $fragment.empty();
+            }
+            ReactLike.renderJQuery($fragment, rendered);
         };
         return JSXView;
     }(BackboneView));

@@ -303,4 +303,7 @@ class MyFormView extends BackboneView {
   protected static _isEventSelectorValid(event_selector: string): boolean {
     throw new Error("Method not implemented.")
   }
+
+  static notInSc = typeof (Backbone.View as any).addChildViews === 'undefined'
+
 }

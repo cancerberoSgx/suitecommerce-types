@@ -15,7 +15,7 @@
     "noEmitHelpers": true,
     "importHelpers": true,
     // "esModuleInterop": true,
-    // "skipLibCheck": true,
+    "skipLibCheck": true,
     "jsx": "react",
     "jsxFactory": "ReactLike.createElement"
   },

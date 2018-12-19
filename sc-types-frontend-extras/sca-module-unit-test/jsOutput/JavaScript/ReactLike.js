@@ -78,6 +78,7 @@ define('ReactLike', [], function () {
          * */
         supportFunctionAttributes: false
     };
+    
     self.ReactLike = ReactLike_;
     return ReactLike_;
 });

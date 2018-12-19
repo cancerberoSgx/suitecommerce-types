@@ -7,7 +7,8 @@ import { ReactLikeCreateElement, ReactLikeTag, ReactLikeAttrs, ReactLikeElement,
 type RR = ReactLike  & ({ _searchForThisView(el: HTMLElement | null): any})
 
 function getThis(): RR {
-  return (self as any).ReactLike
+  const _self = typeof self ==='undefined' ? window : self
+  return (_self as any).ReactLike
 }
 
 const Module: ReactLikeCreateElement = {

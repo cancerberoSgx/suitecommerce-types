@@ -1,4 +1,5 @@
 import { expectType } from 'tsd-check';
+//@ts-ignore
 import {TypedBackboneModel} from '../src'
 import {Project, Diagnostic, SourceFile, TypeGuards} from 'ts-simple-ast'
 

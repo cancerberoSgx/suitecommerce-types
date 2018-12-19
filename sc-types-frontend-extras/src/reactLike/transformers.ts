@@ -9,7 +9,8 @@ type RR = ReactLike  & (Transformers & {
 })
 
 function getThis(): RR {
-  return (self as any).ReactLike
+  const _self = typeof self ==='undefined' ? window : self
+  return (_self as any).ReactLike
 }
 
 const Module = {

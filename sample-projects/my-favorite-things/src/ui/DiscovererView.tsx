@@ -1,9 +1,18 @@
 import { BackboneModel,  TemplateContext } from 'sc-types-frontend';
-import { JSXView, ReactLike, FormEvent, MouseEvent } from 'sc-types-frontend-extras';
+import { JSXBindView, ReactLike, FormEvent, MouseEvent } from 'sc-types-frontend-extras';
 import Manager, { InterestDiscoveredListener } from '../manager/Manager';
 import { Interest } from '../types';
 
-export default class DiscovererView extends JSXView<BackboneModel, Context> implements InterestDiscoveredListener {
+
+interface Context extends TemplateContext {
+  interests: Interest[]
+  newInterests: Interest[]
+  name: string
+}
+class Model extends BackboneModel<Context> {
+
+}
+export default class DiscovererView extends JSXBindView<Model, Context> implements InterestDiscoveredListener {
 
   supportsFunctionAttributes = true
 
@@ -58,9 +67,4 @@ export default class DiscovererView extends JSXView<BackboneModel, Context> impl
       name: 'fooo'
     }
   }
-}
-interface Context extends TemplateContext {
-  interests: Interest[]
-  newInterests: Interest[]
-  name: string
 }

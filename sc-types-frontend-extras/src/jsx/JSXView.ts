@@ -20,6 +20,9 @@ export default class JSXView<Model extends BackboneModel = BackboneModel, Contex
   initialize(options?: JSXViewOptions<Model>) {
     super.initialize(options as any)
     this.options = { ...this.options || {}, ...options }
+    if (BackboneView.notInSc) {
+      return
+    }
     this.supportsFunctionAttributes = this.supportsFunctionAttributes || this.options.supportsFunctionAttributes
     if (!this.preRenderPlugins) {
       this.preRenderPlugins = new PluginContainer<JQuery<HTMLElement>, [BackboneView]>()
@@ -28,20 +31,33 @@ export default class JSXView<Model extends BackboneModel = BackboneModel, Contex
       name: 'jsx',
       execute($fragment, view) {
         if (isJSXView(view)) {
-          const rendered = view.jsxTemplate(view.getContext());
-          if (ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes) {
-            (rendered as any).__this = view
-          }
-          if (!view.options.dontEmptyContainer) {
-            $fragment.empty()
-          }
-          ReactLike.renderJQuery($fragment, rendered)
+          view._renderJsx($fragment)
         }
         return $fragment
       }
     })
   }
 
+  render(): this {
+    if (BackboneView.notInSc) {
+      // we want to support tests in node jsdom
+      this._renderJsx(this.$el)
+      return this
+    }
+    else {
+      return super.render() as this
+    }
+  }
+  protected _renderJsx($fragment: JQuery<HTMLElement>) {
+    const rendered = this.jsxTemplate(this.getContext());
+    if (ReactLike.supportFunctionAttributes && this.supportsFunctionAttributes) {
+      (rendered as any).__this = this
+    }
+    if (!this.options.dontEmptyContainer) {
+      $fragment.empty()
+    }
+    ReactLike.renderJQuery($fragment, rendered)
+  }
 }
 
 export interface JSXViewOptions<Model extends BackboneModel = BackboneModel> extends Backbone.ViewOptions<Model> {
