@@ -86,7 +86,7 @@ export default describe('BindView', () => {
       }
 
       function Bind(prop: BindProps): JSX.Element {
-        return <span data-type="bind"></span>
+        return <div data-type="bind"></div>
       }
       (Bind as any as ReactLikeChildAddTransformer).addChild = (tag: any, attrs: any, parent: HTMLElement, child: HTMLElement) => {
         if (attrs.name) {
@@ -95,10 +95,12 @@ export default describe('BindView', () => {
         return child
       }
 
-      const f = <Bind name="foo"><input className="name"></input></Bind>
+
+      expect(jQuery('#name132').attr('data-bind')).not.toBe('foo')
+      const f = <Bind name="foo"><input id="name132"></input></Bind>
       const parent = jQuery('<div></div>').appendTo('body')
       ReactLike.renderJQuery(parent, f)
-      expect(jQuery('.name').attr('data-bind')).toBe('foo')
+      expect(jQuery('#name132').attr('data-bind')).toBe('foo')
       parent.remove()
     })
 

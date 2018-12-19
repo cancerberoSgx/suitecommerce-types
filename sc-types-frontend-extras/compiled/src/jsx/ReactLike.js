@@ -57,7 +57,7 @@ define('ReactLike', ["tslib"], function (tslib_1) {
             children.filter(function (c) { return c; }).forEach(function (child) {
                 if (isNode(child)) {
                     var toAppend = ReactLike_._transformChild(tag, originalAttrs, element, child);
-                    ReactLike_._addChild(tag, attrs, element, toAppend);
+                    ReactLike_._addChild(tag, originalAttrs, element, toAppend);
                 }
                 else if (Array.isArray(child)) {
                     child.forEach(function (c) {
@@ -65,12 +65,12 @@ define('ReactLike', ["tslib"], function (tslib_1) {
                             throw new Error('Child is not a node: ' + c + ', tag: ' + tag + ', originalAttrs: ' + originalAttrs);
                         }
                         var toAppend = ReactLike_._transformChild(tag, originalAttrs, element, c);
-                        ReactLike_._addChild(tag, attrs, element, toAppend);
+                        ReactLike_._addChild(tag, originalAttrs, element, toAppend);
                     });
                 }
                 else {
                     var toAppend = document.createTextNode(ReactLike_._transformText(tag, originalAttrs, element, child, child + ''));
-                    ReactLike_._addChild(tag, attrs, element, toAppend);
+                    ReactLike_._addChild(tag, originalAttrs, element, toAppend);
                 }
             });
             return element;
@@ -125,9 +125,7 @@ define('ReactLike', ["tslib"], function (tslib_1) {
             if (isReactLikeChildAddTransformer(tag)) {
                 tag.addChild(tag, attrs, element, toAppend);
             }
-            else {
-                element.appendChild(toAppend);
-            }
+            element.appendChild(toAppend);
         },
     };
     function isTextTransformer(n) {

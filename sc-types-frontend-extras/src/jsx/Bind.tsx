@@ -25,7 +25,6 @@ _Bind.transformChild = (tag: any, attrs: any, parent: HTMLElement, child: Node)=
 
 export default _Bind
 
-
 function isHTMLElement(n : any): n is HTMLElement{
   return n && n.nodeType===1 && n.outerHTML
 }
