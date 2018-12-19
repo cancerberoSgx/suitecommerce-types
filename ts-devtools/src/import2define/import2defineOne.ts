@@ -92,12 +92,13 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     // workaround for tsc issue : tests/tsc-issue-importHelper/README.md
     importsToIgnore.push("import { Application } from 'sc-types-frontend'")
   }
+
   const response = {
-    exportName, 
-    imports, 
-    exportValue, 
+    exportName: (config.dependencyPrefix || '') + exportName,
+    imports: imports.map(i => ({ ...i, name: (config.dependencyPrefix || '') + i.name })),
+    exportValue,
     sourceFile,
-    body: sourceFile.getText(), 
+    body: sourceFile.getText(),
     importsToIgnore,
     statementOutsideHandler: statementOutsideHandler.join('\n')
   }

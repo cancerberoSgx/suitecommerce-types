@@ -12,7 +12,12 @@ import { _getDefaultExportValueReset } from './getDefaultExportValue';
 export interface Import2DefineConfig extends AbstractConfig {
   customImportSpecifiers?: CustomImportSpecifier[]
   ignoreImportSpecifiers?: IgnoreImportSpecifier[]
-  // outputTsTmpProjectFolder?: string
+  /** 
+   * If specified all dependency names will be prefixed with it. 
+   * This way, one can make sure AMD dependency names don't collide with other modules so it's possible to use 
+   * simple file names like `Manager.ts`. 
+   */
+  dependencyPrefix?: string
 }
 
 export interface IgnoreImportSpecifier {
@@ -81,45 +86,45 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
     perFileResults: []
   }
   _import2defineReset()
-  result.perFileResults = 
+  result.perFileResults =
     config.project.getSourceFiles()
-    .filter(f =>
-      !f.isFromExternalLibrary() && !f.isDeclarationFile() && !f.isInNodeModules()
-    )
-    .map(sourceFile =>
-      // TODO support config.breakOnFirstError
-      result.errors.length ? undefined : import2defineOne(config, sourceFile, result)
-    )
-    .filter(r => result.errors.length === 0 && r)
-    // now that we have import information for all files we fix imports to relative files to point to the export name
-    .map((r, i, arr) => {
-      r.imports = r.imports.map(im => {
-        if (im.moduleSpecifier.startsWith('.')) {
-          if (!im.importSpecifierSourceFile) {
-            // Heads up : fix issue when importing a .tsx file:
-            const p = resolve(dirname(r.sourceFile.getFilePath()) + '/' + im.moduleSpecifier + '.tsx')
-            if (config.project.getSourceFile(p)) {
-              im.importSpecifierSourceFile = config.project.getSourceFile(p)
+      .filter(f =>
+        !f.isFromExternalLibrary() && !f.isDeclarationFile() && !f.isInNodeModules()
+      )
+      .map(sourceFile =>
+        // TODO support config.breakOnFirstError
+        result.errors.length ? undefined : import2defineOne(config, sourceFile, result)
+      )
+      .filter(r => result.errors.length === 0 && r)
+      // now that we have import information for all files we fix imports to relative files to point to the export name
+      .map((r, i, arr) => {
+        r.imports = r.imports.map(im => {
+          if (im.moduleSpecifier.startsWith('.')) {
+            if (!im.importSpecifierSourceFile) {
+              // Heads up : fix issue when importing a .tsx file:
+              const p = resolve(dirname(r.sourceFile.getFilePath()) + '/' + im.moduleSpecifier + '.tsx')
+              if (config.project.getSourceFile(p)) {
+                im.importSpecifierSourceFile = config.project.getSourceFile(p)
+              }
+            }
+            if (!im.importSpecifierSourceFile) {
+              const importSpecifierSourceFile = config.project.getSourceFile(
+                resolve(dirname(r.sourceFile.getFilePath()) + '/' + im.moduleSpecifier + '.ts'))
+              im.importSpecifierSourceFile = importSpecifierSourceFile || im.importSpecifierSourceFile
+            }
+            if (im.importSpecifierSourceFile) {
+              // TODO: error if !im.importSpecifierSourceFile
+              const importSpecifierResult = arr.find(rr => rr.sourceFile === im.importSpecifierSourceFile)
+              // TODO error if !importSpecifierResult it means it was an error 
+              im.moduleSpecifier = importSpecifierResult && importSpecifierResult.exportName
             }
           }
-          if (!im.importSpecifierSourceFile) {
-            const importSpecifierSourceFile = config.project.getSourceFile(
-              resolve(dirname(r.sourceFile.getFilePath()) + '/' + im.moduleSpecifier + '.ts'))
-            im.importSpecifierSourceFile = importSpecifierSourceFile || im.importSpecifierSourceFile
+          if (!im.importSpecifierSourceFile && config.debug) {
+            console.error('warning local file not found: ' + im.moduleSpecifier)
           }
-          if (im.importSpecifierSourceFile) {
-            // TODO: error if !im.importSpecifierSourceFile
-            const importSpecifierResult = arr.find(rr => rr.sourceFile === im.importSpecifierSourceFile)
-            // TODO error if !importSpecifierResult it means it was an error 
-            im.moduleSpecifier = importSpecifierResult && importSpecifierResult.exportName
-          }
-        }
-        if (!im.importSpecifierSourceFile && config.debug) {
-          console.error('warning local file not found: ' + im.moduleSpecifier)
-        }
-        return im
+          return im
+        })
+        return r
       })
-      return r
-    })
   return result
 }

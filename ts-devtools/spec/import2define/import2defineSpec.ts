@@ -116,6 +116,51 @@ define('c', [], function(){
     //   ])
     // })
 
+    it('dependency prefix', () => {
+      const project = new Project()
+      project.createSourceFile('model/apple.ts', `export default class {} `)
+      project.createSourceFile('model/orange.ts', `export default class {} `)
+      // project.createSourceFile('model/index.ts', `export * from './apple; export * from './orange `)
+      project.createSourceFile('model/types.ts', `export interface I1 {}; export type T1 = false; export interface I2 extends I1 {}`)
+      project.createSourceFile('user.ts', `
+      import Apple from './model/apple'; 
+      import Orange from './model/orange';
+      import {I2} from './model/types'; 
+      export default const apple = new Apple() as I2
+      `)
+      const result = import2defineProject({
+        tsconfigFilePath: '',
+        project,
+        dependencyPrefix: 'Foo',
+        debug: true
+      })
+      expect(result.errors).toEqual([])
+
+      const apple = printFileOutput(result, 'apple.ts')
+      const orange = printFileOutput(result, 'orange.ts')
+      const user = printFileOutput(result, 'user.ts')
+
+      expectCodeEquals(apple, `
+      import { Application } from 'sc-types-frontend'
+      define('Fooapple', [], function(){
+        return  class {}
+      })
+         `)
+      expectCodeEquals(orange, `
+      import { Application } from 'sc-types-frontend'
+      define('Fooorange', [], function(){
+        return  class {}
+      })
+            `)
+      expectCodeEquals(user, `
+      import { I2 } from './model/types'
+      define('Foouser', ['Fooapple', 'Fooorange'], function(FooApple: any, FooOrange: any){
+        const apple = new Apple() as I2
+        return apple
+      })
+                  `)
+      var a = 1
+    })
 
     xit('import an index file a la node', () => {
       const project = new Project()
@@ -125,7 +170,7 @@ define('c', [], function(){
       project.createSourceFile('user.ts', `import {Apple, Orange} from './model`)
       const result = import2defineProject({
         tsconfigFilePath: '',
-        project, 
+        project,
         // debug: true
       })
       expect(result.errors).toEqual([])
