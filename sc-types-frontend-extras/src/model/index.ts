@@ -1,0 +1,1 @@
+export {default as TypedBackboneModel} from './TypedBackboneModel' 

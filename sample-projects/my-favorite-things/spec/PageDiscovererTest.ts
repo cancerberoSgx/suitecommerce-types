@@ -4,6 +4,7 @@ import MyFavoriteThings from '../src/MyFavoriteThings';
 export default describe('PageDiscoverer', () => {
 
   beforeAll(() => {
+    jQuery('[data-test-id="DiscovererView"]').remove()
     jQuery('#main').remove()
   })
 

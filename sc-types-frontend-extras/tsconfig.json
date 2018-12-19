@@ -13,8 +13,9 @@
     "importHelpers": true,
     "jsx": "react",
     "jsxFactory": "ReactLike.createElement",
-    "declaration": true
+    "declaration": true,
+    "skipLibCheck": true
   },
-  "include":["src"],
-  "exclude": ["dist", "compiled"]
+  "include":["src", "spec"],
+  "exclude": ["dist", "compiled", "node_modules"]
 }

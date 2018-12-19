@@ -4,13 +4,28 @@ adds extra functionality to sc-types-frontend-core
 
 Right now it adds supports for JSX React HTML-like syntax (TSX) https://www.typescriptlang.org/docs/handbook/jsx.html
 
-See [sample](./sca-module-unit-test) for an example of a TypeScript project containing .tsx files implementing views using this syntax for markup.
+# Examples
 
-Why? 
+ * Write template with JSX, and use Backbone for all the rest:  (sample-projects/jsx-view-tests/src/JavaScript/CoolFeature56MainView2.tsx)[example]
+ * See how to write small functionaSee [sample](./sca-module-unit-test) for an example of a TypeScript project containing .tsx files implementing views using this syntax for markup.
+
+# Why? 
 
  * Type checking in templates
 
-What ? 
+# What ? 
+
+# Status of TSX/JSX support
+
+ * Supports all HTML DOM intrinsic elements (div, p, etc) and attributes so you have 100% typechecking (like in react)
+ * Doesn't depend on React or any other library - it has a copy of react typings for intrinsic elements.
+ * provides `JSXView` that extends `Backbone.View` with `jsxTemplate` attribute for writing the template in the same .tsx file as an attribute of the class:
+ * is lightweight since no library (like react, preact, etc) is included. Only JSX syntax support to render HTML.
+ * Doesn't support any react-like features like state-aware components, event bindings, virtual-dom, etc. You will still have to work with Backbone View, Model, Events, bindings, etc for this. Just write your templates in TSX/JSX instead of handlebars and keep using Backbone for the rest
+  * Has partial support for function attributes to declare event handlers as JSX attributes (experimental!) - safer to use Backbone.View event
+  * JSXView extends Backbone.View to support a jsxTemplate attribute instead of template one. It will render jsxTemplate using the Backbone.View.render() life cycle so is compatible with Backbone.View.render plugins like any other view. See (sample-projects/jsx-view-tests/src/JavaScript/CoolFeature56MainView2.tsx)[example]
+
+
 
 # JSXView
 
@@ -93,7 +108,7 @@ class ViewJSXAndBackboneEvents extends JSXView<Model1, Context1> {
   ```
 
 
-## Example of creating reusable custom JSX tags
+## Reusable custom JSX tags (Stateless Functional Component)
 
 Create reusable custom JSX tags so view's template are simpler and strongly type checked:
 

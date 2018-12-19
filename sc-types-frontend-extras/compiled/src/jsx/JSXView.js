@@ -1,4 +1,4 @@
-define('JSXView', ['Backbone.Model', 'Backbone.View', 'PluginContainer', 'ReactLike'], function (BackboneModel, BackboneView, PluginContainer, ReactLike) {
+define('JSXView', ['Backbone.Model', 'Backbone', 'Backbone.View', 'PluginContainer', 'ReactLike'], function (BackboneModel, Backbone, BackboneView, PluginContainer, ReactLike) {
     function isJSXView(view) {
         return view.jsxTemplate;
     }
@@ -8,9 +8,12 @@ define('JSXView', ['Backbone.Model', 'Backbone.View', 'PluginContainer', 'ReactL
             this.template = (...args) => `<div>JSXView: template not implemented</div>`;
             this.jsxTemplate = c => { throw new Error('jsxTemplate not implemented'); };
             this.supportsFunctionAttributes = false;
+            this.options = {};
         }
         initialize(options) {
             super.initialize(options);
+            this.options = Object.assign({}, this.options || {}, options);
+            this.supportsFunctionAttributes = this.supportsFunctionAttributes || this.options.supportsFunctionAttributes;
             if (!this.preRenderPlugins) {
                 this.preRenderPlugins = new PluginContainer();
             }
@@ -21,6 +24,9 @@ define('JSXView', ['Backbone.Model', 'Backbone.View', 'PluginContainer', 'ReactL
                         const rendered = view.jsxTemplate(view.getContext());
                         if (ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes) {
                             rendered.__this = view;
+                        }
+                        if (!view.options.dontEmptyContainer) {
+                            $fragment.empty();
                         }
                         ReactLike.renderJQuery($fragment, rendered);
                     }

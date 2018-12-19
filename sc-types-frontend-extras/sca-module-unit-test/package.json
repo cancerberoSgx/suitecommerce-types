@@ -16,7 +16,7 @@
     "license": "ISC",
     "dependencies": {
         "sc-types-frontend": "file:../../sc-types-frontend",
-        "sc-types-frontend-extras": "file:../../sc-types-frontend-extras"
+        "sc-types-frontend-extras": "file:.."
     },
     "devDependencies": {
         "sc-tsc": "file:../../ts-devtools",

@@ -1,4 +1,4 @@
-import { BackboneModel, BackboneView, PluginContainer, TemplateContext } from 'sc-types-frontend';
+import { BackboneModel, Backbone, BackboneView, PluginContainer, TemplateContext } from 'sc-types-frontend';
 import ReactLike from './ReactLike';
 
 /**
@@ -15,9 +15,12 @@ export default class JSXView<Model extends BackboneModel = BackboneModel, Contex
   jsxTemplate: JSXTemplate<Context> = c => { throw new Error('jsxTemplate not implemented') }
 
   supportsFunctionAttributes?: boolean = false
+  private options: JSXViewOptions<Model> = {}
 
-  initialize(options: any) {
-    super.initialize(options)
+  initialize(options?: JSXViewOptions<Model>) {
+    super.initialize(options as any)
+    this.options = { ...this.options || {}, ...options }
+    this.supportsFunctionAttributes = this.supportsFunctionAttributes || this.options.supportsFunctionAttributes
     if (!this.preRenderPlugins) {
       this.preRenderPlugins = new PluginContainer<JQuery<HTMLElement>, [BackboneView]>()
     }
@@ -29,6 +32,9 @@ export default class JSXView<Model extends BackboneModel = BackboneModel, Contex
           if (ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes) {
             (rendered as any).__this = view
           }
+          if (!view.options.dontEmptyContainer) {
+            $fragment.empty()
+          }
           ReactLike.renderJQuery($fragment, rendered)
         }
         return $fragment
@@ -36,6 +42,11 @@ export default class JSXView<Model extends BackboneModel = BackboneModel, Contex
     })
   }
 
+}
+
+export interface JSXViewOptions<Model extends BackboneModel = BackboneModel> extends Backbone.ViewOptions<Model> {
+  dontEmptyContainer?: boolean,
+  supportsFunctionAttributes?: boolean
 }
 
 function isJSXView(view: any): view is JSXView<any, any> {

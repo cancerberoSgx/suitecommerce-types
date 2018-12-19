@@ -1,11 +1,9 @@
-import { MouseEvent } from 'react';
 import { BackboneModel, jQuery, TemplateContext } from 'sc-types-frontend';
 import { JSXView, ReactLike } from 'sc-types-frontend-extras';
 
 export default describe('JSXView and Backbone', () => {
 
   class Model1 extends BackboneModel {
-
   }
 
   interface Context1 extends TemplateContext {

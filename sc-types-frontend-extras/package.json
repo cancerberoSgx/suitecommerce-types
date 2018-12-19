@@ -9,8 +9,10 @@
         "build": "npm run clean && tsc && npm run sc-tsc",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist compiled compiled_ts",
-        "test-js": "npm run clean && npm run build && node dist/spec",
-        "test": "npm run build && cd sca-module-unit-test && npm i && npm run build",
+        "test-run-js": "npm run build && node dist/spec",
+        "test-sca-module-unit-test-build": "npm run build && cd sca-module-unit-test && npm i && npm run build",
+        "test-run": "npx ts-node spec",
+        "test": "npm run test-run && npm run test-run-js && npm run test-sca-module-unit-test-build",
         "sc-tsc": "npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder compiled  --addTslibJsInFolder --debug"
     },
     "repository": {
@@ -36,8 +38,15 @@
         "sc-types-frontend": "file:../sc-types-frontend"
     },
     "devDependencies": {
+        "@types/jasmine": "^3.3.4",
+        "@types/node": "^10",
+        "@types/shelljs": "^0.8.1",
+        "jasmine": "^3.3.1",
         "sc-tsc": "file:../ts-devtools",
+        "shelljs": "^0.8.3",
         "ts-node": "^7.0.1",
+        "ts-simple-ast": "^20.0.0",
+        "tsd-check": "^0.2.1",
         "tslib": "^1.9.3",
         "typescript": "^3.2.2"
     }

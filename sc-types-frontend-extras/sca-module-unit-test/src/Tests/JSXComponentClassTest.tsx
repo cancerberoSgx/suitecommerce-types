@@ -1,6 +1,5 @@
 import { BackboneModel, jQuery, TemplateContext } from 'sc-types-frontend';
-import { JSXView, ReactLike, JSXComponent } from 'sc-types-frontend-extras';
-// import { ReactNode, MouseEvent } from 'react';
+import { JSXView, ReactLike, JSXComponent, ReactNode, MouseEvent } from 'sc-types-frontend-extras';
 
 export default fdescribe('jsx component class', () => {
 

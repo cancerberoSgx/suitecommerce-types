@@ -1,4 +1,3 @@
-// import { FormEvent, MouseEvent } from 'react';
 import { BackboneModel, jQuery, TemplateContext } from 'sc-types-frontend';
 import { JSXView, ReactLike, MouseEvent, FormEvent } from 'sc-types-frontend-extras';
 
@@ -28,8 +27,8 @@ export default describe('JSXView alone', () => {
       <button className="functionAttributeBound" onClick={this.clicked3.bind(this)}>this.clicked.bind(this) don't work at all</button>
       <button className="functionAttributeDirectly" onClick={this.clicked2}>this.clicked will work and this will be automatically bind</button>
       <button className="functionAttributeInlineNoRefs" onClick={e => {
-        e.preventDefault(); 
-        console.log('clicked'); 
+        e.preventDefault();
+        console.log('clicked');
         (window as any).externalCounter = 'functionAttributeInlineNoRefs'
       }}>inline fn attribute with no references to scope (this) should always work</button>
       <input onInput={e => this.changed(e)}></input>
@@ -143,7 +142,6 @@ export default describe('JSXView alone', () => {
       expect(view1.counter).toBe('')
 
     })
-
   })
 
 })

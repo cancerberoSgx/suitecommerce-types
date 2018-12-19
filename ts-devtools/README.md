@@ -50,30 +50,50 @@ See https://github.com/cancerberoSgx/suitecommerce-types/blob/master/sample-proj
 TODO - This is not really importat since is more useful as a CLI tool. However it has a js API to run the tool or parts of it programmatically in node.js. See spec/ folders and design section below. 
 
 
-# Input TypeScript syntax limitations 
+# TypeScript support
+
+## Input TypeScript syntax limitations 
 
 While the idea of this project is for the user to be able to write TypeScript projects freely as if it were any other TS project, this devtools have some restrictions on the input TypeScript code syntax, particularly in how import and export are declared: 
 
- * import or require() `npm install`ed packages is not supported yet
  * you can import or export several type declarations like interfaces or type alias
  * you only can export / import an valued thing (like a variable, function, or class) only using the `default` mode, ie: `import SomeClass from './somewhere'` or `export default class {}`.
+ * you can use jquery, backbone or underscore libraries out of the box by importing them from 'sc-types-frontend', ie: `import { jQuery} from 'sc-types-frontend'; jQuery('<div>hello</div>').appendTo('body')`
  * The previous statement doesn't apply to values imported from `sc-types-frontend-*` packages
  * you can instruct the tools to ignore a .ts file by adding the following comment at the top of the file: `// @sc-tsc-ignore-file`
 
 # Input project configuration requirements:
 
- * npm i -D tslib
- * 
-
+ * you cannot `npm install` a library to import it in your project, is not supported yet.
+ * jsconfig.json needs to declare : `noEmitHelpers` and `importHelpers`
+ ```json
+ {
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution":"node",
+    "lib": [
+      "es2018", "dom"
+    ],
+    "outDir": "./dist",
+    "rootDir": ".",
+    "noEmitHelpers": true,
+    "importHelpers": true,
+  },
+  "include":["src"]
+}
+```
+ * You need to install a dev-dependency tslib: `npm install --save-dev tslib`. This is because the output code will depend on it. It's a small library that contains js helpers for emitted es5 js  files to support new ecma features like async/await, string templates, classes, generators, etc. It will be copied to the output .js project and loaded in the app.
  
-# status
+# Status
 
  * Supports SCA: `gulp deploy`, `gulp local`, `gulp unit-test`
  * Supports SC Extensions: `gulp extension:deploy`, `gulp extension:local`
  * mostly working without problems: input ts project must use sc-types-frontend to import SC dependencies and special TS configuration
  * tslib added as individual .js file and required as AMD any other dependency
+ * Using using `--dependencyPrefix`, it support's prefixing output .js files and dependency names so keep names simple, without worrying of colliding with other modules dependencies. i.e: `Customer.ts` will be compiled to `MyCompany.Customer.ts` (and the AMD dependency name will be `MyCompany.Customer`)
 
-# design
+# Design
 
 Notes on important APIs and implementation: 
 
@@ -87,7 +107,7 @@ Notes on important APIs and implementation:
  * `import2defineCompileAndFix()` orchestrate import2define(), compileTsProject() and import2defineCompileAndFix() in a single call()
  * CLI tool see spec/bin/binSpec.ts
 
-## design requirements
+## Design requirements
 
  * User able to write TypeScript project using latest standards, tsc, npm, etc
    * .js emitted code is :

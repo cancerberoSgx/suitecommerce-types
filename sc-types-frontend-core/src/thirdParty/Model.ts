@@ -1,8 +1,13 @@
-
 import *  as Backbone from 'backbone'
 
-export class BackboneModel extends Backbone.Model {
+export type ModelAttributes = {[name:string]:any} 
+
+export class BackboneModel<Attributes extends ModelAttributes = ModelAttributes> extends Backbone.Model {
   validation?: {[propertyName: string]: BackboneModelValidation}
+  attributes: Attributes = {} as Attributes
+  // set(a: ModelAttributes|string, b?: any|Backbone.ModelSetOptions): BackboneModel<Attributes> {
+  //   return super.set(a, b)
+  // }
 }
 
 export interface BackboneModelValidation {
@@ -22,6 +27,7 @@ export interface BackboneModelValidation {
   equalTo?: string
   pattern?: string|RegExp
 }
+
 export enum BackboneModelValidationPatterns {
   digits='digits',
   number='number',
@@ -30,7 +36,7 @@ export enum BackboneModelValidationPatterns {
   url='url'
 }
 
-export class BackboneCachedModel extends BackboneModel {
+export class BackboneCachedModel<A> extends BackboneModel<A> {
   isCached(params: any[] | JQuery.PlainObject | JQuery): boolean {
     throw new Error("Method not implemented.");
   }

@@ -1,4 +1,3 @@
-// import { MouseEvent } from 'react';
 import { BackboneModel, jQuery, TemplateContext } from 'sc-types-frontend';
 import { JSXView, ReactLike } from 'sc-types-frontend-extras';
 
@@ -41,7 +40,6 @@ interface Person {
   contacts: Contact[]
 }
 
-
 class ViewJSXAndBackboneEvents extends JSXView<BackboneModel, Context1> {
 
   jsxTemplate = (context: Context1) => <div>
@@ -73,7 +71,6 @@ class ViewJSXAndBackboneEvents extends JSXView<BackboneModel, Context1> {
 interface Context1 extends TemplateContext {
   persons: Person[]
 }
-
 
 export default describe('Reusing jsx', () => {
 
