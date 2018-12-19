@@ -2,6 +2,8 @@ import { shorter } from "misc-utils-of-mine";
 import { Node, SourceFile, Statement, SyntaxKind, TypeGuards } from "ts-simple-ast";
 import { Import2DefineConfig } from "./import2define";
 
+export const DUMMY_MODULE_FLAG = '_-_Dummy_-_'
+
 export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfig): DefaultExportInfo {
 
   const err1 = checkNonDefaultExportedValueNodes(f)
@@ -14,7 +16,7 @@ export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfi
     //  means file doesn't have any default export, however, is valid for exporting only types. 
     return {
       exportValue: 'undefined',
-      exportName: 'Dummy' + (_counter++)
+      exportName: DUMMY_MODULE_FLAG + (_counter++)
     }
   }
 

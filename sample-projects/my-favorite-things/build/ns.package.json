@@ -7,7 +7,7 @@
             "spec/**/*.js"
         ],
         "unit-test-entry-point": [
-            "spec/SCTypesFrontendExtrasTests.js"
+            "spec/MyCompany_MyFavoriteThingsTests.js"
         ]
     }
 }

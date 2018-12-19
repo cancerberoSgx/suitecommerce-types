@@ -40,7 +40,7 @@ export default class DiscovererView extends JSXView<Model1, Context1> implements
     console.log('changed', e.currentTarget.value, this.cid);
   }
   
-  handle(interests: Interest[]): void {
+  handleUserNavigate(interests: Interest[]): void {
     alert('handleInterestDiscovered'+interests.length)
   }
 }

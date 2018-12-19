@@ -1,5 +1,5 @@
 import { BackboneView, Application } from 'sc-types-frontend';
-import { Discoverer } from '../discoverer';
+import { Discoverer } from '../discoverer/discoverer';
 import { Favorite, Interest } from '../types';
 
 export default class Manager {
@@ -53,15 +53,15 @@ export default class Manager {
 }
 
 export interface ManagerListener<T extends any[]= any[]> {
-  handle(...args: T): void
+  handleUserNavigate(...args: T): void
 }
 
 export interface InterestDiscoveredListener extends ManagerListener<[Interest[]]> {
-  handle(interests: Interest[]): void
+  handleUserNavigate(interests: Interest[]): void
 }
 
 export interface UserNavigateListener extends ManagerListener<[Application]> {
-  handle(application: Application): void
+  handleUserNavigate(application: Application): void
 }
 
 /** a query for favorites configuration object. if empty object will reference all known favorites */

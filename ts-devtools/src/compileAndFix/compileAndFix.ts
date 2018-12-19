@@ -1,9 +1,10 @@
 import { readFileSync, writeFileSync } from "fs";
-import { resolve } from "path";
+import { resolve, dirname, sep, basename } from "path";
 import { fixJsFileAmdTslib } from "../fixAmdTslib/fixJsFileAmdTslib";
 import { FixAmdTslibResult } from "../fixAmdTslib/types";
 import { compileTsProject } from "../util/compileTsProject";
 import { addTslibJsInFolder } from "./addTslibJsInFolder";
+import { mv } from "shelljs";
 
 export interface AbstractConfig {
   /** assumes tsconfig.json file is in the root project path. The project must have typescript installed locally and that will be used to compile */
@@ -32,6 +33,14 @@ export interface AbstractConfig {
   // eslintFix?: boolean,
 
   debug?: boolean
+
+
+  /** 
+   * If specified all dependency names will be prefixed with it. 
+   * This way, one can make sure AMD dependency names don't collide with other modules so it's possible to use 
+   * simple file names like `Manager.ts`. Also output .js file names will be prefixed
+   */
+  dependencyPrefix?: string
 }
 
 export interface CompileAndFixConfig extends AbstractConfig {
@@ -99,6 +108,16 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
     .filter(r => r)
 
   const tslibFinalDest = addTslibJsInFolder(config)
+
+  if(config.dependencyPrefix){
+    result.emittedFileNames = result.emittedFileNames || []
+    result.emittedFileNames.map(file=>{
+      const newName = dirname(file)+sep+config.dependencyPrefix+basename(file)
+      mv(file, newName)
+      return newName
+    })
+
+  }
 
   return {
     errors: errors.concat(error ? [`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : []),

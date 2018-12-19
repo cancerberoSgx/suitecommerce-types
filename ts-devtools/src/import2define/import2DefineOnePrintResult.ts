@@ -1,8 +1,9 @@
-import { Import2DefineOneResult } from "./import2defineOne";
+import { Import2DefineOneResult, Import2DefineOneResultImport } from "./import2defineOne";
+import { DUMMY_MODULE_FLAG } from "./getDefaultExportValue";
+
 export function import2DefineOnePrintResult(r: Import2DefineOneResult, addTypes: boolean = true): string {
   // heads up - we need to create also types for define handler params since users might be using those values as types.
   const PP2 = '_un2_iQu3_';
-  // const PP1 = '_un1_iQu3_';
   const Type = addTypes ? `<I=(any|${PP2}),J=(any|${PP2}),K=(any|${PP2}),L=(any|${PP2}),M=(any|${PP2})>=any|${PP2}` : ''
   r.exportName = r.exportName || r.sourceFile.getBaseNameWithoutExtension()
   return `
@@ -13,7 +14,7 @@ ${(isValidIdentifier(r.exportName) && (!r.statementOutsideHandler.includes(`type
 ` : ''}
 ${r.importsToIgnore.join('\n')}
 ${r.exportName ? `
-define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier || imp.name}'`).join(', ')}], function(${r.imports.map(i => `${i.variableName || i.name}: any`).join(', ')}){
+define('${r.exportName}', [${r.imports.map(imp => `'${getDependencyName(imp)}'`).join(', ')}], function(${r.imports.map(i => `${i.variableName || i.name}: any`).join(', ')}){
   ${r.body}
   return ${r.exportValue}
 })
@@ -21,6 +22,12 @@ define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier || imp
 ${r.statementOutsideHandler}
 `;
 }
+
 function isValidIdentifier(s: string): boolean {
   return s && !!s.match(/^[a-z0-9_]+$/i);
+}
+
+function getDependencyName(imp: Import2DefineOneResultImport): string {
+  let name = imp.moduleSpecifier || imp.name
+  return name.includes(DUMMY_MODULE_FLAG) ? 'Backbone' : name
 }

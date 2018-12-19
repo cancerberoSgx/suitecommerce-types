@@ -1,7 +1,5 @@
-
-import { Application } from 'sc-types-frontend';
-import { Interest } from '../types';
 import Manager from '../manager/Manager';
+import { Interest } from '../types';
 
 export interface Discoverer<I extends Interest = Interest>  {
   setup(config: DiscovererConfig): void

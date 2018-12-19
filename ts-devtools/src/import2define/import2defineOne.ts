@@ -1,5 +1,5 @@
 import { ImportDeclaration, SourceFile, Statement, SyntaxKind, TypeGuards } from "ts-simple-ast"
-import { getDefaultExportValue, _getDefaultExportValueReset } from "./getDefaultExportValue"
+import { getDefaultExportValue, _getDefaultExportValueReset, DUMMY_MODULE_FLAG } from "./getDefaultExportValue"
 import { Import2DefineConfig, Import2DefineResult } from "./import2define"
 import { defaultCustomImportSpecifiers, defaultIgnoreImportSpecifiers } from "./import2defineDefaults"
 import { memorizeSourceFile, namedImportReferenceIsType, _namedImportReferenceIsTypeReset } from "./namedImportReferenceIsType";
@@ -94,10 +94,12 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     importsToIgnore.push("import { Application } from 'sc-types-frontend'")
   }
 
+  const finalImports = imports
+    .map(i => ({ ...i, name: (config.dependencyPrefix || '') + i.name, variableName: i.name }))
+
   const response = {
     exportName: (config.dependencyPrefix || '') + exportName,
-    imports: imports.map(i => ({ ...i, name: (config.dependencyPrefix || '') + i.name, variableName: i.name })),
-    // importVariableNames: imports,//.map(i => ({ ...i, name: (config.dependencyPrefix || '') + i.name })),
+    imports: finalImports,
     exportValue,
     sourceFile,
     body: sourceFile.getText(),

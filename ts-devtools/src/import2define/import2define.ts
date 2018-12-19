@@ -12,12 +12,6 @@ import { _getDefaultExportValueReset } from './getDefaultExportValue';
 export interface Import2DefineConfig extends AbstractConfig {
   customImportSpecifiers?: CustomImportSpecifier[]
   ignoreImportSpecifiers?: IgnoreImportSpecifier[]
-  /** 
-   * If specified all dependency names will be prefixed with it. 
-   * This way, one can make sure AMD dependency names don't collide with other modules so it's possible to use 
-   * simple file names like `Manager.ts`. 
-   */
-  dependencyPrefix?: string
 }
 
 export interface IgnoreImportSpecifier {
@@ -108,8 +102,8 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
               }
             }
             if (!im.importSpecifierSourceFile) {
-              const importSpecifierSourceFile = config.project.getSourceFile(
-                resolve(dirname(r.sourceFile.getFilePath()) + '/' + im.moduleSpecifier + '.ts'))
+              const fName = dirname(r.sourceFile.getFilePath()) + '/' + im.moduleSpecifier
+              const importSpecifierSourceFile = config.project.getSourceFile(resolve(fName + '.ts')) || config.project.getSourceFile(resolve(fName + '.tsx'))
               im.importSpecifierSourceFile = importSpecifierSourceFile || im.importSpecifierSourceFile
             }
             if (im.importSpecifierSourceFile) {

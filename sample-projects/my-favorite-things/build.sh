@@ -1,7 +1,9 @@
 # for SCA gulp-local or gulp- unit-test:
-# npx gulp unit-test --modules my-favourites-things --dont-exit
-# OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/my-favourites-things@1.0.0
-OUTPUT_FOLDER=`pwd`/tmp
+# npx gulp unit-test --modules my-favorite-things --dont-exit
+
+
+OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/my-favorite-things@1.0.0
+# OUTPUT_FOLDER=`pwd`/tmp
 EXTRA_SCTSC_PARAMS="--addExtraAmdDependendenciesForSCAUnitTests Backbone.View.Plugin.DebugTemplateName --formatJsOutput --dependencyPrefix MyCompany_"
 
 rm -rf $OUTPUT_FOLDER/* && \
