@@ -1,4 +1,4 @@
-define('render', [], function () {
+define('render', ['ReactLike'], function (ReactLikeRender) {
     return {
         renderDOM: function (parent, el) {
             parent.appendChild(el);

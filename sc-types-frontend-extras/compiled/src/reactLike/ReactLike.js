@@ -1,7 +1,7 @@
 define('ReactLike', ['createElement', 'render', 'transformers', "tslib"], function (createElementModule, render, transformers, tslib_1) {
     var ReactLike_ = tslib_1.__assign({}, createElementModule, render, transformers);
-
-  const _self = typeof self ==='undefined' ? window : self
-  _self.ReactLike = ReactLike_;
+    var _self = typeof self === 'undefined' ? window : self;
+    _self.ReactLike = ReactLike_;
+    export * from './declarations/domElementDeclarations';
     return ReactLike_;
 });

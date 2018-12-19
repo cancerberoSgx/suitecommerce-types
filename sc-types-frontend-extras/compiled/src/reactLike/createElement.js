@@ -1,7 +1,6 @@
 define('createElement', ['transformers', 'typeGuards', "tslib"], function (transformers, TypeGuards, tslib_1) {
     function getThis() {
-
-  const _self = typeof self ==='undefined' ? window : self
+        var _self = typeof self === 'undefined' ? window : self;
         return _self.ReactLike;
     }
     var Module = {

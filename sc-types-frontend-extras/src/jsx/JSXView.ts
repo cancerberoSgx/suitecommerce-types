@@ -40,8 +40,10 @@ export default class JSXView<Model extends BackboneModel = BackboneModel, Contex
 
   render(): this {
     if (BackboneView.notInSc) {
-      // we want to support tests in node jsdom
+      this.undelegateEvents()
+      this.$el.empty()
       this._renderJsx(this.$el)
+      this.delegateEvents()
       return this
     }
     else {

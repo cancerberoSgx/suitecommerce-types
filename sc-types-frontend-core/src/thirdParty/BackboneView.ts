@@ -15,7 +15,24 @@ export class BackboneView<VModel extends Backbone.Model = BackboneModel, Context
   //   super.initialize(options)
   // }
 
-  template: Template<Context>|undefined
+  render(): this {
+    if (BackboneView.notInSc) {
+      if (!this.template) {
+        throw new Error('No template in view')
+      }
+      this.undelegateEvents()
+      this.$el.empty()
+      const html = this.template(this.getContext())
+      jQuery(html).appendTo(this.$el)
+      this.delegateEvents()
+      return this
+    }
+    else {
+      throw new Error('Not implemented')
+    }
+  }
+
+  template: Template<Context> | undefined
 
   /** Declaration of double binding between DOM input els with this.model attributes.
    *
@@ -155,7 +172,7 @@ class MyFormView extends BackboneView {
   }
 
   /**  title this view title. The default behavior is to set the document's title using view.title when calling view.showContent() */
-  title: string|undefined
+  title: string | undefined
   /** returns a text describing the page this view is implemented in the case is rendered as a main view with Layout.showContent()*/
   getPageDescription(): string {
     throw new Error("Method not implemented.")
@@ -168,7 +185,7 @@ class MyFormView extends BackboneView {
 
   contextData: {
     [contextName: string]: any
-  }|undefined
+  } | undefined
 
 
   getContextData(contextNames: string[]): {

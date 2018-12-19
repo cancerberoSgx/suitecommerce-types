@@ -1,6 +1,7 @@
-define('transformers', ['typeGuards'], function (TypeGuards) {
+define('transformers', ['typeGuards', 'ReactLike', 'ReactLike', 'ReactLike', 'ReactLike', 'ReactLike', 'ReactLike', 'ReactLike'], function (TypeGuards, ReactLikeTag, ReactLikeTextTransformer, ReactLikeValue, ReactLikeAttrs, ReactLikeChildTransformer, Transformers, ReactLike) {
     function getThis() {
-        return self.ReactLike;
+        var _self = typeof self === 'undefined' ? window : self;
+        return _self.ReactLike;
     }
     var Module = {
         _globalTextTransformers: [],

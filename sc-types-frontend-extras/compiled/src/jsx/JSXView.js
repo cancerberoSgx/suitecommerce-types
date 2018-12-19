@@ -21,6 +21,9 @@ define('JSXView', ['Backbone.Model', 'Backbone', 'Backbone.View', 'PluginContain
         JSXView.prototype.initialize = function (options) {
             _super.prototype.initialize.call(this, options);
             this.options = tslib_1.__assign({}, this.options || {}, options);
+            if (BackboneView.notInSc) {
+                return;
+            }
             this.supportsFunctionAttributes = this.supportsFunctionAttributes || this.options.supportsFunctionAttributes;
             if (!this.preRenderPlugins) {
                 this.preRenderPlugins = new PluginContainer();
@@ -36,10 +39,11 @@ define('JSXView', ['Backbone.Model', 'Backbone', 'Backbone.View', 'PluginContain
             });
         };
         JSXView.prototype.render = function () {
-            var notInSC = !_super.prototype.render || !this.preRenderPlugins;
-            if (notInSC) {
-                // we want to support tests in node jsdom
+            if (BackboneView.notInSc) {
+                this.undelegateEvents();
+                this.$el.empty();
                 this._renderJsx(this.$el);
+                this.delegateEvents();
                 return this;
             }
             else {

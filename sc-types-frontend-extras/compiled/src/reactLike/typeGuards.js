@@ -1,4 +1,4 @@
-define('typeGuards', [], function () {
+define('typeGuards', ['ReactLike', 'ReactLike', 'ReactLike', 'ReactLike'], function (ReactLikeTextTransformer, ReactLikeChildTransformer, ReactLikeChildAddTransformer, ReactLikeComponent) {
     return {
         isTextTransformer: function (n) {
             return n && n.transformText;
