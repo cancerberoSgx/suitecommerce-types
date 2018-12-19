@@ -1,7 +1,7 @@
 import { BackboneModel, jQuery, TemplateContext } from 'sc-types-frontend';
 import { JSXView, ReactLike, JSXComponent, ReactNode, MouseEvent } from 'sc-types-frontend-extras';
 
-export default fdescribe('jsx component class', () => {
+export default describe('jsx component class', () => {
 
 
   describe('JSXComponent', () => {
@@ -29,7 +29,7 @@ export default fdescribe('jsx component class', () => {
     })
 
 
-    fit('should support function attributes always', () => {
+    xit('should support function attributes always', () => {
       class MyComponent1 extends JSXComponent<{ foo: number }> {
         render(): ReactNode {
           const self = this

@@ -59,7 +59,9 @@ const suiteCommerceSpecifiers: { [name: string]: string } = {
   'SCAUnitTestHelperPreconditions': 'UnitTestHelper.Preconditions', 
 
   'JSXView': 'JSXView', 
-  'ReactLike': 'ReactLike'
+  'ReactLike': 'ReactLike',
+  'JSXComponent': 'JSXComponent',
+  'BindView': 'BindView'
 }
 
 let  suiteCommerceExtraModules : {name: string, text: string }[]
@@ -70,9 +72,9 @@ export function getSuiteCommerceExtraModules(): { name: string, text: string }[]
   if(suiteCommerceExtraModules){
     return suiteCommerceExtraModules
   }
-  const base = join('node_modules', 'sc-types-frontend-extras', 'compiled', 'src', 'jsx')
-  suiteCommerceExtraModules = ls(base)
-    .filter(f => f.endsWith('.js') && f !== 'index.js')
+  const base = join('node_modules', 'sc-types-frontend-extras', 'compiled', 'src')
+  suiteCommerceExtraModules = ls('-R', base)
+    .filter(f => f.endsWith('.js') &&  !f.endsWith('index.js'))
     .map(name => ({ name, text: readFileSync(join(base, name)).toString() }))
     .concat([
       {
@@ -86,5 +88,6 @@ export function getSuiteCommerceExtraModules(): { name: string, text: string }[]
       return Backbone.Router
     })`}
     ])
+    // console.log(suiteCommerceExtraModules.map(m=>m.name).join('\n'))
     return suiteCommerceExtraModules
 }

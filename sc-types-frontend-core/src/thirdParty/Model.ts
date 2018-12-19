@@ -1,8 +1,10 @@
 import *  as Backbone from 'backbone'
 
-export type ModelAttributes = {[name:string]:any} 
-
-export class BackboneModel<Attributes extends ModelAttributes = ModelAttributes> extends Backbone.Model {
+// export declare type ModelAttributes = {
+//     [name: string]: any;
+// };
+export interface ModelAttributes {}
+export class BackboneModel<Attributes extends ModelAttributes = {[name: string]: any}> extends Backbone.Model {
   validation?: {[propertyName: string]: BackboneModelValidation}
   attributes: Attributes = {} as Attributes
   // set(a: ModelAttributes|string, b?: any|Backbone.ModelSetOptions): BackboneModel<Attributes> {

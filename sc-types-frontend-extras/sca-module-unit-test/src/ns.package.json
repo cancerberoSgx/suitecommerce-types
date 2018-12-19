@@ -1,13 +1,13 @@
 {
     "gulp": {
         "javascript": [
-            "JavaScript/**/*.js"
+            "**/*.js"
         ],
         "unit-test-files": [
-            "Tests/**/*.js"
+            "src/Tests/**/*.js"
         ],
         "unit-test-entry-point": [
-            "Tests/SCTypesFrontendExtrasTests.js"
+            "src/Tests/SCTypesFrontendExtrasTests.js"
         ]
     }
 }

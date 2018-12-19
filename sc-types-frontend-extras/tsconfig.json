@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es5",
     "module": "commonjs",
     "moduleResolution":"node",
     "lib": [
@@ -16,6 +16,6 @@
     "declaration": true,
     "skipLibCheck": true
   },
-  "include":["src", "spec"],
+  "include":["src"],
   "exclude": ["dist", "compiled", "node_modules"]
 }

@@ -1,5 +1,5 @@
 import { writeFileSync } from 'fs';
-import { isAbsolute, join, resolve } from 'path';
+import { isAbsolute, join, resolve, dirname } from 'path';
 import { config as shellConfig, cp, mkdir } from 'shelljs';
 import { getSuiteCommerceExtraModules } from '../import2define/import2defineDefaults';
 import { getNodeModulesFolderPath } from '../util/misc';
@@ -27,6 +27,7 @@ export function addTslibJsInFolder(config: CompileAndFixConfig): string | undefi
   // required by those names the correct object is returned
   getSuiteCommerceExtraModules().forEach(extraModule => {
     const filePath = join(finalDest, extraModule.name)
+    mkdir('-p', dirname(filePath))
     writeFileSync(filePath, `\n${extraModule.text}\n`)
     if (config.debug) {
       console.log(`appended suiteCommerceExtraModule '${extraModule.name}' to '${filePath}'`)

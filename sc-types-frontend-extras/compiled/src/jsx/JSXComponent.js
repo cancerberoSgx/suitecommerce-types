@@ -1,18 +1,19 @@
 define('JSXComponent', [], function () {
-    return class JSXComponent {
-        constructor(props) {
+    return /** @class */ (function () {
+        function JSXComponent(props) {
             this.state = {};
             this.refs = null;
             this.props = props;
         }
-        render() {
+        JSXComponent.prototype.render = function () {
             throw new Error('Not Implemented');
-        }
-        setState(state, callback) {
+        };
+        JSXComponent.prototype.setState = function (state, callback) {
             this.state = state;
-        }
-        forceUpdate(callBack) {
+        };
+        JSXComponent.prototype.forceUpdate = function (callBack) {
             throw new Error('Not Implemented');
-        }
-    };
+        };
+        return JSXComponent;
+    }());
 });

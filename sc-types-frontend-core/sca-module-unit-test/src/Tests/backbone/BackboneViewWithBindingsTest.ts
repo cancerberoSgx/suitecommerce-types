@@ -24,7 +24,6 @@ export default describe('View', () => {
       '[data-bind="lastName"]': 'lastName',
       '[data-bind="age"]': 'age',
       '[data-bind="completeDescription"]': 'completeDescription'
-
     }
     private buildCompleteDescription(d: Partial<Context>){
       return `A person named ${d.name||'unknown'} ${d.lastName||'unknown'} with ${d.age||'unknown'} years`
