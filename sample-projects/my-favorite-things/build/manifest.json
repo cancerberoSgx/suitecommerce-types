@@ -1,0 +1,56 @@
+{
+    "name": "Test3",
+    "fantasyName": "Test3",
+    "vendor": "Acme",
+    "version": "1.0.0",
+    "type": "extension",
+    "target": "SCA,SCS",
+    "description": "Backbone simple module using suitecommerce-types",
+    "skins": [],
+    "assets": {
+        "img": {
+            "files": []
+        },
+        "fonts": {
+            "files": []
+        }
+    },
+    "sass": {
+        "entry_points": {
+            "shopping": "Modules/BackboneSimpleTest1/Sass/backbone_simple_test1_view.scss"
+        },
+        "files": [
+            "Modules/BackboneSimpleTest1/Sass/backbone_simple_test1_view.scss"
+        ]
+    },
+    "templates": {
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/BackboneSimpleTest1/Templates/backbone_simple_test1_view.tpl",
+                    "Modules/BackboneSimpleTest1/Templates/backbone_simple_test1_list_view.tpl"
+                ]
+            }
+        }
+    },
+    "javascript": {
+        "entry_points": {
+            "shopping": "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1.js"
+        },
+        "application": {
+            "shopping": {
+                "files": [
+                    "Modules/BackboneSimpleTest1/JavaScript/tslib.js",
+                    "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1.js",
+                    "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1Model.js",
+                    "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1View.js",
+                    "Modules/BackboneSimpleTest1/Tests/BackboneSimpleTest1EntryPointTest.js",
+                    "Modules/BackboneSimpleTest1/Tests/BackboneSimpleTest1View1Test.js",
+                    "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1Collection.js",
+                    "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1ListView.js"
+                ]
+            }
+        }
+    },
+    "local_folder": "Workspace/Test3"
+}

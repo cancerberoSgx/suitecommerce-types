@@ -10,6 +10,7 @@ import { import2DefineOnePrintResult } from './import2DefineOnePrintResult'
 export interface Import2DefineConfig extends AbstractConfig {
   customImportSpecifiers?: CustomImportSpecifier[]
   ignoreImportSpecifiers?: IgnoreImportSpecifier[]
+  // outputTsTmpProjectFolder?: string
 }
 
 export interface IgnoreImportSpecifier {
@@ -33,6 +34,7 @@ export interface Import2DefineResult extends AbstractResult {
  * tsconfig are set up so it's read to be compiled with tsc
  */
 export function import2define(config: Import2DefineConfig): Import2DefineResult {
+  const tsOutputFolder = config.outputFolder//config.outputTsTmpProjectFolder || config.outputFolder
   shellConfig.silent = !config.debug
   const project = new Project({
     tsConfigFilePath: config.tsconfigFilePath,
@@ -41,9 +43,9 @@ export function import2define(config: Import2DefineConfig): Import2DefineResult 
   })
   const tsConfigFolder = dirname(resolve(config.tsconfigFilePath))
   const result = import2defineProject({ ...config, project, tsconfigFilePath: config.tsconfigFilePath })
-  if (!result.errors.length && config.outputFolder) {
-    mkdir('-p', config.outputFolder)
-    cp(config.tsconfigFilePath, config.outputFolder)
+  if (!result.errors.length && tsOutputFolder) {
+    mkdir('-p', tsOutputFolder)
+    cp(config.tsconfigFilePath, tsOutputFolder)
     const project2 = new Project({
       tsConfigFilePath: config.tsconfigFilePath,
       // compilerOptions: { jsx: JsxEmit.React },
@@ -51,7 +53,7 @@ export function import2define(config: Import2DefineConfig): Import2DefineResult 
     })
     result.perFileResults.forEach(r => {
       const p = resolve(r.sourceFile.getFilePath())
-      const name = join(config.outputFolder, p.substring(tsConfigFolder.length + 1, p.length))
+      const name = join(tsOutputFolder, p.substring(tsConfigFolder.length + 1, p.length))
       const file = project2.createSourceFile(name, import2DefineOnePrintResult(r), { overwrite: true })
       if (config.debug) {
         console.log('Fixing all TS errors of ' + file.getFilePath())

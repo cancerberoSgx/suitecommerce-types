@@ -1,0 +1,28 @@
+{
+    "name": "my-favorite-things",
+    "version": "1.0.0",
+    "private": true,
+    "description": "save in local machine favorite items, lists, comments, searches, categories, landings of a site. (using sc-types-frontend-extras jsxview and more to build a cool app to see what the code looks like using my favorite technologies)",
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
+    "typings": "dist/src/index.d.ts",
+    "scripts": {
+        "build": "cd .. && npx tsc && npm run sc-tsc && cd sca-module-unit-test && sh build.sh ",
+        "build-watch": "tsc -w",
+        "clean": "rm -rf dist"
+    },
+    "keywords": [],
+    "author": "sg",
+    "license": "ISC",
+    "dependencies": {
+        "sc-types-frontend": "file:../../sc-types-frontend",
+        "sc-types-frontend-extras": "file:../../sc-types-frontend-extras"
+    },
+    "devDependencies": {
+        "sc-tsc": "file:../../ts-devtools",
+        "@types/jasmine": "^3.3.5",
+        "@types/react": "^16.7.18",
+        "tslib": "^1.9.3",
+        "typescript": "^3.2.2"
+    }
+}

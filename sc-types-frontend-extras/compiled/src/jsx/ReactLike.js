@@ -54,18 +54,18 @@ define('ReactLike', [], function () {
             }
             children.filter(function (c) { return c; }).forEach(function (child) {
                 if (child.nodeType) {
-                    element.appendChild(child);
+                    element.appendChild(ReactLike_._transformElementToAppend(child));
                 }
                 else if (Array.isArray(child)) {
                     child.forEach(function (c) {
-                        // if (!c.nodeType) {
-                        //   debugger
-                        // }
-                        element.appendChild(c);
+                        if (!c.nodeType) {
+                            throw new Error('Child is not a node: ' + c + ', tag: ' + tag + ', attrs: ' + attrs);
+                        }
+                        element.appendChild(ReactLike_._transformElementToAppend(c));
                     });
                 }
                 else {
-                    element.appendChild(document.createTextNode(child.toString()));
+                    element.appendChild(document.createTextNode(ReactLike_._transformText(child.toString())));
                 }
             });
             return element;
@@ -84,8 +84,34 @@ define('ReactLike', [], function () {
          * If true, handlers will only have access to attributes and this, but they won't be able to reference
          * other variables in the scope of the JSX. Also there could be some performance impact on event handling.
          * */
-        supportFunctionAttributes: false
+        supportFunctionAttributes: false,
+        // registerTextTransform(transform: TextTransform): void {
+        //   textTransforms.push(transform)
+        // },
+        _transformText: function (s) {
+            var ss = s;
+            //   textTransforms.forEach(t=>{ss=t(ss)})
+            return ss;
+        },
+        // registerElementTransform(transform: ElementTransform): void {
+        //   elementTransforms.push(transform)
+        // },
+        _transformElementToAppend: function (s) {
+            var ss = s;
+            //   elementTransforms.forEach(t=>{ss=t(ss)})
+            return ss;
+        }
     };
+    // const textTransforms: TextTransform[] = []
+    // const elementTransforms: ElementTransform[] = []
+    // export interface ReactLike {
+    //   createElement(tag: any, attrs?: any, ...children: any[]): HTMLElement
+    //   supportFunctionAttributes:  boolean
+    //   renderJQuery(parent: JQuery<HTMLElement>, el: JSX.Element | JQuery): void 
+    //   renderDOM(parent: HTMLElement, el: JSX.Element): void
+    // }
+    // export type TextTransform = (s: string)=>string
+    // export type ElementTransform = (s: HTMLElement)=>HTMLElement;
     self.ReactLike = ReactLike_;
     return ReactLike_;
 });

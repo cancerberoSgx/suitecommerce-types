@@ -8,21 +8,26 @@ describe('import2defineOne', () => {
   function test(source: string, expectedOutput: string, expectedErrors: string[] | number, fileName: string = 'test3.ts') {
     const project = new Project()
     const sourceFile = project.createSourceFile(fileName, source)
-    const result: Import2DefineResult = {
+    const import2DefineResult: Import2DefineResult = {
       errors: [], perFileResults: []
     }
-    const resultSingle = import2defineOne({
+    let output: string
+    const result = import2defineOne({
       tsconfigFilePath: 'doesntMatter.json',
-    }, sourceFile, result)
+    }, sourceFile, import2DefineResult)
+    
     if (typeof expectedErrors === 'number') {
-      expect(result.errors.length).toEqual(expectedErrors)
+      expect(import2DefineResult.errors.length).toEqual(expectedErrors)
     } else {
-      expect(result.errors).toEqual(expectedErrors)
+      expect(import2DefineResult.errors).toEqual(expectedErrors)
     }
-    if (resultSingle) {
-      const output = import2DefineOnePrintResult(resultSingle, false)
+    if (result) {
+      output = import2DefineOnePrintResult(result, false)
       expectCodeEquals(output, expectedOutput)
+
     }
+
+    return {result, output, project, sourceFile}
     // else {
     //   fail('output undefined is an error')
     // }
@@ -210,20 +215,22 @@ export class C{}
 
   })
 
-  // it('should allow me to export just types', () => {
-  //   test(`
-  //   export interface A{}
-  //   export type b = any
-  //         `,`import { Application } from 'sc-types-frontend' define('foo', [], function(){ return describe() })`,
-  //     [], 'foo.ts')
-
-  // })
 
   it('should allow me to export just types', () => {
     test(`
 export type f = any
 export interface I {}
-            `, undefined, [])
+            `, `import { Application } from 'sc-types-frontend'
+            define('test4', [], function(){
+              
+              return undefined
+            })
+            export type f = any
+            export interface I {}
+            ` , [], 'test4.ts')
+            
+    // console.log(output);
+    
 
   })
 

@@ -5,7 +5,7 @@ import { import2define, import2defineProject, Import2DefineResult } from "../../
 import { import2defineOne } from "../../src/import2define/import2defineOne";
 import { import2DefineOnePrintResult } from "../../src/import2define/import2DefineOnePrintResult";
 import { getPathRelativeToProjectFolder } from "../../src/util/misc";
-import { expectCodeEquals } from '../testUtil';
+import { expectCodeEquals, printFileOutput } from '../testUtil';
 
 
 describe('import2define', () => {
@@ -114,6 +114,53 @@ define('c', [], function(){
     })
 
 
+    xit('import an index file a la node', ()=>{
+
+    })
+
+    xit('export several types', () => { // ISSUE ! user is requiring interfaces! 
+
+      const project = new Project()
+      project.createSourceFile('tmp/user.ts', `import { I2 } from './types'  ; export default class implements I2 {} `)
+      project.createSourceFile('tmp/types.ts', `export interface I1 {}; export type T1 = false; export interface I2 extends I1 {}`)
+      // project.createSourceFile('foo/cc/c.ts', `export default const c  =3  `)
+      // project.saveSync()
+      // // project.getPreEmitDiagnostics().forEach(d=>{console.log(d.getMessageText())});
+      
+      // project.emitToMemory()
+      // project.getPreEmitDiagnostics()
+  const result = import2defineProject({
+        tsconfigFilePath: '',
+        project
+      })
+      expect(result.errors).toEqual([])
+
+      const types = printFileOutput(result, 'types.ts')
+      const user = printFileOutput(result, 'user')
+      debugger
+      
+      expectCodeEquals(types, `
+      define('types', [], function(){
+        ;
+        return undefined
+      })
+      export interface I1 {}
+      export type T1 = false;
+      export interface I2 implements I1 {}
+         `)    
+
+      expectCodeEquals(user, `
+      import { I2 } from './types'
+      import { Application } from 'sc-types-frontend'
+      define('user', [], function(y){
+        const b: I2 = {} 
+        return b
+      })
+       `)
+      // debugger
+    })
+
+
     it('import a .tsx file', () => {
       const project = new Project()
       project.createSourceFile('foo/bar/boo/a.ts', `import b from '../../bb/b' ; export default const a = b`)
@@ -145,9 +192,7 @@ import { Application } from 'sc-types-frontend'
 define('a', ['b'], function(b: any){
   const a = b
   return a
-})
-
-                  
+})    
       `)
       const b2 = import2DefineOnePrintResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'))
             expectCodeEquals(b2, `

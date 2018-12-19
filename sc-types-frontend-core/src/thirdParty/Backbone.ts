@@ -1,6 +1,6 @@
 import * as BackboneLibrary from 'backbone'
 
-export const Backbone : typeof BackboneLibrary= {
+export const Backbone : typeof BackboneLibrary = {
   history: BackboneLibrary.history,
 
   sync: BackboneLibrary.sync,

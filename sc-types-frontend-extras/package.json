@@ -11,7 +11,7 @@
         "clean": "rm -rf dist",
         "test-js": "npm run clean && npm run build && node dist/spec",
         "test": "ts-node spec",
-        "sc-tsc": "rm -rf compiled && npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder compiled --addTslibJsInFolder"
+        "sc-tsc": "rm -rf compiled && npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder compiled  --addTslibJsInFolder --debug"
     },
     "repository": {
         "type": "git",

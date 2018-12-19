@@ -6,3 +6,4 @@ export * from './Router';
 export * from './underscore';
 export * from './Backbone';
 export * from './View'
+export * from './BackboneView'

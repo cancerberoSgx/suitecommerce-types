@@ -83,6 +83,9 @@ Notes on important APIs and implementation:
  # TODO
 
  * change folder name to sc-tsc (the project name)
+ * make output js files and module names unique - user can use simple names in its code and the compiler adds a prefix to all user's project module names. 
+ * embedd images / resources (import icon from './icon.svg)
+ * 'npm install some-lib' and maintain its dependency in package.json.
  * watch mode so it compiles .ts files on change (WIP)
  * config.nsPackageJson so all other resources like .tpl, .scss, etc declared there are copied to output JS project ?
    * or generate ns.package.json ?

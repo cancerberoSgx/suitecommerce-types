@@ -1,9 +1,11 @@
+// TODO: make this a class
 
 const ReactLike_ = {
   /**
    * React-like createElement function so we can use JSX in our TypeScript/JavaScript code.
    */
   createElement(tag: any, attrs: any = {}, ...children: any[]): HTMLElement {
+    
     var element: HTMLElement
     if (typeof tag === 'string') {
       element = document.createElement(tag)
@@ -50,18 +52,18 @@ const ReactLike_ = {
 
     children.filter(c => c).forEach(child => {
       if (child.nodeType) {
-        element.appendChild(child)
+        element.appendChild(ReactLike_._transformElementToAppend(child))
       }
       else if (Array.isArray(child)) {
         child.forEach(c => {
-          // if (!c.nodeType) {
-          //   debugger
-          // }
-          element.appendChild(c)
+          if (!c.nodeType) {
+            throw new Error('Child is not a node: '+c+', tag: '+tag+', attrs: '+attrs)
+          }
+          element.appendChild(ReactLike_._transformElementToAppend(c))
         })
       }
       else {
-        element.appendChild(document.createTextNode(child.toString()))
+        element.appendChild(document.createTextNode(ReactLike_._transformText(child.toString())))
       }
     })
     return element
@@ -79,14 +81,48 @@ const ReactLike_ = {
     return el && ((el as any).__this || ReactLike_._searchForThisView(el.parentElement))
   },
 
-  /** partial support for JSX attribute functions like event handlers. 
+  /** 
+   * Partial support for JSX attribute functions like event handlers. 
    * Experimental!, not recommended, set it to falsy to disable at all, or just use backbone's view events. 
    * If true, handlers will only have access to attributes and this, but they won't be able to reference 
    * other variables in the scope of the JSX. Also there could be some performance impact on event handling. 
    * */
-  supportFunctionAttributes: false
+  supportFunctionAttributes: false,
+
+  // registerTextTransform(transform: TextTransform): void {
+  //   textTransforms.push(transform)
+  // },
+  _transformText(s:string):string {
+    let ss = s
+  //   textTransforms.forEach(t=>{ss=t(ss)})
+    return ss
+  },   
+  // registerElementTransform(transform: ElementTransform): void {
+  //   elementTransforms.push(transform)
+  // },
+  _transformElementToAppend(s: HTMLElement): HTMLElement{
+    let ss = s
+  //   elementTransforms.forEach(t=>{ss=t(ss)})
+    return ss
+  }
 };
 
+// const textTransforms: TextTransform[] = []
+// const elementTransforms: ElementTransform[] = []
+
+// export interface ReactLike {
+//   createElement(tag: any, attrs?: any, ...children: any[]): HTMLElement
+//   supportFunctionAttributes:  boolean
+//   renderJQuery(parent: JQuery<HTMLElement>, el: JSX.Element | JQuery): void 
+//   renderDOM(parent: HTMLElement, el: JSX.Element): void
+
+// }
+
+// export type TextTransform = (s: string)=>string
+// export type ElementTransform = (s: HTMLElement)=>HTMLElement;
+
 (self as any).ReactLike = ReactLike_
+
+// export default ReactLike_ as ReactLike;
 
 export default ReactLike_;
