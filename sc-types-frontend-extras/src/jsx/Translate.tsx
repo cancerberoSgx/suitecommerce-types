@@ -1,4 +1,4 @@
-import ReactLike, { TextTransformer } from './ReactLike'
+import ReactLike, { ReactLikeTextTransformer } from './ReactLike'
 import { Utils } from 'sc-types-frontend';
 
 interface BindProps {
@@ -7,7 +7,7 @@ interface BindProps {
 /**
  * JSX `<Translate>` helper
  */
-let _Translate: (((props: BindProps) => JSX.Element) & TextTransformer) = Object.assign(
+let _Translate: (((props: BindProps) => JSX.Element) & ReactLikeTextTransformer) = Object.assign(
   function (prop: BindProps): JSX.Element {
     return <span></span>
   },

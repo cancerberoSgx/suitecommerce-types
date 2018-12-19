@@ -1,5 +1,6 @@
 import { BackboneModel } from 'sc-types-frontend';
 import { BindView, ReactLike, JSXBindView, Bind } from 'sc-types-frontend-extras';
+import { ReactLikeChildAddTransformer } from '../../../dist/src/jsx/ReactLike';
 
 
 export default describe('BindView', () => {
@@ -87,7 +88,7 @@ export default describe('BindView', () => {
       function Bind(prop: BindProps): JSX.Element {
         return <span data-type="bind"></span>
       }
-      Bind.transformChild = (tag: any, attrs: any, parent: HTMLElement, child: HTMLElement) => {
+      (Bind as any as ReactLikeChildAddTransformer).addChild = (tag: any, attrs: any, parent: HTMLElement, child: HTMLElement) => {
         if (attrs.name) {
           child.setAttribute('data-bind', attrs.name);
         }

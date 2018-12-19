@@ -5,16 +5,19 @@ define('Bind', ['ReactLike'], function (ReactLike) {
     which should output should something like this:
     `<input type="text" data-bind="age"></input>`.
     
-    Uses ReactLike `transformChild` feature
+    Uses `ReactLike.transformChild` feature
      */
     var _Bind = function _Bind(prop) {
         return ReactLike.createElement("span", { "data-type": "bind" });
     };
     _Bind.transformChild = function (tag, attrs, parent, child) {
-        if (attrs.name) {
+        if (attrs.name && isHTMLElement(child)) {
             child.setAttribute('data-bind', attrs.name);
         }
         return child;
     };
+    function isHTMLElement(n) {
+        return n && n.nodeType === 1 && n.outerHTML;
+    }
     return _Bind;
 });

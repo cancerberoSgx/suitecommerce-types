@@ -31,6 +31,7 @@ define('JSXView', ['Backbone.Model', 'Backbone', 'Backbone.View', 'PluginContain
                     if (isJSXView(view)) {
                         var rendered = view.jsxTemplate(view.getContext());
                         if (ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes) {
+                            debugger;
                             rendered.__this = view;
                         }
                         if (!view.options.dontEmptyContainer) {

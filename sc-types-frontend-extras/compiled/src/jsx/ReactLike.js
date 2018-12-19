@@ -15,7 +15,7 @@ define('ReactLike', ["tslib"], function (tslib_1) {
                 element = document.createElement(tag);
             }
             else {
-                if (tag.prototype && tag.prototype.render) {
+                if (isReactLikeComponent(tag)) {
                     // support for class elements (react-component like)
                     element = new tag(tslib_1.__assign({}, attrs, { children: children })).render();
                 }
@@ -37,7 +37,7 @@ define('ReactLike', ["tslib"], function (tslib_1) {
                         if (ReactLike_.supportFunctionAttributes) {
                             // see JSXView.render if supportsFunctionAttributes=== true there could be some parent that could have the _this view context as property. 
                             var innerApply = "(function(){(" + value.toString() + ").apply(__this__, arguments)}).apply(__this__, arguments); ";
-                            element.setAttribute(name_1, "var __this__ = ReactLike._searchForThisView(this) || this;  \n            return " + innerApply);
+                            element.setAttribute(name_1, "var __this__ = ReactLike._searchForThisView(this) || this; var _this = typeof _this === 'undefined' ? __this__ : _this; return " + innerApply);
                         }
                         else {
                             element.setAttribute(name_1, "(" + value.toString() + ").apply(this, arguments)");
@@ -49,25 +49,28 @@ define('ReactLike', ["tslib"], function (tslib_1) {
                         }
                         element.setAttribute(name_1, value.toString());
                     }
-                    // else {
-                    //   console.log('ignoring attribute type ', typeof value, value);
-                    // }
+                    else {
+                        console.log('ignoring attribute type ', typeof value, value);
+                    }
                 }
             }
             children.filter(function (c) { return c; }).forEach(function (child) {
                 if (isNode(child)) {
-                    element.appendChild(ReactLike_.transformElementToAppend(tag, originalAttrs, element, child));
+                    var toAppend = ReactLike_._transformChild(tag, originalAttrs, element, child);
+                    ReactLike_._addChild(tag, attrs, element, toAppend);
                 }
                 else if (Array.isArray(child)) {
                     child.forEach(function (c) {
                         if (!isNode(c)) {
                             throw new Error('Child is not a node: ' + c + ', tag: ' + tag + ', originalAttrs: ' + originalAttrs);
                         }
-                        element.appendChild(ReactLike_.transformElementToAppend(tag, originalAttrs, element, c));
+                        var toAppend = ReactLike_._transformChild(tag, originalAttrs, element, c);
+                        ReactLike_._addChild(tag, attrs, element, toAppend);
                     });
                 }
                 else {
-                    element.appendChild(document.createTextNode(ReactLike_._transformText(child.toString())));
+                    var toAppend = document.createTextNode(ReactLike_._transformText(tag, originalAttrs, element, child, child + ''));
+                    ReactLike_._addChild(tag, attrs, element, toAppend);
                 }
             });
             return element;
@@ -88,41 +91,60 @@ define('ReactLike', ["tslib"], function (tslib_1) {
          * other variables in the scope of the JSX. Also there could be some performance impact on event handling.
          * */
         supportFunctionAttributes: false,
-        // registerTextTransform(transform: TextTransform): void {
-        //   textTransforms.push(transform)
-        // },
-        _transformText: function (s) {
-            var ss = s;
-            //   textTransforms.forEach(t=>{ss=t(ss)})
-            return ss;
+        _globalTextTransformers: [],
+        registerTextTransformer: function (transform) {
+            ReactLike_._globalTextTransformers.push(transform);
         },
-        // registerElementTransform(transform: ElementTransform): void {
-        //   elementTransforms.push(transform)
-        // },
-        transformElementToAppend: function (tag, attrs, parent, child) {
-            if (tag.transformChild && isHTMLElement(child)) {
+        /**
+         * Converts all TextNodes, first applies the global TextTransformer s registered with ReactLike.globalTextTransformers() and then if the tag is a TextTransformer also that
+         */
+        _transformText: function (tag, attrs, parent, child, text) {
+            ReactLike_._globalTextTransformers.forEach(function (t) {
+                text = t.transformText(tag, attrs, parent, child, text);
+            });
+            if (isTextTransformer(tag)) {
+                text = tag.transformText(tag, attrs, parent, child, text);
+            }
+            return text;
+        },
+        _globalChildTransformers: [],
+        registerElementTransform: function (transform) {
+            ReactLike_._globalChildTransformers.push(transform);
+        },
+        _transformChild: function (tag, attrs, parent, child) {
+            ReactLike_._globalChildTransformers.forEach(function (t) {
+                child = t.transformChild(tag, attrs, parent, child);
+            });
+            if (isChildTransformer(tag)) {
                 child = tag.transformChild(tag, attrs, parent, child);
             }
-            //   elementTransforms.forEach(t=>{ss=t(ss)})
             return child;
-        }
+        },
+        // TODO: ChildAdder just like ChildTransformer, TextTransformer - a parent might want to cancel child append for some reason...
+        _addChild: function (tag, attrs, element, toAppend) {
+            if (isReactLikeChildAddTransformer(tag)) {
+                tag.addChild(tag, attrs, element, toAppend);
+            }
+            else {
+                element.appendChild(toAppend);
+            }
+        },
     };
-    // const textTransforms: TextTransform[] = []
-    // const elementTransforms: ElementTransform[] = []
-    // export interface ReactLike {
-    //   createElement(tag: any, attrs?: any, ...children: any[]): HTMLElement
-    //   supportFunctionAttributes:  boolean
-    //   renderJQuery(parent: JQuery<HTMLElement>, el: JSX.Element | JQuery): void 
-    //   renderDOM(parent: HTMLElement, el: JSX.Element): void
-    // }
-    // export type TextTransform = (s: string)=>string
-    // export type ElementTransform = (s: HTMLElement)=>HTMLElement;
-    self.ReactLike = ReactLike_;
+    function isTextTransformer(n) {
+        return n && n.transformText;
+    }
+    function isChildTransformer(n) {
+        return n && n.transformChild;
+    }
+    function isReactLikeChildAddTransformer(n) {
+        return n && n.addChild;
+    }
     function isNode(n) {
-        return n && !!n.nodeType;
+        return n && n.nodeType;
     }
-    function isHTMLElement(n) {
-        return n && n.nodeType === 1 && n.outerHTML;
+    function isReactLikeComponent(c) {
+        return c.prototype && c.prototype.render;
     }
+    self.ReactLike = ReactLike_;
     return ReactLike_;
 });
