@@ -1,8 +1,10 @@
-import { dirname, resolve } from "path";
+import { dirname, resolve, join } from "path";
 import { config as shellConfig, rm } from "shelljs";
 import { compileAndFix, CompileAndFixConfig, CompileAndFixResult } from "../compileAndFix/compileAndFix";
 import { import2define, Import2DefineConfig, Import2DefineResult } from "../import2define/import2define";
 import { startWatch, WatchEvent } from "./startWatch";
+import { fixProjectErrors } from "ts-fix-all-errors";
+import Project from "ts-simple-ast";
 
 export interface AllConfig extends CompileAndFixConfig, Import2DefineConfig {
   outputFolder: string
@@ -38,6 +40,13 @@ export function import2defineCompileAndFix(config: AllConfig): AllResult {
     !config.debug && rm('-rf', outputFolder)
     return { ...import2defineResult, tscFinalCommand: '' }
   }
+
+   // first we run fixallProjectErrors (again) but on entire project this time:
+   const tofix = join(outputFolder, 'tsconfig.json')
+   const project = new Project({tsConfigFilePath:tofix})
+   fixProjectErrors({project})
+  //  console.log(tofix);
+  //  process.exit(1)
 
   inputFolder = outputFolder
   outputFolder = config.outputFolder

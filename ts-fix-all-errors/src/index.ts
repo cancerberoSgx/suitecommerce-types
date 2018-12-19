@@ -5,9 +5,12 @@ export interface Config {
   tsConfigFilePath?: string
   project?: Project
   debug?: boolean
+  dontSave?: boolean
 }
-
-export function fixProjectErrors(config: Config) {
+export interface Result{
+  project: Project
+}
+export function fixProjectErrors(config: Config): Result {
   const project = config.tsConfigFilePath ? new Project({
     tsConfigFilePath: config.tsConfigFilePath,
     addFilesFromTsConfig: true
@@ -15,23 +18,31 @@ export function fixProjectErrors(config: Config) {
   if (!project) {
     throw new Error('No project not tsConfigFilePath given, aborting. ')
   }
-  project.getSourceFiles().forEach(f => {
+  project.getSourceFiles().forEach(sourceFile => {
     if (config.debug) {
-      console.log('Fixing errors of ' + f.getBaseName())
+      console.log('Fixing errors of ' + sourceFile.getBaseName())
     }
-    fixSourceFileErrors(f)
+    fixSourceFileErrors({sourceFile, project})
   })
-  project.saveSync()
+  if(!config.dontSave){
+    project.saveSync()
+  }
+  return {project}
 }
 
-export function fixSourceFileErrors(f: SourceFile) {
-  const changes = []
-  const s = f.getFullText()
-  const diagnostics = f.getPreEmitDiagnostics()
+export function fixSourceFileErrors(config:{sourceFile: SourceFile, project: Project}) {
+  const changes: { pos: number, toAdd: string }[] = []
+  const s = config.sourceFile.getFullText()
+  const diagnostics = config.sourceFile.getPreEmitDiagnostics()
   diagnostics.forEach(d => {
-    let pos = getPreviousMatchingPos(s, d.getStart(), '\n')
+    const start = d.getStart()
+    if(start===undefined){
+      console.log('WARNING ignoring diagnostic with undefined start :', config.project.formatDiagnosticsWithColorAndContext([d]));
+      return
+    }
+    let pos = getPreviousMatchingPos(s, start, '\n')
     let toAdd = `\n${comment}`
-    const descendant = f.getDescendantAtPos(d.getStart())
+    const descendant = config.sourceFile.getDescendantAtPos(start)
     const templateSpanAncestor = descendant && descendant.getFirstAncestorByKind(SyntaxKind.TemplateSpan)
     if (templateSpanAncestor) {
       pos = templateSpanAncestor.getStart()
@@ -42,7 +53,7 @@ export function fixSourceFileErrors(f: SourceFile) {
   })
   if (diagnostics.length) {
     const newText = changeText(s, changes)
-    f.replaceWithText(newText)
+    config.sourceFile.replaceWithText(newText)
   }
 }
 const comment = `//@ts-ignore`

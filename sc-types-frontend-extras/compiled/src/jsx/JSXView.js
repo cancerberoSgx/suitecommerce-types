@@ -1,4 +1,4 @@
-define('JSXView', ['Backbone.Model', 'Backbone', 'Backbone.View', 'PluginContainer', 'ReactLike', "tslib"], function (BackboneModel, Backbone, BackboneView, PluginContainer, ReactLike, tslib_1) {
+define('JSXView', ['Backbone.Model', 'Backbone', 'Backbone.View', 'PluginContainer', "tslib"], function (BackboneModel, Backbone, BackboneView, PluginContainer, tslib_1) {
     function isJSXView(view) {
         return view.jsxTemplate;
     }

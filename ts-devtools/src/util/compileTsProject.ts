@@ -1,6 +1,8 @@
 import { dirname, resolve } from "path"
 import { cd, config as shellconfig, exec, mkdir, pwd, rm, test } from "shelljs"
 import { AbstractConfig, AbstractResult, CompileAndFixResult } from "../compileAndFix/compileAndFix"
+import Project from "ts-simple-ast";
+import { fixProjectErrors } from "ts-fix-all-errors";
 
 
 export const forceTsConfig: { [name: string]: string | boolean } = {
@@ -17,6 +19,9 @@ export const forceTsConfig: { [name: string]: string | boolean } = {
 }
 
 export function compileTsProject(config: AbstractConfig): CompileAndFixResult {
+
+ 
+
   shellconfig.silent = !config.debug
   const outputFolder = config.outputFolder ? resolve(config.outputFolder) : false
   if (outputFolder) {

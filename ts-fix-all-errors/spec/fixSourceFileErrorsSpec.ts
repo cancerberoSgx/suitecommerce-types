@@ -9,20 +9,25 @@ describe('fixSourceFileErrors', ()=>{
   beforeAll(()=>{
     rm('-rf', 'tmp')
   })
+  function createProject(code: string, fileName: string='f1.ts'){
+    const project = new Project({compilerOptions:{strict: true, allowJs: true, checkJs: true, outDir: 'dist', removeComments: false}})
+    const sourceFile = project.createSourceFile(fileName, code)
+    return {project, sourceFile}
+  }
+
   function test(code: string,  equivalentJsCode: string, fileName:string='f1.ts'){
-    const p = new Project({compilerOptions:{strict: true, allowJs: true, checkJs: true, outDir: 'dist', removeComments: false}})
-    p.createSourceFile(fileName, code)
-    expect(p.getSourceFile(fileName).getPreEmitDiagnostics().length).toBeGreaterThan(0)
-    fixSourceFileErrors(p.getSourceFile(fileName))
-    expect(p.getSourceFile(fileName).getPreEmitDiagnostics().length).toBe(0)
+    const {project} = createProject(code, fileName)
+    expect(project.getSourceFileOrThrow(fileName).getPreEmitDiagnostics().length).toBeGreaterThan(0)
+    fixSourceFileErrors({sourceFile: project.getSourceFileOrThrow(fileName), project})
+    expect(project.getSourceFileOrThrow(fileName).getPreEmitDiagnostics().length).toBe(0)
     
-    const emitted = p.getSourceFile(fileName).emit()
+    const emitted = project.getSourceFileOrThrow(fileName).emit()
     expect(emitted.getDiagnostics().length).toBe(0)
     expect(emitted.getEmitSkipped()).toBe(false)
 
     mkdir('-p', 'tmp')
     const fname = `tmp/${unique()}.js`
-    writeFileSync(fname, p.getSourceFile(fileName).getEmitOutput().getOutputFiles()[0].getText())
+    writeFileSync(fname, project.getSourceFileOrThrow(fileName).getEmitOutput().getOutputFiles()[0].getText())
     const g1 = exec(`node ${fname}`)
     expect(g1.code).toBe(0)
 
@@ -123,13 +128,51 @@ describe('fixSourceFileErrors', ()=>{
     }
     })
     `
-    const p = new Project()
-    const f = p.createSourceFile('f.ts', code)
-    fixSourceFileErrors(f)
-    console.log(p.getSourceFile('f.ts').getText());
+    const project = new Project()
+    const f = project.createSourceFile('f.ts', code)
+    fixSourceFileErrors({sourceFile: f, project})
+    console.log(project.getSourceFileOrThrow('f.ts').getText());
     
   })
 
 
+
+  fit('problem with new()', ()=>{
+    const code = `
+    function f(){}
+    var C = f()
+    const b = new C({foo: 1})
+    `
+    const {project, sourceFile} = createProject(code, 'foo.ts')
+    fixProjectErrors({project, dontSave: true})
+    expect(project.getSourceFileOrThrow('foo.ts').getText()).toContain(`
+var C = f()
+//@ts-ignore
+    const b = new C({foo: 1})   
+    `.trim())
+    // console.log();
+  })
+
+  fit('problem in compiled with any and new()', ()=>{
+    // const code = `
+    // function f(){}
+    // var C = f()
+    // const b = new C({foo: 1})
+    // `
+    // // const {project, sourceFile} = createProject(code, 'foo.ts')
+    const project = new Project({tsConfigFilePath: '/home/sg/git/suitecommerce-types/sc-types-frontend-extras/compiled_ts/tsconfig.json'})
+    fixProjectErrors({project})
+//     expect(project.getSourceFileOrThrow('foo.ts').getText()).toContain(`
+// var C = f()
+// //@ts-ignore
+//     const b = new C({foo: 1})   
+//     `.trim())
+    // console.log();
+  })
+  // /home/sg/git/suitecommerce-types/sc-types-frontend-extras/compiled_ts/tsconfig.json
+
 })
+
+
+
 

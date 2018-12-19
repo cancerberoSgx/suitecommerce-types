@@ -1,4 +1,4 @@
-import ReactLike, { ReactLikeTextTransformer } from './ReactLike'
+import ReactLike, { ReactLikeTextTransformer } from '../../reactLike/ReactLike'
 import { Utils } from 'sc-types-frontend';
 
 interface BindProps {

@@ -1,5 +1,5 @@
 import { BackboneModel, Backbone, BackboneView, PluginContainer, TemplateContext } from 'sc-types-frontend';
-import ReactLike, { ReactLikeElement } from './ReactLike';
+import ReactLike from '../reactLike/ReactLike';
 
 /**
  * I'm a BackboneView that supports JSX templates with attribute `jsxTemplate` instead of the normal `template` one. 

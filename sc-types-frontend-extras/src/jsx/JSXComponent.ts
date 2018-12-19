@@ -1,6 +1,4 @@
-import { ReactNode } from './domElementDeclarations';
-
-// import { ReactNode } from 'react';
+import { ReactNode } from '../reactLike/declarations/domElementDeclarations';
 
 export default class JSXComponent<P={}, S={}> {
   context: any

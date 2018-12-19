@@ -13,11 +13,11 @@
     "declaration": true,
     // "noStrictGenericChecks": true,
     // "strictBindCallApply": false,
-    "strictNullChecks": false,
+    // "strictNullChecks": false,
     // "strictFunctionTypes": false,
     // "strictPropertyInitialization": false,
     // "stripInternal": false,
-    "noImplicitAny": false
+    // "noImplicitAny": false
   },
   "include":["src", "spec"],
   // "exclude": ["node_modules", "dist"]

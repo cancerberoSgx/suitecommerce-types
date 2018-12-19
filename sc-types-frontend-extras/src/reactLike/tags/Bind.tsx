@@ -1,4 +1,5 @@
-import ReactLike from './ReactLike'
+import TypeGuards from '../typeGuards'
+import ReactLike from '../ReactLike'
 
 interface BindProps {
   name: string
@@ -17,14 +18,10 @@ const _Bind = function _Bind(prop: BindProps): JSX.Element{
 }
 
 _Bind.transformChild = (tag: any, attrs: any, parent: HTMLElement, child: Node)=>{
-  if(attrs.name && isHTMLElement(child)){
+  if(attrs.name && TypeGuards.isHTMLElement(child)){
     child.setAttribute('data-bind', attrs.name); 
   }
   return child
 }
 
 export default _Bind
-
-function isHTMLElement(n : any): n is HTMLElement{
-  return n && n.nodeType===1 && n.outerHTML
-}

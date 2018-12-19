@@ -1,6 +1,5 @@
 import { BackboneModel } from 'sc-types-frontend';
-import { BindView, ReactLike, JSXBindView, Bind } from 'sc-types-frontend-extras';
-import { ReactLikeChildAddTransformer } from '../../../dist/src/jsx/ReactLike';
+import { BindView, ReactLike, JSXBindView, Bind, ReactLikeChildAddTransformer } from 'sc-types-frontend-extras';
 
 
 export default describe('BindView', () => {
@@ -38,13 +37,13 @@ export default describe('BindView', () => {
 
 
   describe('JSXBindView', () => {
-    interface C {
+    interface TheContext {
       name: string
       greet?: string
     }
-    class Model1 extends BackboneModel<C>{ }
-    class JSXBindViewExample extends JSXBindView<Model1, C> {
-      jsxTemplate = (c: C) =>
+    class TheModel extends BackboneModel<TheContext>{ }
+    class JSXBindViewExample extends JSXBindView<TheModel, TheContext> {
+      jsxTemplate = (c: TheContext) =>
         <div>
           <div>Name: <Bind name="name"><input className="name"></input></Bind></div>
           <div className="greet">
@@ -54,7 +53,7 @@ export default describe('BindView', () => {
         </div>
       initialize() {
         super.initialize()
-        this.model = new Model1({ name: 'seba', greet: '' })
+        this.model = new TheModel({ name: 'seba', greet: '' })
         this.model.on('change', () => {
           this.model.set('greet', `Hello ${this.model.get('name')}, how are you?`)
         })

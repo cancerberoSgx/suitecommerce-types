@@ -2,7 +2,7 @@
 
 adds extra functionality to sc-types-frontend-core
 
-Right now it adds supports for JSX React HTML-like syntax (TSX) https://www.typescriptlang.org/docs/handbook/jsx.html
+Right now it adds supports for JSX React HTML-like syntax [JSX / TSX](https://www.typescriptlang.org/docs/handbook/jsx.html) 
 
 # Examples
 
@@ -27,9 +27,9 @@ Right now it adds supports for JSX React HTML-like syntax (TSX) https://www.type
 
 
 
-# JSXView
+# JSX / TSX 
 
-## setup 
+## Setup 
 
 in tsconfig.json: 
 
@@ -76,14 +76,11 @@ Example of a View using a TSX template:
 ```ts
 import { JSXView, ReactLike } from 'sc-types-frontend-extras';
 
-class Model1 extends BackboneModel {
-}
-
 interface Context1 extends TemplateContext {
   name: string
 }
 
-class ViewJSXAndBackboneEvents extends JSXView<Model1, Context1> {
+class ViewJSXAndBackboneEvents extends JSXView<BackboneModel, Context1> {
 
   jsxTemplate = context => <div>
     <div className="view1">Name: {context.name}</div>
@@ -187,6 +184,32 @@ interface Person {
 
 ```
 
+## Use <Bind> for installing Backbone.View.bindings from markup
+
+```ts
+interface TheContext {
+  name: string
+  greet?: string
+}
+class TheModel extends BackboneModel<TheContext>{ }
+class JSXBindViewExample extends JSXBindView<TheModel, TheContext> {
+  jsxTemplate = (c: TheContext) =>
+    <div>
+      <div>Name: <Bind name="name"><input className="name"></input></Bind></div>
+      <div className="greet">
+        This is an automatic message:
+        <Bind name="greet"><span></span></Bind>-- end.
+        </div>
+    </div>
+  initialize() {
+    super.initialize()
+    this.model = new TheModel({ name: 'seba', greet: '' })
+    this.model.on('change', () => {
+      this.model.set('greet', `Hello ${this.model.get('name')}, how are you?`)
+    })
+  }
+}
+```
 
 ## Partial support for function attributes (event handlers)
 

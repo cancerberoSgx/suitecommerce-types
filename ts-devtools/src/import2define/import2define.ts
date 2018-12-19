@@ -55,14 +55,14 @@ export function import2define(config: Import2DefineConfig): Import2DefineResult 
     result.perFileResults.forEach(r => {
       const p = resolve(r.sourceFile.getFilePath())
       const name = join(tsOutputFolder, p.substring(tsConfigFolder.length + 1, p.length))
-      const file = project2.createSourceFile(name, import2DefineOnePrintResult(r), { overwrite: true })
+      const sourceFile = project2.createSourceFile(name, import2DefineOnePrintResult(r), { overwrite: true })
       if (config.debug) {
-        console.log('Fixing all TS errors of ' + file.getFilePath())
+        console.log('Fixing all TS errors of ' + sourceFile.getFilePath())
       }
       // Heads up: fixSourceFileErrors() implemented in separate project ts-fix-all-errors will add //@ts-ignore 
       // comments on lines with errors - heuristic way of making sure output TS project compilation won't fail
-      fixSourceFileErrors(file)
-      file.saveSync()
+      // fixSourceFileErrors({sourceFile, project: project2})
+      // sourceFile.saveSync()
     })
     project2.saveSync()
     linkInputProjectFiles(config)

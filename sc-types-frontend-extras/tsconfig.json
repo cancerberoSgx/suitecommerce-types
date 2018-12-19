@@ -17,5 +17,5 @@
     "skipLibCheck": true
   },
   "include":["src"],
-  "exclude": ["dist", "compiled", "node_modules"]
+  "exclude": ["dist", "compiled", "compiled_ts", "node_modules"]
 }
