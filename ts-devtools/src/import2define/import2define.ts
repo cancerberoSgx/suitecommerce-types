@@ -94,8 +94,13 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
           return
         }
         
-        if(config.organizeImportsFirst){
-          preprocessSourceFile(sourceFile);
+        if(config.preprocessOrganizeImports){
+          try {
+            config.debug && console.error('Executing organize imports on tile '+sourceFile.getFilePath())
+            sourceFile = sourceFile.organizeImports()
+          } catch (error) {
+            console.error('error while executing organizeImports on file '+sourceFile.getFilePath()+': '+error+'. Trying to recover original.')
+          }
           sourceFile = config.project.getSourceFile(sourceFile.getFilePath())
         }
         return import2defineOne(config, sourceFile, result)

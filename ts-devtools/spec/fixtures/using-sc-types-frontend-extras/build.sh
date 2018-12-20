@@ -13,9 +13,9 @@ node node_modules/.bin/sc-tsc \
   --outputFolder $OUTPUT_FOLDER \
   $EXTRA_SCTSC_PARAMS \
   && \
-mv $OUTPUT_FOLDER/src/* $OUTPUT_FOLDER && \
-rm -rf $OUTPUT_FOLDER/src/  && \
+# mv $OUTPUT_FOLDER/src/* $OUTPUT_FOLDER && \
+# rm -rf $OUTPUT_FOLDER/src/  && \
 cp -r src/ns.package.json $OUTPUT_FOLDER && \
-mv $OUTPUT_FOLDER/tslib.js $OUTPUT_FOLDER/JavaScript && \
+# mv $OUTPUT_FOLDER/tslib.js $OUTPUT_FOLDER/JavaScript && \
 echo "end" && \
 echo $?

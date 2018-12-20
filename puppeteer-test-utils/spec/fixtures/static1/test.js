@@ -1,0 +1,1 @@
+window.My_Global123 = 'hello'

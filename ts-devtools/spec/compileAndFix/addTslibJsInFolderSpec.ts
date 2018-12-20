@@ -5,7 +5,7 @@ import { getPathRelativeToProjectFolder } from "../../src/util/misc";
 
 describe('addTslibJsInFolder', () => {
 
-  describe('--addTslibJsInFolder cli', () => {
+  fdescribe('--addTslibJsInFolder cli', () => {
     
     let cwd: string, tslibOutputFolder: string, p: any, outputFolder: string, files: string[]
 
@@ -41,7 +41,7 @@ describe('addTslibJsInFolder', () => {
     })
 
     it('Should add sc-types-frontend-extras modules', () => {
-      files.find(f=>f.endsWith('ReactLike.js'))
+      // files.find(f=>f.endsWith('ReactLike.js'))
       expect(readFileSync(join(tslibOutputFolder, files.find(f=>f.endsWith('ReactLike.js')))).toString()).toContain(`define('ReactLike'`)
       expect(readFileSync(join(tslibOutputFolder, files.find(f=>f.endsWith('jsx/JSXView.js')))).toString()).toContain(`define('JSXView'`)
     })
