@@ -12,7 +12,7 @@ export default describe('jsx component class', () => {
 
     it('should render using a parent JSXView', () => {
       class MyComponent1 extends JSXComponent<{ foo: number }> {
-        render(): ReactNode {
+        render() {
           return <div className="comp1">jojojo: {this.props.foo}</div>
         }
       }
@@ -31,7 +31,7 @@ export default describe('jsx component class', () => {
 
     xit('should support function attributes always', () => {
       class MyComponent1 extends JSXComponent<{ foo: number }> {
-        render(): ReactNode {
+        render() {
           const self = this
           return <div>Foo: {this.props.foo}
             <button className="clickme" onClick={e=>self.clicked(e)}>clickme</button>
