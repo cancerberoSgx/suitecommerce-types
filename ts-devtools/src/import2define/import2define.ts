@@ -12,6 +12,9 @@ import { _getDefaultExportValueReset } from './getDefaultExportValue';
 export interface Import2DefineConfig extends AbstractConfig {
   customImportSpecifiers?: CustomImportSpecifier[]
   ignoreImportSpecifiers?: IgnoreImportSpecifier[]
+  /** will apply the organize imports refactors before transforming the .ts file which could generate an output with less errors, in exchange of a bit slower process and more probabilities of failure. */
+  preprocessOrganizeImports?: boolean
+  // preprocessRemoveUnusedSymbol?: boolean // TODO
 }
 
 export interface IgnoreImportSpecifier {
@@ -85,9 +88,18 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
       .filter(f =>
         !f.isFromExternalLibrary() && !f.isDeclarationFile() && !f.isInNodeModules()
       )
-      .map(sourceFile =>
-        // TODO support config.breakOnFirstError
-        result.errors.length ? undefined : import2defineOne(config, sourceFile, result)
+      .map(sourceFile => {
+        if (result.errors.length) {
+          // TODO support config.breakOnFirstError
+          return
+        }
+        
+        if(config.organizeImportsFirst){
+          preprocessSourceFile(sourceFile);
+          sourceFile = config.project.getSourceFile(sourceFile.getFilePath())
+        }
+        return import2defineOne(config, sourceFile, result)
+      }
       )
       .filter(r => result.errors.length === 0 && r)
       // now that we have import information for all files we fix imports to relative files to point to the export name
@@ -124,6 +136,7 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
 }
 
 
-export function ignoreFile(f: SourceFile): boolean{
+export function ignoreFile(f: SourceFile): boolean {
   return !!f.getFullText().trim().match(/^\/\/\s*\@sc\-tsc\-ignore\-file/)
 }
+

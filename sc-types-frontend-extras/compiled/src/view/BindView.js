@@ -1,4 +1,4 @@
-define('BindView', ['Backbone.View', 'Backbone.Model', 'Backbone.FormView', 'backbone', "tslib"], function (BackboneView, BackboneModel, BackboneFormView, View, tslib_1) {
+define('BindView', ['Backbone.View', 'Backbone.Model', 'Backbone.FormView', "tslib"], function (BackboneView, BackboneModel, BackboneFormView, tslib_1) {
     return /** @class */ (function (_super) {
         tslib_1.__extends(BindView, _super);
         function BindView() {

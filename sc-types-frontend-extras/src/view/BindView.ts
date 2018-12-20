@@ -1,5 +1,5 @@
-import { TemplateContext, _, BackboneView, BackboneModel, BackboneFormView, BackboneViewWithBindings, BackboneViewBindings } from 'sc-types-frontend';
-import { View } from 'backbone';
+import { TemplateContext, _, BackboneView, BackboneModel, BackboneFormView, BackboneViewWithBindings, BackboneViewBindings } from 'sc-types-frontend'
+
 /**
  * Make it easy to work with double binding.
  * 
