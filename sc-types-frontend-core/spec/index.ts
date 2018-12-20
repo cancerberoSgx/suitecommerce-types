@@ -9,6 +9,8 @@ function installJsDom(){
   global.window = dom.window;
   global.navigator = dom.window.navigator;
   global.$ = global.jQuery = require( 'jquery' );
+
+  // global.Backbone = require( 'jquery' );
 }
 
 function runJasmine(){

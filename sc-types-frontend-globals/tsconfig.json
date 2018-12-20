@@ -10,8 +10,10 @@
       "rootDir": ".",
       "strict": true,
       // "strictNullChecks": false,
+      "skipLibCheck": true,
       "esModuleInterop": true,
       "sourceMap": true,
       "declaration": true,
-    }
+    }, 
+    "include": ["src"]
   }

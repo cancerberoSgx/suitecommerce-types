@@ -2,7 +2,9 @@
 import createElementModule from './createElement';
 import render from './render';
 import transformers from './transformers';
-import * as JSX from './declarations/domElementDeclarations'
+
+// declare namespace JSX{}
+// import * as JSX from './declarations/domElementDeclarations'
 
 
 export interface ReactLikeCreateElement {

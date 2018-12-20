@@ -5,6 +5,7 @@ import { Deferred } from './Deferred'
 import { TemplateContext, View, Template, ShowInModalOptions, ShowInPushOptions, ChildViewsDefinition } from './View'
 import * as Backbone from 'backbone';
 import { BackboneViewBindings } from "../app";
+import { jQuery } from "./jQuery";
 
 export class BackboneView<VModel extends Backbone.Model = BackboneModel, Context extends TemplateContext = TemplateContext> extends Backbone.View<VModel> implements View<VModel, Context> {
 
@@ -17,21 +18,21 @@ export class BackboneView<VModel extends Backbone.Model = BackboneModel, Context
   // }
 
   render(): this {
-    // if (BackboneView.notInSc) {
-    //   if (!this.template) {
-    //     throw new Error('No template in view')
-    //   }
-    //   this.undelegateEvents()
-    //   this.$el.empty()
-    //   const html = this.template(this.getContext())
-    //   jQuery(html).appendTo(this.$el)
-    //   this.delegateEvents()
-    //   this.trigger('afterViewRender', this)
-    //   return this
-    // }
-    // else {
+    if (BackboneView.notInSc) {
+      if (!this.template) {
+        throw new Error('No template in view')
+      }
+      this.undelegateEvents()
+      this.$el.empty()
+      const html = this.template(this.getContext())
+      jQuery(html).appendTo(this.$el)
+      this.delegateEvents()
+      this.trigger('afterViewRender', this)
+      return this
+    }
+    else {
       throw new Error('Not implemented')
-    // }
+    }
   }
 
   template: Template<Context> | undefined

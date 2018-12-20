@@ -1,5 +1,17 @@
-var p = '/home/sg/git/WASM-ImageMagick/node_modules/puppeteer'
-var url = 'http://localhost:7777/test1.html'
+const config = {
+  modulePath = '/home/sg/git/WASM-ImageMagick/node_modules/puppeteer',
+  url = 'http://localhost:7777/test1.html'
+}
+
+
+var fs = require('fs')
+
+function isPInstalled(){
+  return fs.existsSync('node_modules/puppeteer')
+}
+
+
+function main(){}
 const puppeteer = require('puppeteer');
 
 (async () => {

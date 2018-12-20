@@ -1,0 +1,9 @@
+node_modules
+spec
+tests
+tsconfig.json
+src
+dist/spec
+dist/proj*
+dist/test*
+.vscode

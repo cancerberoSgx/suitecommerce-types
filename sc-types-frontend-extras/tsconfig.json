@@ -8,14 +8,15 @@
     ],
     "outDir": "./dist",
     "rootDir": ".",
-    "strict": true,
+    // "strict": true,
     "noEmitHelpers": true,
     "importHelpers": true,
     "jsx": "react",
     "jsxFactory": "ReactLike.createElement",
     "declaration": true,
-    // "skipLibCheck": true
+    "skipLibCheck": true, 
+    // "types": ["./declarations/domElementDeclarations"]
   },
   "include":["src"],
-  "exclude": ["dist", "compiled", "compiled_ts", "node_modules"]
+  "exclude": ["spec", "dist", "compiled", "compiled_ts", "node_modules"]
 }

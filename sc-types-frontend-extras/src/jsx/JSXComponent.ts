@@ -1,4 +1,4 @@
-import { ReactNode } from '../reactLike/declarations/domElementDeclarations';
+// import { ReactNode } from '../reactLike/declarations/domElementDeclarations';
 
 export default class JSXComponent<P={}, S={}> {
   context: any
@@ -7,13 +7,13 @@ export default class JSXComponent<P={}, S={}> {
   
   refs: any = null
   
-  readonly props: Readonly<{ children?: ReactNode }> & Readonly<P>
+  readonly props: Readonly<{ children?: JSX.Element }> & Readonly<P>
   
   constructor(props: Readonly<P>) {
     this.props = props
   }
 
-  render(): ReactNode {
+  render(): JSX.Element {
     throw new Error('Not Implemented')
   }
 
