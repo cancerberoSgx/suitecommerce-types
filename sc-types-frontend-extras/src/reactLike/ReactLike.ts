@@ -2,6 +2,7 @@
 import createElementModule from './createElement';
 import render from './render';
 import transformers from './transformers';
+import * as JSX from './declarations/domElementDeclarations'
 
 
 export interface ReactLikeCreateElement {
@@ -77,5 +78,3 @@ export interface ReactLike extends ReactLikeCreateElement, ReactLikeRender, Tran
 const _self = typeof self ==='undefined' ? window : self;
 (_self as any).ReactLike = ReactLike_;
 export default ReactLike_ as ReactLike;
-
-export * from './declarations/domElementDeclarations'

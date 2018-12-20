@@ -1,12 +1,13 @@
 import TypeGuards from '../typeGuards'
 import ReactLike from '../ReactLike'
 import JSXBindView from '../../jsx/JSXBindView';
+import { BackboneView } from 'sc-types-frontend';
 
 interface BindProps<View extends JSXBindView = JSXBindView> {
   name: string
   children?: JSX.Element|JSX.Element[]
   /** in the case the attribute is a collection this is the view class to render the items */
-  view?: View
+  view?: BackboneView
 }
 /**
  * Support JSX <Bind> tag to declare bindings with like: `<Bind name="age"><input type="number"></input></Bind>`

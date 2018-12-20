@@ -12,9 +12,10 @@
         "copy": "cp -r spec/support_js dist/spec/support",
         "clean": "rm -rf dist tmp",
         "generateHelp": "sh scripts/generateHelp.sh && sh scripts/generateCliUsageMd.sh",
-        "all": "npm run clean && npm run build && npm run test",
+        "all": "npm run clean-npm && npm i && npm run build && npm run test",
         "test-run": "ts-node node_modules/jasmine/bin/jasmine",
         "test": "npm run build && npm run test-install && npm run test-run",
+        "clean-npm": "npm run clean && find . -name \"node_modules\" -exec rm -rf '{}' + ; find . -name \"package-lock.json\" -exec rm -rf '{}' +;",
         "test-install": "cd spec/fixtures/project1 && npm i && cd ../projectMine && npm i && cd ../using-sc-types-frontend-extras && npm i && cd ../tsxTest && npm i && cd ../../../../sample-projects/frontend-simple1 && npm i && cd ../jsx-view-tests && npm i && cd ../projectMine && npm i && cd ../tsx-test && npm i"
     },
     "repository": {

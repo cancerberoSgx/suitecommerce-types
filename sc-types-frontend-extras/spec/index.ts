@@ -1,26 +1,59 @@
 
-import { JSDOM } from 'jsdom';
+// import { JSDOM } from 'jsdom';
 import { ls } from 'shelljs';
+import {BackboneView, BackboneFormView} from 'sc-types-frontend'
 
 declare const global: any
-function installJsDom() {
-  const dom = new JSDOM('<!doctype html><html><body></body></html>', {
-    url: 'http://my.home.com/'
-  })
+
+var JSDOM = require("jsdom").JSDOM
+    const dom = new JSDOM('<html><head><head><body></body></html>', {
+      url: 'http://foo.com',
+      runScripts: "dangerously",
+      resources: "usable"
+    })
+    var jQuery = require("jquery")(dom.window);
+
   global.document = dom.window.document;
   global.window = dom.window;
   global.navigator = dom.window.navigator;
   global.Image = global.window.Image
   global.MouseEvent = global.window.MouseEvent
-  global.$ = global.jQuery = require('jquery');
-  Object.keys(document.defaultView).forEach((property) => {
-    if (typeof global[property] === 'undefined') {
-      global[property] = document.defaultView[property]
-    }
-  })
-}
-installJsDom()
+  global.window.$ = global.window.jQuery = global.$ = global.jQuery = jQuery
 
+
+// function installJsDom() {
+//   const dom = new JSDOM('<html><head><head><body></body></html>', {
+//     url: 'http://foo.com',
+//     runScripts: "dangerously",
+//     resources: "usable"
+//   })
+//   global.document = dom.window.document;
+//   global.window = dom.window;
+//   global.navigator = dom.window.navigator;
+//   global.Image = global.window.Image
+//   global.MouseEvent = global.window.MouseEvent
+//   global.window.$ = global.window.jQuery = global.$ = global.jQuery = require('jquery')(global.window);
+//   // global._ = require('underscore');
+//   // global.Backbone  = require('backbone');
+//   // Object.keys(document.defaultView).forEach((property) => {
+//   //   if (typeof global[property] === 'undefined') {
+//   //     global[property] = document.defaultView[property]
+//   //   }
+//   // })
+
+
+//   // if(BackboneView.notInSc){
+//   //   debugger
+//   //   const stickit = require('./ported/backbone.stickit')
+//   //   const   BackboneFormViewPartial =    require('./ported/BackboneFormViewPartial').default
+//   //   debugger
+//   //   Object.assign(BackboneFormView, BackboneFormViewPartial)
+//   // }
+// }
+
+//   // if(BackboneView.notInSc){
+// installJsDom()
+//   // }
 
 function runJasmine() {
   const Jasmine = require('jasmine')

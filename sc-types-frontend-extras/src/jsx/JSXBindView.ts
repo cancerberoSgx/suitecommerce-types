@@ -14,7 +14,7 @@ export default class JSXBindView<Model extends BackboneModel<Context>= BackboneM
   _bindings: any
   // heads up - a getter for this.bindings, because we need to return a new high level object each time
   public get bindings() {
-    return BindView.buildBindings(this)
+    return BindView.buildBindings(this as any)
   }
 
   getContext() {

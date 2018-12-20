@@ -14,7 +14,7 @@
     "jsx": "react",
     "jsxFactory": "ReactLike.createElement",
     "declaration": true,
-    "skipLibCheck": true
+    // "skipLibCheck": true
   },
   "include":["src"],
   "exclude": ["dist", "compiled", "compiled_ts", "node_modules"]

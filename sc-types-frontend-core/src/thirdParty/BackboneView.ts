@@ -2,8 +2,9 @@ import { Fn, PluginContainer } from ".."
 import { BackboneModel } from './Model'
 import { TODOFn, TODO } from '../types'
 import { Deferred } from './Deferred'
-import { TemplateContext, View, Template, BackboneViewBindings, ShowInModalOptions, ShowInPushOptions, ChildViewsDefinition } from './View'
+import { TemplateContext, View, Template, ShowInModalOptions, ShowInPushOptions, ChildViewsDefinition } from './View'
 import * as Backbone from 'backbone';
+import { BackboneViewBindings } from "../app";
 
 export class BackboneView<VModel extends Backbone.Model = BackboneModel, Context extends TemplateContext = TemplateContext> extends Backbone.View<VModel> implements View<VModel, Context> {
 
@@ -16,20 +17,21 @@ export class BackboneView<VModel extends Backbone.Model = BackboneModel, Context
   // }
 
   render(): this {
-    if (BackboneView.notInSc) {
-      if (!this.template) {
-        throw new Error('No template in view')
-      }
-      this.undelegateEvents()
-      this.$el.empty()
-      const html = this.template(this.getContext())
-      jQuery(html).appendTo(this.$el)
-      this.delegateEvents()
-      return this
-    }
-    else {
+    // if (BackboneView.notInSc) {
+    //   if (!this.template) {
+    //     throw new Error('No template in view')
+    //   }
+    //   this.undelegateEvents()
+    //   this.$el.empty()
+    //   const html = this.template(this.getContext())
+    //   jQuery(html).appendTo(this.$el)
+    //   this.delegateEvents()
+    //   this.trigger('afterViewRender', this)
+    //   return this
+    // }
+    // else {
       throw new Error('Not implemented')
-    }
+    // }
   }
 
   template: Template<Context> | undefined
@@ -62,6 +64,10 @@ class MyFormView extends BackboneView {
 ```
    */
   bindings?: BackboneViewBindings
+  /** optional model for FormView bidings */
+  validationModel?:VModel
+
+childViews?: TODO
 
   /**
    * Serialize the input of some form and save() the given model using it. 
@@ -79,7 +85,7 @@ class MyFormView extends BackboneView {
   // }
 
   getContext(): Context {
-    throw new Error("Method not implemented.")
+    return {} as Context
   }
 
   /** instance plugin container that can act on the jquery document fragment just before it's appended to this.$el. */
@@ -119,6 +125,12 @@ class MyFormView extends BackboneView {
    * @param softDestroy decides if the view should be empty instead of removed
   */
   destroy(softDestroy?: boolean): void {
+    if(BackboneView.notInSc){
+      this.model && this.model.off()
+      this.collection && this.collection.off()
+      this.undelegateEvents()
+      return 
+    }
     throw new Error("Method not implemented.")
   }
 

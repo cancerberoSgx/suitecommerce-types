@@ -6,16 +6,17 @@
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
-        "build": "npm run clean && tsc && npm run test-build && npm run sc-tsc",
+        "build": "npm run clean && tsc && npm run test-build-js && npm run sc-tsc",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist compiled compiled_ts",
-        "test-run-js": "npm run build && node dist/spec",
-        "test-build": "tsc -p ./tsconfig-spec.json",
-        "test-sca-module-unit-test-build": "npm run build && cd sca-module-unit-test && npm i && npm run build",
+        "test-run-js": "npm run test-build-js && npx tsc && node dist/spec",
+        "test-build-js": "tsc -p ./tsconfig-spec.json && cp spec/ported/backbone.stickit.js dist/spec/ported/backbone.stickit.js",
+        "test-sca-module-unit-test-build": "cd sca-module-unit-test && npm i && npm run build",
         "test-run": " ts-node --project ./tsconfig-spec.json spec",
         "test": "npx tsc && npm run test-run && npm run test-run-js && npm run test-sca-module-unit-test-build",
         "sc-tsc": "npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder compiled  --addTslibJsInFolder",
-        "all": "npm run clean && npm run build && npm test"
+        "clean-npm": "npm run clean && find . -name \"node_modules\" -exec rm -rf '{}' + ; find . -name \"package-lock.json\" -exec rm -rf '{}' +;",
+        "all": "npm run clean-npm && npm i && npm run build && npm test"
     },
     "repository": {
         "type": "git",

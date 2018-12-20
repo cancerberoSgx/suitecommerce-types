@@ -1,7 +1,7 @@
 # for SCA gulp-local or gulp- unit-test:
 # npx gulp unit-test --modules SCTypesFrontEndExtrasSCAUnitTest --dont-exit
 OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/SCTypesFrontEndExtrasSCAUnitTest@1.0.0
-EXTRA_SCTSC_PARAMS="--addExtraAmdDependendenciesForSCAUnitTests Backbone.View.Plugin.DebugTemplateName --formatJsOutput"
+EXTRA_SCTSC_PARAMS="--addExtraAmdDependendenciesForSCAUnitTests Backbone.View.Plugin.DebugTemplateName --formatJsOutput --dependencyPrefix SCTypesExtras_"
 
 rm -rf $OUTPUT_FOLDER/* && \
 npm run clean && \

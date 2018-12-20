@@ -9,7 +9,8 @@
         "build": "tsc",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist",
-        "test": "echo 'no tests yet' && exit 0"
+        "test": "echo 'no tests yet' && exit 0",
+        "all": "npm run clean; rm -rf node_modules package-lock.json && npm i && npm run build && npm test"
     },
     "repository": {
         "type": "git",

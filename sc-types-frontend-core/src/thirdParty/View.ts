@@ -4,6 +4,7 @@ import { BackboneModel } from './Model';
 import { TODO } from '../types';
 import { Deferred } from './Deferred';
 import { BackboneView } from './BackboneView';
+import { BackboneViewBindings } from '../app';
 
 /**
  * Subset of SuiteCommerce View exposed for Extensions developers for declaring new views, adding child-views, etc.
@@ -259,9 +260,6 @@ export interface ShowInPushOptions {
   no_destroy?: boolean
 }
 
-
-
-export type BackboneViewBindings = { [selector: string]: (string | Fn) }
 
 
 export type ChildViewDefinition = {

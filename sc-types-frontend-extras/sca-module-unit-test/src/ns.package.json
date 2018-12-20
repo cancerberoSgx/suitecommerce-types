@@ -7,7 +7,7 @@
             "src/Tests/**/*.js"
         ],
         "unit-test-entry-point": [
-            "src/Tests/SCTypesFrontendExtrasTests.js"
+            "src/Tests/SCTypesExtras_SCTypesFrontendExtrasTests.js"
         ]
     }
 }

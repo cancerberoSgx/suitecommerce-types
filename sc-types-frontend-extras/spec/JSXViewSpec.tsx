@@ -65,7 +65,7 @@ describe('JSXViews and JSDOM in node.js', () => {
   it('should trigger clicks', () => {
     v.render()
     expect(html(v)).toContain(`<div>The people:<ul><li><span class="person-name">person0</span> of 1 years old</li></ul><button class="button032">Clickme</button></div>`)
-      
+
     v.$('.button032').click()
     expect(html(v)).toContain(`<div>The people:<ul><li><span class="person-name">person0</span> of 1 years old</li><li><span class="person-name">person2</span> of 3 years old</li></ul><button class="button032">Clickme</button></div>`)
   })
