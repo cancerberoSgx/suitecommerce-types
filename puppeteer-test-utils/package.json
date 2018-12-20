@@ -7,6 +7,7 @@
     "typings": "dist/src/index.d.ts",
     "scripts": {
         "build": "npx tsx",
+        "install-p": "npx ts-node src/_local_installation_scripts/installP.ts",
         "test": "npx ts-node node_modules/jasmine/bin/jasmine"
     },
     "repository": {

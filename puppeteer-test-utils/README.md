@@ -1,3 +1,5 @@
+TODO: move this project to misc-utils-of-mine-puppeteer
+
 utilities based on puppeteer for:
 
  * link puppeteer dependency from another node_modules (so it don't download it each time)

@@ -1,7 +1,7 @@
 import { ls, test, ln } from "shelljs";
 import { join, resolve } from 'path';
 
-export function linkDependencies(fromWhere: string = '/home/sg/git/WASM-ImageMagick/node_modules', to: string = './node_modules') {
+export function linkDependencies(fromWhere: string, to: string = './node_modules') {
   ls(fromWhere)
     .filter(f => {
       // console.log(f);
