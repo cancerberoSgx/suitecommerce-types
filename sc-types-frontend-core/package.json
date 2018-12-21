@@ -1,5 +1,5 @@
 {
-    "name": "sc-types-frontend-globals",
+    "name": "sc-types-frontend-core",
     "version": "2018.1.0",
     "description": "SuiteCommerce Development Tools to develop new themes or extensions",
     "main": "dist/src/index.js",
@@ -9,7 +9,9 @@
     "keywords": [],
     "author": "sg",
     "license": "ISC",
-    "dependencies": {},
+    "dependencies": {
+        "sc-types-frontend-core": "file:../sc-types-frontend-globals"
+    },
     "devDependencies": {
         "typescript": "^3.2.2"
     }
