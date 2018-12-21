@@ -10,7 +10,6 @@
     "author": "sg",
     "license": "ISC",
     "dependencies": {
-        "sc-types-frontend-core": "file:../sc-types-frontend-globals"
     },
     "devDependencies": {
         "typescript": "^3.2.2"
