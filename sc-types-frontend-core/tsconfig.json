@@ -4,7 +4,7 @@
     "module": "none",
     "moduleResolution":"node",
     "lib": [
-      "es2018"
+      "es2018", "dom"
     ],
     "outDir": "./dist",
     "rootDir": ".",
@@ -14,5 +14,5 @@
     "sourceMap": true,
     "declaration": true,
   },
-  "include":["src"]
+  "include":["src", "spec"]
 }

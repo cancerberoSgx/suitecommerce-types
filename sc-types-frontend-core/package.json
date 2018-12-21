@@ -6,16 +6,20 @@
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
-        "build":"tsc",
-        "build-watch":"tsc -w",
-        "clean":"rm -rf dist"
+        "build": "tsc",
+        "build-watch": "tsc -w",
+        "clean": "rm -rf dist",
+        "test": "ts-node node_modules/jasmine/bin/jasmine"
     },
     "keywords": [],
     "author": "sg",
     "license": "ISC",
-    "dependencies": {
-    },
+    "dependencies": {},
     "devDependencies": {
+        "@types/jasmine": "^3.3.4",
+        "jasmine": "^3.3.1",
+        "ts-node": "^7.0.1",
+        "tsd-check": "^0.2.1",
         "typescript": "^3.2.2"
     }
 }

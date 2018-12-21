@@ -7,3 +7,9 @@ import { Layout } from "./Layout";
 export interface Application extends ComponentContainer {
     getLayout():Layout
 }
+
+export interface ModuleEntryPoint {
+	/**
+	 */
+	mountToApp(componentContainer: Application):any
+}

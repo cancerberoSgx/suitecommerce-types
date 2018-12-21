@@ -4,7 +4,7 @@
     "module": "commonjs",
     // "moduleResolution":"node",
     "lib": [
-      "es2018"
+      "es2018", "dom","es2018.promise"
     ],
     "outDir": "./dist",
     "rootDir": ".",

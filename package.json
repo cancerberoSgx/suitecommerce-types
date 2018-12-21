@@ -1,10 +1,13 @@
 {
   "name": "suitecommerce-types",
   "version": "1.0.0",
+  "private": true,
   "description": "monorepo containing suitecommerce types for different areas.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+
+    "build":"yamat run npm run build",
+    "clean":"yamat run npm run clean"
   },
   "repository": {
     "type": "git",
