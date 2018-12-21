@@ -1,0 +1,1 @@
+declares types for core libraries abstractions like Backbone.View and core objects like Application, layout, etc

@@ -1,0 +1,16 @@
+{
+    "name": "sc-types-frontend-core",
+    "version": "2018.1.0",
+    "description": "SuiteCommerce Development Tools to develop new themes or extensions",
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
+    "typings": "dist/src/index.d.ts",
+    "scripts": {},
+    "keywords": [],
+    "author": "sg",
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {
+        "typescript": "^3.2.2"
+    }
+}

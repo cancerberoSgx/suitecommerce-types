@@ -1,0 +1,1 @@
+declares global variables defined or used by SuiteCommerce code - some are libraries and other just globals
