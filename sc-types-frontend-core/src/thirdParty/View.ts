@@ -2,7 +2,7 @@ import { Fn } from "..";
 import { Collection } from "./Collection";
 import { Model } from "./Model";
 
-export type Template<Context={}> = Fn<string, [Context]>
+export type Template<Context=any> = Fn<string, [Context]>
 /**
  * Subset of SuiteCommerce View exposed for Extensions developers for declaring new views, adding child-views, etc.
  *
@@ -13,7 +13,7 @@ export type Template<Context={}> = Fn<string, [Context]>
  *
  * @class
  */
-export interface View<Context, ModelOrCollection extends (Model|Collection) = Model> {
+export interface View<Context=any, ModelOrCollection extends (Model|Collection) = Model> {
 	/**
 	 * The template for this view, in general a function that accepts this view context object and returns an HTML string.
 	 * If it is a string an AMD module with that name is tried to be loaded.
@@ -77,10 +77,15 @@ export interface View<Context, ModelOrCollection extends (Model|Collection) = Mo
 // }
 
 
-export interface ViewConstructor {
-    new <Context, ModelOrCollection extends (Model | Collection) = Model>(...any: any[]): View<Context, ModelOrCollection>;
-    extend<Context, ModelOrCollection extends (Model | Collection) = Model>(def: Partial<View<Context, ModelOrCollection>>): ViewConstructor;
+export interface ViewConstructor<V extends View> {
+    // new <Context, ModelOrCollection extends (Model | Collection) = Model>(...any: any[]): View<Context, ModelOrCollection>;
+	// extend<Context, ModelOrCollection extends (Model | Collection) = Model>(def: PartialView<Context, ModelOrCollection>): ViewConstructor;
+	 new (...any: any[]): V
+	 extend<V2 extends V=V>(def:Partial<View>|Partial<V2>):ViewConstructor<V2>
 }
+// type PartialView<Context, ModelOrCollection extends (Model | Collection) = Model>=Partial<View<Context, ModelOrCollection>>
+
+// type ViewDef<V> = Parti
 
 // export function BackboneView<V extends View=View>(backboneObject=(window as any).Backbone): ViewConstructor<V>{
 //     return backboneObject.View

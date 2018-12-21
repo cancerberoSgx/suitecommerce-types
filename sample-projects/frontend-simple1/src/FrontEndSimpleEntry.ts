@@ -1,12 +1,15 @@
-import {View, ExtensionEntryPoint, ViewConstructor} from 'sc-types-frontend'
+import { ModuleEntryPoint, ViewConstructor } from 'sc-types-frontend';
 import { Simple1ListView } from './FrontEndSimple1.ListView';
 
-define<ExtensionEntryPoint, [ViewConstructor]>('FrontEndSimpleEntry', ['FrontEndSimple1.ListView'], (Simple1ListViewConstructor)=>({
-    mountToApp(container){
-        const view = new Simple1ListViewConstructor()
-        const a =new Array()
-        container.getComponent('PDP').on('test', ()=>{
-            
+define<ModuleEntryPoint, [ViewConstructor<Simple1ListView>]>('FrontEndSimpleEntry', ['FrontEndSimple1.ListView'], (Simple1ListViewConstructor) => ({
+    mountToApp(application) {
+        application.getLayout().on('afterAppendView', async view => {
+            const myView = new Simple1ListViewConstructor()
+            const valid = await myView.customValidation()
+            if (valid) {
+                alert('yahoo')
+            }
         })
     }
-}))
+})
+)

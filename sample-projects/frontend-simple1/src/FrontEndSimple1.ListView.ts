@@ -1,6 +1,6 @@
 import { ViewConstructor, Template , View, BackboneType, Model} from 'sc-types-frontend'
 
-define<ViewConstructor, [Template<Simple1ListViewContext>, BackboneType]>('FrontEndSimple1.ListView', 
+define<ViewConstructor<Simple1ListView>, [Template, BackboneType]>('FrontEndSimple1.ListView', 
 ['frontend_simple1_listview.tpl', 'Backbone'], (template, Backbone) => {
 
     const result = Backbone.View.extend<Simple1ListView>({
@@ -28,6 +28,6 @@ export interface Simple1ListViewContext {
 }
 
 export interface Simple1ListView extends View<Simple1ListViewContext, Model>{
-    customValidation(e:MouseEvent): Promise<boolean>
+    customValidation(e?:MouseEvent): Promise<boolean>
     model:Model
 }

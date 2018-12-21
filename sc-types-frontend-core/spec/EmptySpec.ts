@@ -2,6 +2,9 @@ import {expectType} from 'tsd-check';
 
 describe('empty', ()=>{
     it('empty spec', ()=>{
-        expectType<1>(1);
+        interface I {a: number}
+        interface J extends I {b:string}
+        type X=Partial<I>&Partial<J>
+        // expectType<X>({a:'9'});
     })
 })
