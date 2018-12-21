@@ -2,7 +2,7 @@
     "name": "jasmine-puppeteer-results",
     "version": "20.0.1",
     "description": "utilities to headless tests with puppeteer",
-    "bin": "./bin/sca-unit-test.js",
+    "bin": "./bin/jasmine-puppeteer-results.js",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",

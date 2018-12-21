@@ -1,6 +1,6 @@
 import { ChildProcess } from "child_process";
 import { config as shellConfig, exec } from "shelljs";
-import { AbstractConfig, getJasmineHtmlResults, JasmineResult } from "jasmine-puppeteer-results";
+import { getJasmineHtmlResults, JasmineResult, AbstractConfig } from "jasmine-puppeteer-results";
 
 // tools for execute sca's gulp unit-test command and wait till is ready so we can execute jasmineHtml tools
 

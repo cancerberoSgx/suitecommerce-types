@@ -10,6 +10,22 @@ export interface JasmineResult {
   /** something like 16 specs, 2 failures, 2 pending specs */
   barMessage: string
 }
+
+export interface AbstractConfig {
+  /** help info for CLI */
+  help?: boolean
+  debug?: boolean, 
+  onConsoleLog? : (s:string)=>void, 
+  consoleLog?: boolean
+  screenshot?: string
+  /** specify another project where puppeteer is installed so it's not downloaded each time. For example, if you know the project ../foo/bar has puppeteer installed, this is, the folder ../foo/bar/node_modules/puppeteer exists then use --puppeteerNodeModulesPath ../foo/bar */
+  puppeteerNodeModulesPath?: string
+}
+
+export interface GetJasmineHtmlResultsConfig extends AbstractConfig {
+  url: string, 
+}
+
 export async function waitForJasmine(page: Page, globalName = 'jQuery', ms = 300, timeout = 2000): Promise<JasmineResult> {
 
   await page.waitFor('.jasmine_html-reporter .results')
@@ -30,19 +46,6 @@ export async function waitForJasmine(page: Page, globalName = 'jQuery', ms = 300
     internalErrors: errors
   }
 }
-export interface AbstractConfig {
-  /** help info for CLI */
-  help?: boolean
-  debug?: boolean, 
-  onConsoleLog? : (s:string)=>void, 
-  consoleLog?: boolean
-  screenshot?: string
-  /** specify another project where puppeteer is installed so it's not downloaded each time. For example, if you know the project ../foo/bar has puppeteer installed, this is, the folder ../foo/bar/node_modules/puppeteer exists then use --puppeteerNodeModulesPath ../foo/bar */
-  puppeteerNodeModulesPath?: string
-}
-export interface GetJasmineHtmlResultsConfig extends AbstractConfig{
-  jasmineHtmlServerUrl: string, 
-}
 export async function getJasmineHtmlResults(config: GetJasmineHtmlResultsConfig) : Promise<JasmineResult>{
   
   const browser = await launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
@@ -55,8 +58,8 @@ export async function getJasmineHtmlResults(config: GetJasmineHtmlResultsConfig)
     }
   })
   config.debug && console.log(`getJasmineHtmlResults page created`);
-  await page.goto(config.jasmineHtmlServerUrl)
-  config.debug && console.log(`getJasmineHtmlResults waiting for navigation on url ${config.jasmineHtmlServerUrl}`);
+  await page.goto(config.url)
+  config.debug && console.log(`getJasmineHtmlResults waiting for navigation on url ${config.url}`);
   await page.waitForNavigation()
   config.screenshot && await page.screenshot({path: config.screenshot})
   const result = await waitForJasmine(page)

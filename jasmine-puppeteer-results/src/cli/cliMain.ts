@@ -26,4 +26,4 @@ if (args.puppeteerNodeModulesPath) {
 }
 // import { linkDependencies } from '../installation';
 
-require('./scaUnitTest').main()
+require('./cli').main()

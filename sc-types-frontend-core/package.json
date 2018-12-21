@@ -9,10 +9,11 @@
         "build": "tsc",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist",
-        "test-js": "npm run clean && npm run build && node dist/spec && npm run sca-module-unit-test",
+        "test-node-js": "npm run build && node dist/spec",
         "sca-module-unit-test": "cd sca-module-unit-test && npm i && sh build.sh && sca-unit-test --puppeteerNodeModulesPath /home/sg/git/WASM-ImageMagick/ --path ~/awa/kilimanjaro/ --modules SCTypesFrontEndCoreTests",
-        "test": "ts-node spec",
-        "all": "npm run clean; rm -rf node_modules package-lock.json && npm i && npm run build && npm test && npm run test-js"
+        "test-node": "ts-node spec",
+        "test": "npm run test-node && npm run test-node-js && npm run sca-module-unit-test && echo $?",
+        "all": "npm run clean; rm -rf node_modules package-lock.json && npm i && npm run build && npm test"
     },
     "repository": {
         "type": "git",
