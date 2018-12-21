@@ -9,7 +9,8 @@
         "build": "tsc",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist",
-        "test-js": "npm run clean && npm run build && node dist/spec",
+        "test-js": "npm run clean && npm run build && node dist/spec && npm run sca-module-unit-test",
+        "sca-module-unit-test": "cd sca-module-unit-test && npm i && sh build.sh && sca-unit-test --puppeteerNodeModulesPath /home/sg/git/WASM-ImageMagick/ --path ~/awa/kilimanjaro/ --modules SCTypesFrontEndCoreTests",
         "test": "ts-node spec",
         "all": "npm run clean; rm -rf node_modules package-lock.json && npm i && npm run build && npm test && npm run test-js"
     },
@@ -45,6 +46,7 @@
         "ts-node": "^7.0.1",
         "tsd-check": "^0.2.1",
         "typescript": "^3.2.2",
+        "sca-unit-test": "../sca-unit-test",
         "underscore": "^1.9.1"
     }
 }
