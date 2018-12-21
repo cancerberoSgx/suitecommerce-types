@@ -7,6 +7,7 @@ utilities based on puppeteer for:
 
 TODO:
 
+ * the CLI
  * move sca-related things to another project
  * move this project to misc-utils-of-mine-puppeteer 
  * other frameworks than jasmine
