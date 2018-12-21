@@ -5,7 +5,7 @@ export function linkDependencies(fromWhere: string, to: string = './node_modules
   ls(fromWhere)
     .filter(f => {
       // console.log(f);
-      return !test('-e', join(to, f)) && test('-d', join(fromWhere, f))
+      return !test('-e', join(to, f)) && test('-e', join(fromWhere, f))
     })
     .forEach(f => {
       // console.log(join(fromWhere, f), resolve(join(to, f)));

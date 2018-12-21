@@ -1,7 +1,5 @@
 
-// import { JSDOM } from 'jsdom';
 import { ls } from 'shelljs';
-import {BackboneView, BackboneFormView} from 'sc-types-frontend'
 
 declare const global: any
 
@@ -19,7 +17,6 @@ var JSDOM = require("jsdom").JSDOM
   global.Image = global.window.Image
   global.MouseEvent = global.window.MouseEvent
   global.window.$ = global.window.jQuery = global.$ = global.jQuery = jQuery
-
 
 // function installJsDom() {
 //   const dom = new JSDOM('<html><head><head><body></body></html>', {

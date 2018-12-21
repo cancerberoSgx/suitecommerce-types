@@ -1,4 +1,4 @@
-
+// TODO: move to misc project
 export async function loadScriptBrowser(path='jquery.js'){
   return new Promise(resolve=>{ 
     const s = document.createElement('script')

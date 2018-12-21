@@ -9,7 +9,6 @@ describe('compileAndFix', () => {
 
     it('basic, project: ../sample-projects/frontend-simple1/', () => {
         mkdir('-p', 'tmp')
-        getNodeModulesFolderPath
         const outputFolder = getPathRelativeToProjectFolder('tmp/testdist')
         const tsconfigFilePath = getPathRelativeToProjectFolder(`../sample-projects/frontend-simple1/tsconfig.json`)
         rm('-rf', outputFolder)

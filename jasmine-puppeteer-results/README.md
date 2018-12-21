@@ -1,4 +1,4 @@
-TODO: move this project to misc-utils-of-mine-puppeteer
+
 
 utilities based on puppeteer for:
 
@@ -7,5 +7,7 @@ utilities based on puppeteer for:
 
 TODO:
 
+ * move sca-related things to another project
+ * move this project to misc-utils-of-mine-puppeteer 
  * other frameworks than jasmine
  * report errors to CLI

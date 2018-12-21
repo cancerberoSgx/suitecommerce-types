@@ -1,14 +1,15 @@
 {
-    "name": "puppeteer-test-utils",
-    "version": "2018.1.0",
+    "name": "jasmine-puppeteer-results",
+    "version": "20.0.1",
     "description": "utilities to headless tests with puppeteer",
+    "bin": "./bin/sca-unit-test.js",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
         "build": "npx tsx",
-        "install-p": "npx ts-node src/_local_installation_scripts/installP.ts",
-        "test": "npx ts-node node_modules/jasmine/bin/jasmine"
+        "install-p": "npx ts-node -T src/_local_installation_scripts/installP.ts",
+        "test": "npm run install-p && npx ts-node -T node_modules/jasmine/bin/jasmine"
     },
     "repository": {
         "type": "git",
@@ -20,7 +21,9 @@
     "author": "Sebastian Gurin",
     "license": "MIT",
     "homepage": "https://github.com/cancerberoSgx/suitecommerce-types",
-    "dependencies": {},
+    "dependencies": {
+        "yargs-parser": "^11.1.1"
+    },
     "devDependencies": {
         "@types/jasmine": "^3.3.4",
         "@types/node": "^10",
