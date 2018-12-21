@@ -28,7 +28,7 @@ export interface ScaUnitTestConfig extends AbstractConfig{
 // export class PromiseEmitter
 export async function execGulpUnitTest(config: ScaUnitTestConfig): Promise<ScaUnitTestResult> {
   
-  config.debug && (shellConfig.silent = true)
+  !config.debug && (shellConfig.silent = true)
 
   if(!config.dontKillAllGulp){
     const p = exec('killall gulp')

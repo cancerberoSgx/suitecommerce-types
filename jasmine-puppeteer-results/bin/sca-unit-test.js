@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../dist/src/cli/scaUnitTest').main()
+require('../dist/src/cli/scaUnitTestMain')
