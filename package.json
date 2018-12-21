@@ -1,0 +1,21 @@
+{
+  "name": "suitecommerce-types",
+  "version": "1.0.0",
+  "description": "monorepo containing suitecommerce types for different areas.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://awalabs_sgurin@bitbucket.org/awalabs_sgurin/suitecommerce-types.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/awalabs_sgurin/suitecommerce-types#readme",
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "yamat": "^0.1.1"
+  }
+}

@@ -1,0 +1,14 @@
+[
+    {
+        "name":"sc-types-frontend-globals",
+        "path":"./sc-types-frontend-globals"
+    },
+    {
+        "name":"sc-types-frontend-core",
+        "path":"./sc-types-frontend-core"
+    },
+    {
+        "name":"sc-types-frontend",
+        "path":"./sc-types-frontend"
+    }
+]

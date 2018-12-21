@@ -1,0 +1,1 @@
+a simple example for a SC frontend (JavaScript) module, written with TypeScript strongly typed and using latest ecma features and then tranpiled to es5

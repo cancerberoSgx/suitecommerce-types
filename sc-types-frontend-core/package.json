@@ -5,7 +5,11 @@
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
-    "scripts": {},
+    "scripts": {
+        "build":"tsc",
+        "build-watch":"tsc -w",
+        "clean":"rm -rf dist"
+    },
     "keywords": [],
     "author": "sg",
     "license": "ISC",

@@ -1,5 +1,5 @@
 {
-    "name": "sc-types-frontend-globals",
+    "name": "sample-frontend-simple1",
     "version": "2018.1.0",
     "description": "SuiteCommerce Development Tools to develop new themes or extensions",
     "main": "dist/src/index.js",
@@ -13,7 +13,9 @@
     "keywords": [],
     "author": "sg",
     "license": "ISC",
-    "dependencies": {},
+    "dependencies": {
+        "sc-types-frontend": "file:../../sc-types-frontend"
+    },
     "devDependencies": {
         "typescript": "^3.2.2"
     }
