@@ -1,10 +1,10 @@
 import { Project, TypeGuards, CallExpression, SyntaxKind, SourceFile } from "ts-simple-ast";
-import { Result, Config } from "./types";
+import { FixAmdTslibResult, FixAmdTslibConfig } from "./types";
 
 
 /** will remove first statement `var $VARNAME = require("tslib")` found anbd return $VARNAME */
-export function addTslibAmdDependency(config: Config): Result {
-  const result: Result = {
+export function addTslibAmdDependency(config: FixAmdTslibConfig): FixAmdTslibResult {
+  const result: FixAmdTslibResult = {
     errors: [],
     outputCode: undefined,
     variableName: undefined

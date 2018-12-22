@@ -1,8 +1,8 @@
-import { Config , Result} from "./types";
+import { FixAmdTslibConfig , FixAmdTslibResult} from "./types";
 import { removeVariableDeclaration } from "./removeVariableDeclaration";
 import { addTslibAmdDependency } from "./addTslibAmdDependency";
 
-export function fixJsFileAmdTslib(config: Config): Result{
+export function fixJsFileAmdTslib(config: FixAmdTslibConfig): FixAmdTslibResult{
     const result1=removeVariableDeclaration(config)
     if(result1.errors.length){
         return result1
