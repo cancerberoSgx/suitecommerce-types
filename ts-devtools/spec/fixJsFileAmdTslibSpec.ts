@@ -1,7 +1,22 @@
 import { fixJsFileAmdTslib } from "../src/fixJsFileAmdTslib";
 
 describe('addTslibAmdDependency', () => {
-    fit('basic', () => {
+
+    it('custom dependencyName and other variablename', () => { //failing
+        const inputCode = `
+var tslib_2 = require("tslib");
+define('a', ['b'],function (b) { 
+}) 
+ `
+        const result = fixJsFileAmdTslib({
+            inputCode,
+            tslibDependencyName: 'TsLibrary'
+        })
+        expect(result.errors).toEqual([])
+        expect(result.outputCode).toContain(`define('a', ['b', "tslib"],function (b, tslib_2) { `)
+    })
+
+    it('real file', () => {
         const inputCode = `
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -42,7 +57,7 @@ define('FrontEndSimple1.ListView', ['frontend_simple1_listview.tpl', 'Backbone']
         const result = fixJsFileAmdTslib({
             inputCode
         })
-        console.log(result.outputCode);
+        // console.log(result.outputCode);
         expect(result.errors).toEqual([])
 
         expect(result.variableName).toBe('tslib_1')
@@ -53,4 +68,61 @@ define('FrontEndSimple1.ListView', ['frontend_simple1_listview.tpl', 'Backbone']
         expect(result.outputCode).toContain(`['frontend_simple1_listview.tpl', 'Backbone', "tslib"]`)
 
     })
+
+
+
+    xit('define with two args', () => {
+
+    })
+
+    xit('dependency names not literals', () => {
+
+    })
+
+    xit('empty dependency array', () => {
+
+    })
+
+
+    xit('not supported: dependency array from variable (must be literal)', () => {
+
+    })
+
+
+    xit('arrow', () => { //failing
+        const inputCode = `
+var tslib_2 = require("tslib");
+define('a', ['b'], (template)=> {
+}) 
+`
+        const result = fixJsFileAmdTslib({
+            inputCode,
+            // tslibDependencyName: 'TsLibrary'
+        })
+        // console.log(result.outputCode);
+        expect(result.errors).toEqual([])
+
+        // expect(result.variableName).toBe('tslib_1')
+        // expect(result.outputCode).not.toContain('var tslib_1')
+        // expect(result.outputCode).not.toContain('require("tslib")')
+
+        // expect(result.outputCode).toContain(`function (template, Backbone, tslib_1) {`)
+        // expect(result.outputCode).toContain(`['frontend_simple1_listview.tpl', 'Backbone', "tslib"]`)
+
+    })
+
+    xit(`require("tslib") but using other quotes`, () => { //fails
+        const inputCode = `
+    var tslib_2 = require('tslib');
+    define('a', ['b'], (template)=> {
+    }) 
+     `
+        const result = fixJsFileAmdTslib({
+            inputCode,
+            tslibDependencyName: 'TsLibrary'
+        })
+        // console.log(result.outputCode);
+        expect(result.errors).toEqual([])
+    })
+
 })
