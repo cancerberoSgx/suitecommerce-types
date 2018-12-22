@@ -1,5 +1,8 @@
-import { dirname } from "path";
-import { cd, exec, tempdir, mkdir } from "shelljs";
+import { dirname, resolve } from "path";
+import { cd, exec, tempdir, mkdir, rm } from "shelljs";
+import { readFileSync, writeFileSync } from "fs";
+import { fixJsFileAmdTslib } from "../fixAmdTslib/fixJsFileAmdTslib";
+import { FixAmdTslibResult } from "../fixAmdTslib/types";
 
 export interface CompileAndFixConfig {
     /** assumes tsconfig.json file is in the root project path */
@@ -11,33 +14,61 @@ export interface CompileAndFixConfig {
     tsConfig?: {
         target: 'es5' | 'es6' //TODO
     }
+    cleanOutputFolder?: boolean
+    breakOnFirstError?: boolean
 }
 export interface CompileAndFixResult {
     errors: string[]
+    /** the final tsc command used to compile the project */
+    tscFinalCommand: string
+    emittedFilePaths?: string[]
+    postProcessResults?: (FixAmdTslibResult & { fileName: string })[]
 }
 
 const forceTsConfig: { [name: string]: string | boolean } = {
     module: "commonjs",
     noEmitHelpers: true,
     importHelpers: true,
-    listEmittedFiles: ''
+    listEmittedFiles: true
 }
+
 export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult {
-    // const auxDir=`${tempdir()}/ts-devtools-${new Date().getTime()}`
-    // const auxDir=config.outputFolder
-    mkdir('-p', config.outputFolder)
+    const outputFolder = config.outputFolder ? resolve(config.outputFolder) : false
+    if (outputFolder) {
+
+        if (config.cleanOutputFolder) {
+            rm('-rf', outputFolder)
+        }
+        mkdir('-p', outputFolder)
+    }
     cd(dirname(config.tsconfigJsonPath))
-    const cmd = `npx tsc ${config.outputFolder ? `--outDir '${config.outputFolder}` : ``} ${Object.keys(forceTsConfig).map(name => `--${name} '${forceTsConfig[name] = ''}'`)}'`
-    const p = exec(cmd)
+    const tscFinalCommand = `npx tsc ${outputFolder ? `--outDir '${outputFolder}'` : ``} ${Object.keys(forceTsConfig).filter(name => !!forceTsConfig[name]).map(name => `--${name} ${forceTsConfig[name] === true ? '' : forceTsConfig[name]}`).join(' ')}`
+    const p = exec(tscFinalCommand)
     if (p.code !== 0) {
-        return { errors: [`Executing command ${cmd} throwed error: stderr: ${p.stderr}`] }
+        return { tscFinalCommand, errors: [`Executing command ${tscFinalCommand} throwed error: stderr: ${p.stderr}`] }
     }
     const prefix = 'TSFILE: '
-    const emittedFiles = p.stdout.split('\n').map(l => l.trim()).filter(l => l.startsWith(prefix)).map(l => l.substring(prefix.length, l.length))
-    console.log(emittedFiles);
+    const emittedFileNames = p.stdout.split('\n')
+        .map(l => l.trim())
+        .filter(l => l.startsWith(prefix) && l.endsWith('.js'))
+        .map(l => l.substring(prefix.length, l.length))
+        .filter(f => f.endsWith('.js'))
 
-    return null
-
+    let error = false
+    const postProcessResults = emittedFileNames
+        .map(fileName => {
+            const result = fixJsFileAmdTslib({
+                inputCode: readFileSync(fileName).toString()
+            })
+            if (error || config.breakOnFirstError && result.errors.length) {
+                error = true
+                return undefined
+            }
+            writeFileSync(fileName, result.outputCode)
+            return { ...result, fileName }
+        })
+        .filter(r => !!r)
+    return { errors: [], tscFinalCommand, emittedFilePaths: emittedFileNames, postProcessResults }
 }
 
 //TODO watcher

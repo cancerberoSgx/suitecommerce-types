@@ -2,10 +2,13 @@ import { addTslibAmdDependency } from "../../src/fixAmdTslib/addTslibAmdDependen
 import { compileAndFix } from "../../src/compileAndFix/compileAndFix";
 import { rm } from "shelljs";
 
-describe('compileANDFIX', () => {
+describe('compileAndFix', () => {
     fit('basic', () => {
-        const outputFolder='./dist/testdist'
+        const outputFolder = './dist/testdist'
         rm('-rf', outputFolder)
-        compileAndFix({outputFolder,tsconfigJsonPath:'./tsconfig.json'})
+        const tsconfigJsonPath=`../sample-projects/frontend-simple1/tsconfig.json` //: './tsconfig.json'
+        const result = compileAndFix({ outputFolder, tsconfigJsonPath, breakOnFirstError: true })
+
+        console.log('\n\n', JSON.stringify(result, null, 2) );
     })
 })

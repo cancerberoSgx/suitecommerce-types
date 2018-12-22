@@ -5,10 +5,24 @@ user tool that, given a folder with .ts files will transpile to .js files that S
  * must support es5 target output
  * there should be an output (perhaps not es5) that is clean, very clean without helpers, es2018, so others can read .js clearly.
  * there should be no performance impact (cannot repeat helpers on each file)
+
+
+# status
+
+ * .js file fixer, see spec/fixJsFileAmdTslibSpec.ts
+ * compile project and fix emitted files, see spec/compileAndFix/compileAndFixSpec.ts
+
+
+
+ # TODO
+
  * watch mode so it compiles .ts files on change
+ * preserve indentation (probably we need to ask the user for a eslintrc and reindent)
 
 
-# Posible solution:
+
+
+# OLD - Posible solution:
 
 1) * compile using:
 
@@ -42,8 +56,3 @@ define('FrontEndSimpleEntry', ['FrontEndSimple1.ListView', 'tslib'], function (S
 3) pack tslib as a SC module or just a .js file so is easy for users to include it in their SC builds.
 Note: tslib is amd/umd compatible https://github.com/Microsoft/tslib/blob/master/tslib.js so we should publish it as SC module. 
 
-
-
-# status
-
- * .js file fixer, see spec/fixJsFileAmdTslibSpec.ts
