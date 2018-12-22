@@ -10,5 +10,9 @@
     {
         "name":"sc-types-frontend",
         "path":"./sc-types-frontend"
+    },
+    {
+        "name":"ts-devtools",
+        "path":"./ts-devtools"
     }
 ]

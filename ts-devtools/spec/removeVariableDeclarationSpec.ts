@@ -1,4 +1,4 @@
-import { removeVariableDeclaration } from "../src/removeVariableDeclaration";
+import { removeVariableDeclaration } from "../src/fixJsFileAmdTslib/removeVariableDeclaration";
 
 describe('removeVariableDeclaration', () => {
     it('basic', () => {
