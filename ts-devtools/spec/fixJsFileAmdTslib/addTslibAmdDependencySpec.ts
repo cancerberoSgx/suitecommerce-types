@@ -1,4 +1,4 @@
-import { addTslibAmdDependency } from "../src/fixJsFileAmdTslib/addTslibAmdDependency";
+import { addTslibAmdDependency } from "../../src/fixJsFileAmdTslib/addTslibAmdDependency";
 
 describe('addTslibAmdDependency', () => {
     it('basic', () => {

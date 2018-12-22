@@ -1,0 +1,1 @@
+export {fixJsFileAmdTslib} from './fixJsFileAmdTslib/fixJsFileAmdTslib'
