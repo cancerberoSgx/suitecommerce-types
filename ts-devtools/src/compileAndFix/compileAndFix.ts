@@ -16,7 +16,12 @@ export interface CompileAndFixConfig {
     }
     cleanOutputFolder?: boolean
     breakOnFirstError?: boolean
+    /**if true will run `npx eslint --fix` before writing the files using the target project cwd. 
+     * Note that the target project needs to have support for eslint (all dependencies installed locally)
+     * and have a tslintrc file available since the project will be defining indentation style.*/
+    eslintFix?:boolean
 }
+
 export interface CompileAndFixResult {
     errors: string[]
     /** the final tsc command used to compile the project */
@@ -25,12 +30,14 @@ export interface CompileAndFixResult {
     postProcessResults?: (FixAmdTslibResult & { fileName: string })[]
 }
 
+
 const forceTsConfig: { [name: string]: string | boolean } = {
     module: "commonjs",
     noEmitHelpers: true,
     importHelpers: true,
     listEmittedFiles: true
 }
+
 
 export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult {
     const outputFolder = config.outputFolder ? resolve(config.outputFolder) : false
@@ -64,11 +71,18 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
                 error = true
                 return undefined
             }
+            // const output=config.eslintFix ? eslintFix(fileName)
             writeFileSync(fileName, result.outputCode)
             return { ...result, fileName }
         })
         .filter(r => !!r)
     return { errors: [], tscFinalCommand, emittedFilePaths: emittedFileNames, postProcessResults }
 }
+
+// function eslintFix(fileName:string) {
+//     if
+//  //TODO
+//  return f
+// }
 
 //TODO watcher

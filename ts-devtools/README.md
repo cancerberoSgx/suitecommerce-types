@@ -15,7 +15,7 @@ user tool that, given a folder with .ts files will transpile to .js files that S
 
 
  # TODO
-
+ * add tslib.js AMD module and perhaps generate ns.package.json
  * watch mode so it compiles .ts files on change
  * preserve indentation (probably we need to ask the user for a eslintrc and reindent)
 
