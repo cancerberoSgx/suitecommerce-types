@@ -5,6 +5,8 @@ import { FixAmdTslibResult } from "../fixAmdTslib/types";
 import { compileTsProject } from "../util/compileTsProject";
 import { addTslibJsInFolder } from "./addTslibJsInFolder";
 import { mv } from "shelljs";
+import { time, timeEnd } from "../util/timeLog";
+import Project from "ts-simple-ast";
 
 export interface AbstractConfig {
   /** assumes tsconfig.json file is in the root project path. The project must have typescript installed locally and that will be used to compile */
@@ -51,7 +53,8 @@ export interface CompileAndFixConfig extends AbstractConfig {
   formatJsOutput?: boolean
 
   /** comma separated of extra SCA AMD dependencies that will be added to the end of the list on each file. This is a workaround so SCA gulp local and gulp unit-test works since SCA issue regarding not requiring necessary dependencies automatically */
-  addExtraAmdDependendenciesForSCAUnitTests?: string
+  addExtraAmdDependendenciesForSCAUnitTests?: string,
+  project?: Project
 
 }
 
@@ -70,17 +73,19 @@ export interface CompileAndFixResult extends AbstractResult {
 
 /** 
  * given an input TS project using define() (not import/export) will 
- * will run tsc with approrpiate args (target) and then fixJsFileAmdTslib() and addTslibAmd() 
+ * will run tsc with appropriate args (target) and then fixJsFileAmdTslib() and addTslibAmd() 
  * so the output JS project is AMD understandable by SC
  * 
  * Notice that input project can import only types (ie: sc-types-frontend)
  */
 export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult {
+  time('compileAndFix')
   config.tsconfigFilePath = resolve(config.tsconfigFilePath)
   config.outputFolder = config.outputFolder ? resolve(config.outputFolder) : config.outputFolder
 
   const result = compileTsProject(config)
   if (result.errors.length) {
+    timeEnd('compileAndFix')
     return { ...result }
   }
 
@@ -119,19 +124,28 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
 
   }
 
-  return {
+  const finalResult = {
     errors: errors.concat(error ? [`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : []),
     tscFinalCommand: result.tscFinalCommand,
     emittedFileNames: result.emittedFileNames,
     postProcessResults,
     tslibFinalDest
   }
+  timeEnd('compileAndFix')
+  return finalResult
 }
 
 function postProcessEmittedJs(s: string): string {
-  // s = removeObjectDefineTopDeclaration(s)
-  s = removeUnwantedLines(s)
-  return s
+  const lines = s.split('\n')
+    .filter(line => !(
+      line.includes(`require("sc-types`) ||
+      line.includes(`require('sc-types`) ||
+      line.match(/^\s*\/\/\s*@ts\-ignore\s*$/) ||
+      (line.trim() === '"use strict";') ||
+      (line.trim() === `Object.defineProperty(exports, "__esModule", { value: true });`)
+      )
+    )
+  return lines.join('\n')
 }
 
 // function removeObjectDefineTopDeclaration(s: string): string {
@@ -149,18 +163,18 @@ function postProcessEmittedJs(s: string): string {
 
 // }
 
-function removeUnwantedLines(s: string): string {
-  //removing require("sc-types-frontend") declarations that might be still there and break SC
-  // TODO: do this better / quotes/format might change and this fails
-  const lines = s.split('\n')
-    .filter(line => !(
-      line.includes(`require("sc-types`) ||
-      line.includes(`require('sc-types`) ||
-      line.match(/^\s*\/\/\s*@ts\-ignore\s*$/) ||
-      (line.trim() === '"use strict";') ||
-      (line.trim() === `Object.defineProperty(exports, "__esModule", { value: true });`)
-      )
-    )
-  return lines.join('\n')
-}
+// function removeUnwantedLines(s: string): string {
+//   //removing require("sc-types-frontend") declarations that might be still there and break SC
+//   // TODO: do this better / quotes/format might change and this fails
+//   const lines = s.split('\n')
+//     .filter(line => !(
+//       line.includes(`require("sc-types`) ||
+//       line.includes(`require('sc-types`) ||
+//       line.match(/^\s*\/\/\s*@ts\-ignore\s*$/) ||
+//       (line.trim() === '"use strict";') ||
+//       (line.trim() === `Object.defineProperty(exports, "__esModule", { value: true });`)
+//       )
+//     )
+//   return lines.join('\n')
+// }
 

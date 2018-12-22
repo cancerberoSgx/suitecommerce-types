@@ -9,7 +9,7 @@ npx tsc && \
 mkdir -p  $OUTPUT_FOLDER && \
 node node_modules/.bin/sc-tsc \
   --tsconfigFilePath ./tsconfig.json \
-  --addTslibJsInFolder $OUTPUT_FOLDER/extra --debug \
+  --addTslibJsInFolder $OUTPUT_FOLDER/extra --debug --printTimes \
   --outputFolder $OUTPUT_FOLDER \
   $EXTRA_SCTSC_PARAMS \
   && \

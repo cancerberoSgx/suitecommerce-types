@@ -29,6 +29,7 @@ export interface CustomImportSpecifier {
 
 export interface Import2DefineResult extends AbstractResult {
   perFileResults: Import2DefineOneResult[]
+  project:Project
 }
 
 /**
@@ -80,7 +81,8 @@ export function _import2defineReset() {
 export function import2defineProject(config: Import2DefineConfig & { project: Project }): Import2DefineResult {
   const result: Import2DefineResult = {
     errors: [],
-    perFileResults: []
+    perFileResults: [], 
+    project: config.project
   }
   _import2defineReset()
   result.perFileResults =

@@ -1,9 +1,12 @@
 import { CallExpression, Project, TypeGuards } from "ts-simple-ast";
 import { FixAmdTslibConfig, FixAmdTslibResult } from "./types";
+import { time, timeEnd } from "../util/timeLog";
 
 
 /** will remove first statement `var $VARNAME = require("tslib")` found anbd return $VARNAME */
 export function addTslibAmdDependency(config: FixAmdTslibConfig): FixAmdTslibResult {
+
+  // time('addTslibAmdDependency')
   const result: FixAmdTslibResult = {
     errors: [],
     outputCode: undefined,
@@ -17,6 +20,8 @@ export function addTslibAmdDependency(config: FixAmdTslibConfig): FixAmdTslibRes
     TypeGuards.isCallExpression(node) &&
     node.getText().trim().startsWith('define')) as CallExpression
   if (!callExpression) {
+
+  // timeEnd('addTslibAmdDependency')
     return { ...result, errors: ['no define() CallExpression found'] }
   }
   if (config.variableName) {
@@ -24,10 +29,14 @@ export function addTslibAmdDependency(config: FixAmdTslibConfig): FixAmdTslibRes
     //TODO args.length must be at least 2
     const dependencyNames = args[args.length - 2]
     if (!TypeGuards.isArrayLiteralExpression(dependencyNames)) {
+
+  // timeEnd('addTslibAmdDependency')
       return { ...result, errors: ['define() dependencyNames argument is not ArrayLiteralExpression'] }
     }
     const dependencyHandler = args[args.length - 1]
     if (!TypeGuards.isFunctionExpression(dependencyHandler)) {
+
+  // timeEnd('addTslibAmdDependency')
       return { ...result, errors: ['define() dependencyHandler argument is not isFunctionExpression'] }
     }
     // TODO: could be arrow, or even a variable name referencing a function !
@@ -48,6 +57,8 @@ export function addTslibAmdDependency(config: FixAmdTslibConfig): FixAmdTslibRes
     sourceFile.formatText()
     // sourceFile.organizeImports()
   }
+
+  // timeEnd('addTslibAmdDependency')
   return {
     ...result,
     variableName: config.variableName,

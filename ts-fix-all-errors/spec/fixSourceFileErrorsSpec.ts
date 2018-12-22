@@ -1,7 +1,8 @@
-import { Project, SourceFile, Identifier, SyntaxKind, TypeGuards, TextChange, VariableDeclaration } from "ts-simple-ast";
-import { fixProjectErrors, fixSourceFileErrors } from "../src";
-import { mkdir, exec, rm, config } from "shelljs";
 import { writeFileSync } from "fs";
+import { config, exec, mkdir, rm } from "shelljs";
+import { Project } from "ts-simple-ast";
+import { fixProjectErrors } from "../src/fixProjectErrors";
+import { fixProjectSourceFileErrors } from "../src/fixSourceFileErrors";
 import { unique } from "./testUtil";
 
 config.silent=true
@@ -18,7 +19,7 @@ describe('fixSourceFileErrors', ()=>{
   function test(code: string,  equivalentJsCode: string, fileName:string='f1.ts'){
     const {project} = createProject(code, fileName)
     expect(project.getSourceFileOrThrow(fileName).getPreEmitDiagnostics().length).toBeGreaterThan(0)
-    fixSourceFileErrors({sourceFile: project.getSourceFileOrThrow(fileName), project})
+    fixProjectSourceFileErrors({sourceFile: project.getSourceFileOrThrow(fileName), project})
     expect(project.getSourceFileOrThrow(fileName).getPreEmitDiagnostics().length).toBe(0)
     
     const emitted = project.getSourceFileOrThrow(fileName).emit()
@@ -26,14 +27,14 @@ describe('fixSourceFileErrors', ()=>{
     expect(emitted.getEmitSkipped()).toBe(false)
 
     mkdir('-p', 'tmp')
-    const fname = `tmp/${unique()}.js`
-    writeFileSync(fname, project.getSourceFileOrThrow(fileName).getEmitOutput().getOutputFiles()[0].getText())
-    const g1 = exec(`node ${fname}`)
+    const fileName2 = `tmp/${unique()}.js`
+    writeFileSync(fileName2, project.getSourceFileOrThrow(fileName).getEmitOutput().getOutputFiles()[0].getText())
+    const g1 = exec(`node ${fileName2}`)
     expect(g1.code).toBe(0)
 
-    const fname2 = `tmp/${unique()}.js`
-    writeFileSync(fname2, equivalentJsCode)
-    const g2 = exec(`node ${fname2}`)
+    const fileName3 = `tmp/${unique()}.js`
+    writeFileSync(fileName3, equivalentJsCode)
+    const g2 = exec(`node ${fileName3}`)
     expect(g2.code).toBe(0)
 
     expect(g1.stdout).toBe(g2.stdout)
@@ -130,7 +131,7 @@ describe('fixSourceFileErrors', ()=>{
     `
     const project = new Project()
     const f = project.createSourceFile('f.ts', code)
-    fixSourceFileErrors({sourceFile: f, project})
+    fixProjectSourceFileErrors({sourceFile: f, project})
     console.log(project.getSourceFileOrThrow('f.ts').getText());
     
   })

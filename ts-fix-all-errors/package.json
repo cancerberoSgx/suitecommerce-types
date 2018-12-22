@@ -1,6 +1,7 @@
 {
   "name": "ts-fix-all-errors",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "bin": "bin/ts-fix-all-errors.js",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "typings": "dist/src/index.d.ts",

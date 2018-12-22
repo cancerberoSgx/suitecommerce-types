@@ -3,6 +3,7 @@ import { getDefaultExportValue, _getDefaultExportValueReset } from "./getDefault
 import { Import2DefineConfig, Import2DefineResult, ignoreFile } from "./import2define"
 import { defaultCustomImportSpecifiers, defaultIgnoreImportSpecifiers } from "./import2defineDefaults"
 import { memorizeSourceFile, namedImportReferenceIsType, _namedImportReferenceIsTypeReset } from "./namedImportReferenceIsType";
+import { time, timeEnd } from "../util/timeLog";
 
 
 export function _import2defineOneReset() {
@@ -13,7 +14,10 @@ export function _import2defineOneReset() {
 
 export function import2defineOne(config: Import2DefineConfig, sourceFile: SourceFile, result: Import2DefineResult): Import2DefineOneResult | undefined {
 
+  time('import2defineOne')
+
   if(ignoreFile(sourceFile)){
+    timeEnd('import2defineOne') 
     return  {
       exportName: sourceFile.getBaseNameWithoutExtension(),
       imports: [],
@@ -87,6 +91,7 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
   const { error, exportName, exportValue, exportStatement } = getDefaultExportValue(sourceFile, config)
   // HEADS UP:  notice that it's valid that a file doesn't have any default exports - users can group interfaces and type as named exports if they want. 
   if (error) {
+    timeEnd('import2defineOne') 
     return postError(error)
   }
   if (exportStatement) {
@@ -121,6 +126,8 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
   if (config.debug) {
     console.log('import2defineOne finish', { exportName: response.exportName, imports: response.imports.map(i => i.moduleSpecifier).join(', '), importsToIgnore: response.importsToIgnore.join(', ') })
   }
+
+  timeEnd('import2defineOne')
   return response
 }
 

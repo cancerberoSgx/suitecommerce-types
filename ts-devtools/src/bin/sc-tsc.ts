@@ -1,6 +1,7 @@
 import minimist from 'minimist'
 import { AllConfig, import2defineCompileAndFix } from '../util/import2defineCompileAndFix';
 import { help } from './help';
+import { printTimes } from '../util/timeLog';
 
 export function main() {
   const args = minimist((process.argv.slice(2)))
@@ -14,6 +15,13 @@ ${JSON.stringify(config)}
     exit('Invalid call, insufficient arguments. ', 1, true)
   }
   const result = import2defineCompileAndFix(config)
+
+  if(config.printTimes){
+    console.log(`TIMES: 
+${printTimes().join('\n')}
+    `)
+    
+  }
 //   if (config.debug) {
 //     console.log(`Results: 
 // ${JSON.stringify({

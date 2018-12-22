@@ -5,6 +5,7 @@ import { import2define, Import2DefineConfig, Import2DefineResult } from "../impo
 import { startWatch, WatchEvent } from "./startWatch";
 import { fixProjectErrors } from "ts-fix-all-errors";
 import Project from "ts-simple-ast";
+import { time, timeEnd, withTime } from "./timeLog";
 
 export interface AllConfig extends CompileAndFixConfig, Import2DefineConfig {
   outputFolder: string
@@ -12,7 +13,8 @@ export interface AllConfig extends CompileAndFixConfig, Import2DefineConfig {
   tsOutputFolder?: string
   /** watch mode will recompile changed files only */
   watch?: boolean,
-  watchListener?: (event: WatchEvent)=>true|void
+  watchListener?: (event: WatchEvent) => true | void
+  printTimes?: boolean
 }
 
 export interface AllResult extends CompileAndFixResult, Import2DefineResult {
@@ -22,6 +24,7 @@ export interface AllResult extends CompileAndFixResult, Import2DefineResult {
 /** will execute import2define() first using a tmp project folder and then compileAndFix() over that one 
  * to generate a valid JS AMD project that SC understand */
 export function import2defineCompileAndFix(config: AllConfig): AllResult {
+  time('import2defineCompileAndFix')
   config.tsconfigFilePath = resolve(config.tsconfigFilePath)
   config.outputFolder = config.outputFolder ? resolve(config.outputFolder) : config.outputFolder
   shellConfig.silent = !config.debug
@@ -38,15 +41,15 @@ export function import2defineCompileAndFix(config: AllConfig): AllResult {
 
   if (import2defineResult.errors.length) {
     !config.debug && rm('-rf', outputFolder)
+    timeEnd('import2defineCompileAndFix')
     return { ...import2defineResult, tscFinalCommand: '' }
   }
 
-   // first we run fixallProjectErrors (again) but on entire project this time:
-   const tofix = join(outputFolder, 'tsconfig.json')
-   const project = new Project({tsConfigFilePath:tofix})
-   fixProjectErrors({project})
-  //  console.log(tofix);
-  //  process.exit(1)
+  // first we run fixallProjectErrors (again) but on entire project this time:
+  const toFix = join(outputFolder, 'tsconfig.json')
+  const project = new Project({ tsConfigFilePath: toFix })
+
+  withTime('fixProjectErrors', () => fixProjectErrors({ project }))
 
   inputFolder = outputFolder
   outputFolder = config.outputFolder
@@ -56,6 +59,7 @@ export function import2defineCompileAndFix(config: AllConfig): AllResult {
 
   const result = compileAndFix({
     ...config,
+    project,
     tsconfigFilePath: `${inputFolder}/tsconfig.json`,
     breakOnFirstError: true,
     addTslibJsInFolder: config.addTslibJsInFolder || `src`
@@ -65,11 +69,12 @@ export function import2defineCompileAndFix(config: AllConfig): AllResult {
     rm('-rf', outputFolderFirst)
   }
 
-  startWatch({
-    ...config,
-    filesToWatch: import2defineResult.perFileResults.map(r => r.sourceFile.getFilePath())
-  })
+  // startWatch({
+  //   ...config,
+  //   filesToWatch: import2defineResult.perFileResults.map(r => r.sourceFile.getFilePath())
+  // })
 
+  timeEnd('import2defineCompileAndFix')
   return { ...import2defineResult, ...result }
 }
 

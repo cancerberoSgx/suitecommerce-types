@@ -36,6 +36,7 @@
     "dependencies": {
         "minimist": "^1.2.0",
         "misc-utils-of-mine": "0.0.4",
+        "pretty-ms": "^4.0.0",
         "shelljs": "^0.8.3",
         "ts-fix-all-errors": "file:../ts-fix-all-errors",
         "ts-simple-ast": "^20.0.0",

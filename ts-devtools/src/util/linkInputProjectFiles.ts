@@ -1,6 +1,7 @@
 import { dirname, resolve } from "path"
 import { mkdir, ln, ls, test } from "shelljs"
 import { AbstractConfig } from "../compileAndFix/compileAndFix"
+import { time, timeEnd } from "./timeLog";
 
 /** Called by import2define() to complete the output project setup. Will create links in `config.outputFolder` like node_modules so they point to `config.tsconfigFilePath`'s folder
  * 
@@ -8,6 +9,7 @@ import { AbstractConfig } from "../compileAndFix/compileAndFix"
  * TODO: review this since it can cause problems. Ideally we want to create a new project with the right configuration or even work in an existing ts project. in later case we should check if configuration is supported. 
 */
 export function linkInputProjectFiles(config: AbstractConfig) {
+  // time('linkInputProjectFiles')
   const tsConfigFolder = dirname(resolve(config.tsconfigFilePath))
   if (!config.skipLinkInputProjectFiles) {
     ln('-sf', `${tsConfigFolder}/node_modules`, `${config.outputFolder}/node_modules`)
@@ -20,4 +22,5 @@ export function linkInputProjectFiles(config: AbstractConfig) {
         }
       })
   }
+  // timeEnd('linkInputProjectFiles')
 }

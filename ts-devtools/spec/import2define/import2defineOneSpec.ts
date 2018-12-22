@@ -11,7 +11,7 @@ describe('import2defineOne', () => {
     const project = new Project()
     const sourceFile = project.createSourceFile(fileName, source)
     const import2DefineResult: Import2DefineResult = {
-      errors: [], perFileResults: []
+      errors: [], perFileResults: [], project
     }
     let output: string
     _import2defineOneReset()
