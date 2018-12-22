@@ -1,6 +1,7 @@
 {
-    "name": "sc-types-frontend-core",
+    "name": "sample-frontend-simple1",
     "version": "2018.1.0",
+    "private": true,
     "description": "SuiteCommerce Development Tools to develop new themes or extensions",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
@@ -15,12 +16,13 @@
     "author": "sg",
     "license": "ISC",
     "dependencies": {
+        "ts-simple-ast": "^20.0.0"
     },
     "devDependencies": {
-        "@types/jasmine": "^3.3.4",
+        "@types/jasmine": "^3.3.5",
+        "@types/node": "^10.12.18",
         "jasmine": "^3.3.1",
         "ts-node": "^7.0.1",
-        "tsd-check": "^0.2.1",
         "typescript": "^3.2.2"
     }
 }

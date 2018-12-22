@@ -10,53 +10,29 @@ export interface Layout extends View<{}> {
     /**
      * Set's the current view
      */
-    showContent(view:View, dont_scroll?:boolean):Deferred
+    showContent(view: View, dont_scroll?: boolean): Deferred
 
     /**
      * Get's the current view.
      */
-    getCurrentView():View
+    getCurrentView(): View
 
     /**
      * Shows given view in a modal
      */
-    showInModal(view:View, options?:any):Deferred 
+    showInModal(view: View, options?: any): Deferred
 
     /**
      * Closes the current opened modal, if any
      */
-    closeModal():void
-/**triggered before this layout view is appended to the DOM. This is NOT a cancelable event! */
-    on(name:'beforeAppendToDom', handler: Fn)
+    closeModal(): void
+    
+    /**triggered before this layout view is appended to the DOM. This is NOT a cancelable event! */
+    on(name: 'beforeAppendToDom', handler: Fn)
     /**Triggered after this layout view is appended to the DOM */
-    on(name:'afterAppendToDom', handler: Fn)
+    on(name: 'afterAppendToDom', handler: Fn)
     /**Triggered before the user navigates (current view changes). This is NOT a cancelable event! */
-    on(name:'beforeAppendView', handler: (v:View)=>void)
+    on(name: 'beforeAppendView', handler: Fn<void, [View]>)
     /**Triggered after the user navigates (current view changes)*/
-    on(name:'afterAppendView', handler: (v:View)=>void)
+    on(name: 'afterAppendView', handler: Fn<void, [View]>)
 }
-
-// /**
-//  * triggered before this layout view is appended to the DOM. This is NOT a cancelable event!
-//  * @event Layout#beforeAppendToDom
-//  * @type {Layout}
-//  * @property {Layout} layout
-//  */
-
-// /**
-//  * Triggered after this layout view is appended to the DOM
-//  * @event Layout#afterAppendToDom
-//  * @type {Layout}
-//  */
-
-// /**
-//  * Triggered before the user navigates (current view changes). This is NOT a cancelable event!
-//  * @event Layout#beforeAppendView
-//  * @type {View}
-//  */
-
-// /**
-//  * Triggered after the user navigates (current view changes)
-//  * @event Layout#afterAppendView
-//  * @type {View}
-//  */

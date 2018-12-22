@@ -54,39 +54,7 @@ export interface View<Context=any, ModelOrCollection extends (Model|Collection) 
 	destroy(): void
 }
 
-// export interface ViewConstructor<V extends View=View> {
-// 	prototype: V
-// 	new<V2 extends View = V> (...any):V2
-// 	extend(def: Partial<V>): ViewConstructor<V>
-// 	// extend<V2 extends Partial<View> = V> (def: Partial<V2>): ViewConstructor<V2>
-// }
-
-
-// export interface ViewConstructor <V extends View=View> {
-// 	// prototype: V
-// 	new<V2 extends View=V> (...any):V2
-// 	extend<V2 extends View=V>(def: Partial<V2>): ViewConstructor<V2>
-// 	// extend<V2 extends Partial<View> = V> (def: Partial<V2>): ViewConstructor<V2>
-// }
-
-
-// export interface ViewConstructor{
-// 	// prototype: V
-// 	new<V2 extends View<unknown>> (...any):V2
-// 	extend<V2 extends View<unknown>>(def: Partial<V2>): ViewConstructor
-// }
-
-
 export interface ViewConstructor<V extends View> {
-    // new <Context, ModelOrCollection extends (Model | Collection) = Model>(...any: any[]): View<Context, ModelOrCollection>;
-	// extend<Context, ModelOrCollection extends (Model | Collection) = Model>(def: PartialView<Context, ModelOrCollection>): ViewConstructor;
 	 new (...any: any[]): V
 	 extend<V2 extends V=V>(def:Partial<View>|Partial<V2>):ViewConstructor<V2>
 }
-// type PartialView<Context, ModelOrCollection extends (Model | Collection) = Model>=Partial<View<Context, ModelOrCollection>>
-
-// type ViewDef<V> = Parti
-
-// export function BackboneView<V extends View=View>(backboneObject=(window as any).Backbone): ViewConstructor<V>{
-//     return backboneObject.View
-// }
