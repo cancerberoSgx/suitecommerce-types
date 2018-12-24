@@ -25,15 +25,29 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
       result.errors = [...result.errors, 'not named import found / not supported:' + id.getText()];
       return;
     }
+
+    let importNamesToBeIgnored: string[]=[]
+    // let importNeedsToRemain=false
     namedImports.forEach(ni => {
       const customImportSpecifier = config.customImportSpecifiers.find(i => i.predicate(id, ni));
       const customImportSpecifierFn = customImportSpecifier ? customImportSpecifier.getImportSpecifier : ((id: ImportDeclaration, is: string) => moduleSpecifier);
-      imports.push({
-        name: ni,
-        moduleSpecifier: customImportSpecifierFn(id, ni),
-        importSpecifierSourceFile: (!id.getModuleSpecifierSourceFile()) ? undefined : id.getModuleSpecifierSourceFile()
-      });
+      const finalImportSpecififier = customImportSpecifierFn(id, ni)
+      if(finalImportSpecififier){
+        imports.push({
+          name: ni,
+          moduleSpecifier: finalImportSpecififier,
+          importSpecifierSourceFile: !id.getModuleSpecifierSourceFile() ? undefined : id.getModuleSpecifierSourceFile()
+        });
+      }else {
+        importNamesToBeIgnored.push(ni)
+        // importNeedsToRemain=true
+      }
     });
+    if(importNamesToBeIgnored.length){
+      // if(importNeedsToRemain){
+      // importsToIgnore.push(id.getText());
+      importsToIgnore.push(`import { ${importNamesToBeIgnored.join(', ')} } from '${moduleSpecifier}'`);
+    }
     id.remove();
   });
   if (sourceFile.getDescendantsOfKind(SyntaxKind.ExportAssignment).length) {

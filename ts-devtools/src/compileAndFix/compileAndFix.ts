@@ -61,11 +61,13 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
   }
   let error = false
   const filesWithErrors = []
+  let errors : string[]=[]
   const postProcessResults = result.emittedFileNames
     .map(fileName => {
       const result = fixJsFileAmdTslib({
         inputCode: readFileSync(fileName).toString()
       })
+      errors=errors.concat(result.errors) 
       if (error || config.breakOnFirstError && result.errors.length) {
         error = true
         filesWithErrors.push(fileName)
@@ -77,7 +79,8 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
     .filter(r => !!r)
   const tslibFinalDest = addTslibAmd(config)
   return {
-    errors: error ? [`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : [], tscFinalCommand: result.tscFinalCommand,
+    errors: errors.concat( error ?[`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : []), 
+    tscFinalCommand: result.tscFinalCommand,
     emittedFilePaths: result.emittedFileNames,
     postProcessResults, tslibFinalDest
   }

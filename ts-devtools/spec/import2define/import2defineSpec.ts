@@ -28,7 +28,7 @@ describe('import2define', () => {
     it('single file', () => {
 
       test(`
-import {a, b} from 'foo' 
+import { a, b } from 'foo' 
 export const bar = 1
     `, `
 define('bar', ['foo', 'foo'], function(a: any, b: any){
@@ -39,18 +39,22 @@ define('bar', ['foo', 'foo'], function(a: any, b: any){
     })
 
     it('single file export declared separately', () => { //should work
+      // import { Utils } from 'suitecommerce' 
       test(`
-import {Util} from 'suitecommerce' 
-import {ExtensionEntryPoint} from 'sc-types-frontend'
+import { ExtensionEntryPoint, Utils } from 'sc-types-frontend'
 const obj: ExtensionEntryPoint = {
-  mountToApp: (container){}
+  mountToApp: (container){
+    alert(Utils.translate('hello'))
+  }
 }
 export const extension = obj
     `, `
-import {ExtensionEntryPoint} from 'sc-types-frontend'
-define('extension', ['Util'], function(Util: any){
+import { ExtensionEntryPoint } from 'sc-types-frontend'
+define('extension', ['Utils'], function(Utils: any){
   const obj: ExtensionEntryPoint = {
-  mountToApp: (container){}
+  mountToApp: (container){
+    alert(Utils.translate('hello'))
+  }
 }
   return obj
 })
@@ -60,25 +64,29 @@ define('extension', ['Util'], function(Util: any){
 
     it('other export decls in statements before should be preserved if interface decl', () => { //should work
       test(`
-import {Util, View} from 'sc-types-frontend'
+import { Utils, BackboneView, View } from 'sc-types-frontend'
 import template from './my_extension_view.tpl'
-export interface IMyExtensionView {
+export interface IMyExtensionView extends View {
   play(): void
 }
-export const MyExtensionView:IMyExtensionView = View.extend({
+export const MyExtensionView: IMyExtensionView = BackboneView.extend({
   template, 
-  play(){}
+  play(){
+    alert(Utils.translate('hello'))
+  }
 })
     `, `
 
-import {Util, View} from 'sc-types-frontend'
-define('MyExtensionView', ['my_extension_view.tpl'], function(template: any){
-  return View.extend({
+import { View } from 'sc-types-frontend'
+define('MyExtensionView', ['Utils', 'Backbone.View', 'my_extension_view.tpl'], function(Utils: any, BackboneView: any, template: any){
+  return BackboneView.extend({
   template, 
-  play(){}
+  play(){
+    alert(Utils.translate('hello'))
+  }
 })
 })
-export interface IMyExtensionView {
+export interface IMyExtensionView extends View {
   play(): void
 }
     
@@ -96,9 +104,8 @@ export interface IMyExtensionView {
 
       const project = new Project()
       project.createSourceFile('MyExtensionMain.ts', `
-import {Util} from 'suitecommerce' 
-import {ExtensionEntryPoint} from 'sc-types-frontend'
-import {MyExtensionView} from './MyExtensionView'
+import { Utils, ExtensionEntryPoint } from 'sc-types-frontend'
+import { MyExtensionView } from './MyExtensionView'
 const obj: ExtensionEntryPoint = {
   mountToApp: (container){
     const view = new MyExtensionView()
@@ -109,9 +116,9 @@ export const MyExtensionMain = obj
     `)
 
       project.createSourceFile('MyExtensionView.ts', `
-import {Util, View} from 'sc-types-frontend'
+import { Utils, BackboneView } from 'sc-types-frontend'
 import template from './my_extension_view.tpl'
-export const MyExtensionView = View.extend({
+export const MyExtensionView = BackboneView.extend({
   template
 })
     `)
@@ -125,8 +132,8 @@ export const MyExtensionView = View.extend({
 
       const strs = result.perFileResults.map(pr => printImport2DefineOneResult(pr))
       expectCodeEquals(strs[0], `
-import {ExtensionEntryPoint} from 'sc-types-frontend'
-define('MyExtensionMain', ['Util', 'MyExtensionView'], function(Util: any, MyExtensionView: any){
+import { ExtensionEntryPoint } from 'sc-types-frontend'
+define('MyExtensionMain', ['Utils', 'MyExtensionView'], function(Utils: any, MyExtensionView: any){
   const obj: ExtensionEntryPoint = {
     mountToApp: (container){
       const view = new MyExtensionView()
@@ -137,10 +144,9 @@ define('MyExtensionMain', ['Util', 'MyExtensionView'], function(Util: any, MyExt
 })
       `)
       expectCodeEquals(strs[1], `
-import {Util, View} from 'sc-types-frontend'
-define('MyExtensionView', ['my_extension_view.tpl'], function(template: any){
-  return View.extend({
-    template
+define('MyExtensionView', ['Utils', 'Backbone.View', 'my_extension_view.tpl'], function(Utils: any, BackboneView: any, template: any){
+  return BackboneView.extend({
+    template  
   })
 })
       `)

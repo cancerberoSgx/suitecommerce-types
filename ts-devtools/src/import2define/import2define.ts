@@ -16,7 +16,8 @@ export interface IgnoreImportSpecifier {
 
 export interface CustomImportSpecifier {
   predicate: (id: ImportDeclaration, ni: string) => boolean,
-  getImportSpecifier: (id: ImportDeclaration, ni: string) => string
+  /** is undefined the specifier will be ignored */
+  getImportSpecifier: (id: ImportDeclaration, ni: string) => string|undefined
 }
 
 export interface Import2DefineResult extends AbstractResult {

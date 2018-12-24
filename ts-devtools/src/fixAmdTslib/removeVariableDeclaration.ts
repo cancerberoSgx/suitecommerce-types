@@ -16,7 +16,10 @@ export function removeVariableDeclaration(config: FixAmdTslibConfig): FixAmdTsli
     node.getText() === `require("tslib")`) as CallExpression
 
   if (!callExpression) {
-    return { ...result, errors: ['no require("tslib") CallExpression found'] }
+    // this means the file is not using any helper / feature
+    return { ...result, outputCode: sourceFile.getText()
+      // errors: ['no require("tslib") CallExpression found']
+     }
   }
 
   const variableDeclaration = callExpression.getFirstAncestorByKind(SyntaxKind.VariableDeclaration)
