@@ -5,7 +5,7 @@
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
-    "bin":"bin/sc-tsc",
+    "bin": "bin/sc-tsc",
     "scripts": {
         "build": "npm run clean && tsc && npm run copy",
         "build-watch": "tsc -w",
@@ -27,6 +27,7 @@
         "@types/minimist": "^1.2.0",
         "@types/node": "^10.12.18",
         "@types/shelljs": "^0.8.1",
+        "generate-cli-api-help": "0.0.3",
         "jasmine": "^3.3.1",
         "ts-node": "^7.0.1",
         "typescript": "^3.2.2"

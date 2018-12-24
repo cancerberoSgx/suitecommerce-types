@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import { rm, test } from "shelljs";
 import { compileAndFix } from "../../src/compileAndFix/compileAndFix";
-import { export2define } from "../../src/import2define/import2define";
+import { import2define } from "../../src/import2define/import2define";
 import { expectCodeNotToContain, expectCodeToContain } from "../testUtil";
 
 describe('compileAndFix', () => {
@@ -24,7 +24,7 @@ describe('compileAndFix', () => {
     let inputFolder = 'spec/fixtures/project1/'
     let outputFolder = './dist/project2'
     rm('-rf', outputFolder)
-    const export2defineResult = export2define({
+    const export2defineResult = import2define({
       tsconfigFilePath: `${inputFolder}/tsconfig.json`,
       outputFolder
     })

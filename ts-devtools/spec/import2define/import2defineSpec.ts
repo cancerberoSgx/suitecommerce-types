@@ -1,26 +1,25 @@
 import { Project } from "ts-simple-ast";
-import { export2defineProject, Export2DefineResult, export2define } from "../../src/import2define/import2define";
-import { export2defineOne, printExport2DefineOneResult } from "../../src/import2define/export2defineOne";
+import { import2defineProject, Import2DefineResult, import2define } from "../../src/import2define/import2define";
+import { import2defineOne, printImport2DefineOneResult } from "../../src/import2define/import2defineOne";
 import {expectCodeEquals} from '../testUtil'
 import { resolve } from "path";
 import { rm, test } from "shelljs";
 
-describe('export2define', () => {
+describe('import2define', () => {
 
-
-  describe('export2defineOne', () => {
+  describe('import2defineOne', () => {
 
     function test(source: string, expectedOutput: string, expectedErrors: string[]) {
       const project = new Project()
       const sourceFile = project.createSourceFile('test3.ts', source)
-      const result: Export2DefineResult = {
+      const result: Import2DefineResult = {
         errors: [], perFileResults: []
       }
-      const resultSingle = export2defineOne({
+      const resultSingle = import2defineOne({
         tsconfigFilePath: 'doesntMatter.json',
 
       }, sourceFile, result)
-      const output = printExport2DefineOneResult(resultSingle)
+      const output = printImport2DefineOneResult(resultSingle)
       expect(result.errors).toEqual(expectedErrors)
       expectCodeEquals(output, expectedOutput)
     }
@@ -91,7 +90,7 @@ export interface IMyExtensionView {
 
   })
 
-  describe('export2defineProject', () => {
+  describe('import2defineProject', () => {
 
     it('simple', () => {
 
@@ -117,14 +116,14 @@ export const MyExtensionView = View.extend({
 })
     `)
 
-      const result = export2defineProject({
+      const result = import2defineProject({
         tsconfigFilePath: '',
         project
       })
-      // result.perFileResults.forEach(pr => console.log(printExport2DefineFileResult(pr)))
+      // result.perFileResults.forEach(pr => console.log(printimport2defineFileResult(pr)))
       expect(result.errors).toEqual([])
 
-      const strs = result.perFileResults.map(pr => printExport2DefineOneResult(pr))
+      const strs = result.perFileResults.map(pr => printImport2DefineOneResult(pr))
       expectCodeEquals(strs[0], `
 import {ExtensionEntryPoint} from 'sc-types-frontend'
 define('MyExtensionMain', ['Util', 'MyExtensionView'], function(Util: any, MyExtensionView: any){
@@ -148,11 +147,11 @@ define('MyExtensionView', ['my_extension_view.tpl'], function(template: any){
     })
 
 
-    describe('export2define', () => {
+    describe('import2define', () => {
 
       it('write output project', () => {
         rm('-rf', 'dist/project1')
-        const result = export2define({
+        const result = import2define({
           tsconfigFilePath: resolve('spec/fixtures/project1/tsconfig.json'),
           outputFolder: resolve('dist/project1')
         })

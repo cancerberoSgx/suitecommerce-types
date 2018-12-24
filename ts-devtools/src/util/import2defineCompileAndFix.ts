@@ -1,34 +1,35 @@
-import { CompileAndFixConfig, CompileAndFixResult, compileAndFix } from "../compileAndFix/compileAndFix";
-import { Export2DefineConfig, Export2DefineResult, export2define } from "../import2define/import2define";
 import { dirname, resolve } from "path";
-import { rm , config as shellconfig} from "shelljs";
+import { config as shellconfig, rm } from "shelljs";
+import { compileAndFix, CompileAndFixConfig, CompileAndFixResult } from "../compileAndFix/compileAndFix";
+import { import2define, Import2DefineConfig, Import2DefineResult } from "../import2define/import2define";
 
-export interface AllConfig extends CompileAndFixConfig, Export2DefineConfig {
+export interface AllConfig extends CompileAndFixConfig, Import2DefineConfig {
   outputFolder: string
 }
 
-export interface AllResult extends CompileAndFixResult, Export2DefineResult {
+export interface AllResult extends CompileAndFixResult, Import2DefineResult {
 
 }
 
-/** will execute export2define() first using a tmp project folder and then compileAndFix() over that one to generate a valid JS AMD project that SC understand */
+/** will execute import2define() first using a tmp project folder and then compileAndFix() over that one 
+ * to generate a valid JS AMD project that SC understand */
 export function import2defineCompileAndFix(config: AllConfig): AllResult {
   shellconfig.silent = !config.debug
   let inputFolder = dirname(resolve(config.tsconfigFilePath));
-  let outputFolder = `${config.outputFolder}_ts`, outputFolderFirst=outputFolder
+  let outputFolder = `${config.outputFolder}_ts`, outputFolderFirst = outputFolder
   rm('-rf', outputFolder)
-  const export2defineResult = export2define({
-    ...config, 
+  const import2defineResult = import2define({
+    ...config,
     outputFolder
   })
-  if (export2defineResult.errors.length) {
+  if (import2defineResult.errors.length) {
     config.debug && rm('-rf', outputFolder)
-    return { ...export2defineResult, tscFinalCommand: '' }
+    return { ...import2defineResult, tscFinalCommand: '' }
   }
 
   inputFolder = outputFolder
   outputFolder = config.outputFolder
-  if(config.cleanOutputFolder){
+  if (config.cleanOutputFolder) {
     rm('-rf', config.outputFolder)
   }
   const result = compileAndFix({
@@ -37,7 +38,7 @@ export function import2defineCompileAndFix(config: AllConfig): AllResult {
     breakOnFirstError: true,
     addTslibJsInFolder: `${resolve(config.outputFolder)}/src`
   })
-  
+
   config.debug && rm('-rf', outputFolderFirst)
-  return {...export2defineResult, ...result}
+  return { ...import2defineResult, ...result }
 }

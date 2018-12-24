@@ -1,12 +1,12 @@
 import { ImportDeclaration, SourceFile, SyntaxKind, TypeGuards } from "ts-simple-ast";
 import { defaultCustomImportSpecifiers, defaultIgnoreImportSpecifiers } from "./import2defineDefaults";
-import { Export2DefineConfig, Export2DefineResult } from "./import2define";
+import { Import2DefineConfig, Import2DefineResult } from "./import2define";
 
-export function export2defineOne(config: Export2DefineConfig, sourceFile: SourceFile, result: Export2DefineResult): Export2DefineOneResult {
+export function import2defineOne(config: Import2DefineConfig, sourceFile: SourceFile, result: Import2DefineResult): Import2DefineOneResult {
   config.customImportSpecifiers = (config.customImportSpecifiers && config.customImportSpecifiers.length) ? config.customImportSpecifiers : defaultCustomImportSpecifiers;
   config.ignoreImportSpecifiers = (config.ignoreImportSpecifiers && config.ignoreImportSpecifiers.length) ? config.ignoreImportSpecifiers : defaultIgnoreImportSpecifiers;
   const importDeclarations = sourceFile.getDescendantsOfKind(SyntaxKind.ImportDeclaration);
-  const imports: Export2DefineOneResultImport[] = [];
+  const imports: Import2DefineOneResultImport[] = [];
   const importsToIgnore: string[] = [];
   importDeclarations.forEach(id => {
     const moduleSpecifier = id.getModuleSpecifier().getLiteralText();
@@ -84,23 +84,23 @@ export function export2defineOne(config: Export2DefineConfig, sourceFile: Source
   };
 }
 
-export interface Export2DefineOneResult {
+export interface Import2DefineOneResult {
   sourceFile: SourceFile;
   exportName: string;
-  imports: Export2DefineOneResultImport[];
+  imports: Import2DefineOneResultImport[];
   exportValue: string;
   body: string;
   statementOutsideHandler: string;
   importsToIgnore: string[];
 }
 
-export interface Export2DefineOneResultImport {
+export interface Import2DefineOneResultImport {
   name: string;
   moduleSpecifier: string;
   importSpecifierSourceFile: SourceFile | undefined;
 }
 
-export function printExport2DefineOneResult(r: Export2DefineOneResult): string {
+export function printImport2DefineOneResult(r: Import2DefineOneResult): string {
   return `
 ${r.importsToIgnore.join('\n')}
 define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier}'`).join(', ')}], function(${r.imports.map(i => `${i.name}: any`).join(', ')}){

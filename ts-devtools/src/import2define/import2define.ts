@@ -2,10 +2,10 @@ import { dirname, join, resolve } from "path";
 import { cp, mkdir, config as shellconfig } from "shelljs";
 import { ImportDeclaration, Project, QuoteKind } from "ts-simple-ast";
 import { AbstractConfig, AbstractResult } from "../compileAndFix/compileAndFix";
-import { export2defineOne, Export2DefineOneResult, printExport2DefineOneResult } from "./export2defineOne";
+import { import2defineOne, Import2DefineOneResult, printImport2DefineOneResult } from "./import2defineOne";
 import { linkInputProjectFiles } from "../util/linkInputProjectFiles";
 
-export interface Export2DefineConfig extends AbstractConfig {
+export interface Import2DefineConfig extends AbstractConfig {
   customImportSpecifiers?: CustomImportSpecifier[]
   ignoreImportSpecifiers?: IgnoreImportSpecifier[]
 }
@@ -19,17 +19,17 @@ export interface CustomImportSpecifier {
   getImportSpecifier: (id: ImportDeclaration, ni: string) => string
 }
 
-export interface Export2DefineResult extends AbstractResult {
-  perFileResults: Export2DefineOneResult[]
+export interface Import2DefineResult extends AbstractResult {
+  perFileResults: Import2DefineOneResult[]
 }
 
-export function export2define(config: Export2DefineConfig): Export2DefineResult {
+export function import2define(config: Import2DefineConfig): Import2DefineResult {
   shellconfig.silent = !config.debug
   const project = new Project({
     tsConfigFilePath: config.tsconfigFilePath,
     addFilesFromTsConfig: true,
   })
-  const result = export2defineProject({ project, tsconfigFilePath: config.tsconfigFilePath })
+  const result = import2defineProject({ project, tsconfigFilePath: config.tsconfigFilePath })
 
   const tsConfigFolder = dirname(resolve(config.tsconfigFilePath))
   if (config.outputFolder) {
@@ -42,7 +42,7 @@ export function export2define(config: Export2DefineConfig): Export2DefineResult 
     result.perFileResults.forEach(r => {
       const p = resolve(r.sourceFile.getFilePath())
       const name = join(config.outputFolder, p.substring(tsConfigFolder.length + 1, p.length))
-      const file = project2.createSourceFile(name, printExport2DefineOneResult(r), { overwrite: true })
+      const file = project2.createSourceFile(name, printImport2DefineOneResult(r), { overwrite: true })
       file.saveSync()
     })
     project2.saveSync()
@@ -53,8 +53,8 @@ export function export2define(config: Export2DefineConfig): Export2DefineResult 
   return result
 }
 
-export function export2defineProject(config: Export2DefineConfig & { project: Project }): Export2DefineResult {
-  const result: Export2DefineResult = {
+export function import2defineProject(config: Import2DefineConfig & { project: Project }): Import2DefineResult {
+  const result: Import2DefineResult = {
     errors: [],
     perFileResults: []
   }
@@ -65,7 +65,7 @@ export function export2defineProject(config: Export2DefineConfig & { project: Pr
     })
 
     .map(sourceFile => {
-      const r = result.errors.length ? undefined : export2defineOne(config, sourceFile, result)
+      const r = result.errors.length ? undefined : import2defineOne(config, sourceFile, result)
       //TODO support config.breakOnFirstError
       return r
     })
