@@ -1,5 +1,5 @@
 import { dirname, join, resolve } from "path";
-import { cp, mkdir, ln, ls } from "shelljs";
+import { cp, mkdir, ln, ls, test } from "shelljs";
 import { ImportDeclaration, Project, QuoteKind } from "ts-simple-ast";
 import { AbstractConfig, AbstractResult } from "../compileAndFix/compileAndFix";
 import { export2defineOne, Export2DefineOneResult, printExport2DefineOneResult } from "./export2defineOne";
@@ -48,16 +48,18 @@ export function export2define(config: Export2DefineConfig): Export2DefineResult 
     project2.saveSync()
 
 
-    // if (!config.skipLinkInputFiles) {
-    //   ln(`${tsConfigFolder}/node_modules`, `${config.outputFolder}/node_modules`)
-    //   ls('-R', tsConfigFolder)
-    //     .filter(f => !f.startsWith('node_modules'))
-    //     .forEach(f => {
-    //       mkdir('-p', `${config.outputFolder}/${dirname(f)}`)
-    //       ln(`${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`)
-
-    //     })
-    // }
+    if (!config.skipLinkInputFiles) {
+      ln(`${tsConfigFolder}/node_modules`, `${config.outputFolder}/node_modules`)
+      ls('-R', tsConfigFolder)
+        .filter(f => !f.startsWith('node_modules') && !test('-e', `${config.outputFolder}/${f}`))
+        .forEach(f => {
+          console.log(`${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`);
+          
+          mkdir('-p', `${config.outputFolder}/${dirname(f)}`)
+          // ln(`${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`)
+          ln(`${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`)
+        })
+    }
   }
 
   return result
