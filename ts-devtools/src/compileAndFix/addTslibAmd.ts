@@ -1,6 +1,7 @@
 import { CompileAndFixConfig } from "./compileAndFix";
 import { relative, isAbsolute, resolve, join } from "path";
 import { cp, mkdir, config as shellconfig } from "shelljs";
+import { getNodeModulesFolderPath } from "../util/misc";
 
 /**
  * @param config 
@@ -13,7 +14,10 @@ export function addTslibAmd(config: CompileAndFixConfig): string | undefined {
   }
   const finalDest = isAbsolute(config.addTslibJsInFolder) ? config.addTslibJsInFolder : resolve(relative(config.tsconfigFilePath, config.addTslibJsInFolder))
   mkdir('-p', finalDest)
-  const tslibJsPath = resolve(join(__dirname, '..', '..', 'node_modules/tslib/tslib.js'))
+  const tslibJsPath = resolve(join(getNodeModulesFolderPath(),  'tslib', 'tslib.js'))
+  if(config.debug){
+    console.log(`--addTslibJsInFolder - copying from "${tslibJsPath}" to "${finalDest}"`)
+  }
   cp(tslibJsPath, finalDest)
   return finalDest
 }

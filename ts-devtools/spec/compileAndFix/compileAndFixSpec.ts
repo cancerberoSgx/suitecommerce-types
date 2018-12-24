@@ -47,12 +47,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 define('FrontEndSimple1ListView', ['frontend_simple1_listview.tpl', "tslib"], function (template, tslib_1) {
     var Backbone = null;
         `)
-    expectCodeToContain(aFile, `
-        "use strict";
-        Object.defineProperty(exports, "__esModule", { value: true });
-        define('FrontEndSimple1ListView', ['frontend_simple1_listview.tpl', "tslib"], function (template, tslib_1) {
-            var Backbone = null;
-                `)
+
     expectCodeNotToContain(aFile, `require("tslib")`)
     expect(test('-f', `${outputFolder}/src/tslib.js`)).toBe(true)
   })

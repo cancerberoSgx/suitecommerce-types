@@ -21,13 +21,21 @@ ${JSON.stringify({
       ...result,
       perFileResults: (result.perFileResults || []).map(r => ({
         ...r,
-        sourceFile: r.sourceFile && r.sourceFile.getFilePath(), imports: r.imports.map(i => ({
+        body: ministr(r.body),
+        exportValue: ministr(r.exportValue),
+        statementOutsideHandler: ministr(r.statementOutsideHandler),
+        sourceFile: r.sourceFile && r.sourceFile.getFilePath(),
+        imports: r.imports.map(i => ({
           ...i,
-          importSpecifierSourceFile: i.importSpecifierSourceFile&&i.importSpecifierSourceFile.getFilePath()
+          importSpecifierSourceFile: i.importSpecifierSourceFile && i.importSpecifierSourceFile.getFilePath()
         }))
       })),
-    })
-      }, null, 2)}
+      postProcessResults: result.postProcessResults.map(pr => ({
+        ...pr,
+        outputCode: ministr(pr.outputCode)
+      })),
+    }, null, 2)
+      }
 `);
 
   }
@@ -42,6 +50,10 @@ ${result.errors.map(e => e).join('\n')}`, 1)
 
 function checkRequiredParams(config: AllConfig) {
   return config.tsconfigFilePath && config.outputFolder
+}
+
+function ministr(s: string): string {
+  return typeof s === 'undefined' ? 'undefined' : `string(${s.length})`
 }
 
 function exit(msg: string, code: number = 0, showHelp = false) {
