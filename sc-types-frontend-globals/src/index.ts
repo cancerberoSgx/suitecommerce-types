@@ -24,3 +24,7 @@ declare var SC: any
  */
  declare var getExtensionAssetsPath: (path:string)=>string
 
+ declare module "*.tpl" {
+  const value: (context:any)=>string;
+  export default value;
+}

@@ -76,7 +76,7 @@ export const MyExtensionMain = obj
 
       project.createSourceFile('MyExtensionView.ts', `
 import {Util, View} from 'sc-types-frontend'
-import {template} from './my_extension_view.tpl'
+import template from './my_extension_view.tpl'
 export const MyExtensionView = View.extend({
   template
 })
@@ -87,6 +87,7 @@ export const MyExtensionView = View.extend({
         project
       })
       result.perFileResults.forEach(pr => console.log(printExport2DefineFileResult(pr)))
+      expect(result.errors).toEqual([])
 
       const strs = result.perFileResults.map(pr => printExport2DefineFileResult(pr))
       expectCodeEquals(strs[0], `
@@ -103,7 +104,7 @@ define('MyExtensionMain', ['Util', 'MyExtensionView'], function(Util: any, MyExt
       `)
       expectCodeEquals(strs[1], `
 import {Util, View} from 'sc-types-frontend'
-define('MyExtensionView', ['./my_extension_view.tpl'], function(template: any){
+define('MyExtensionView', ['my_extension_view.tpl'], function(template: any){
   return View.extend({
     template
   })

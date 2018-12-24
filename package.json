@@ -5,8 +5,8 @@
   "description": "monorepo containing suitecommerce types for different areas.",
   "main": "index.js",
   "scripts": {
-
     "build":"yamat run npm run build",
+    "build-watch":"yamat run npm run build-watch",
     "clean":"yamat run npm run clean"
   },
   "repository": {

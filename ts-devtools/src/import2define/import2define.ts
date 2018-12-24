@@ -1,16 +1,20 @@
 import { ImportDeclaration, ImportSpecifier, Project, SourceFile, SyntaxKind, TypeGuards } from "ts-simple-ast";
 import { AbstractConfig, AbstractResult } from "../compileAndFix/compileAndFix";
+import { mkdir, cp } from "shelljs";
+import { join, dirname, resolve } from "path";
 
 export interface Export2DefineConfig extends AbstractConfig {
   customImportSpecifiers?: CustomImportSpecifier[]
   ignoreImportSpecifiers?: IgnoreImportSpecifier[]
+  /** if defined it will write output .ts project at given location */
+  ouputProjectPath?:string
 }
 export interface IgnoreImportSpecifier {
   predicate: (id: ImportDeclaration) => boolean
 }
 export interface CustomImportSpecifier {
-  predicate: (id: ImportDeclaration, ni: ImportSpecifier) => boolean,
-  getImportSpecifier: (id: ImportDeclaration, ni: ImportSpecifier) => string
+  predicate: (id: ImportDeclaration, ni: string) => boolean,
+  getImportSpecifier: (id: ImportDeclaration, ni: string) => string
 }
 export interface Export2DefineResult extends AbstractResult {
   perFileResults: Export2DefineSingleFileResult[]
@@ -18,9 +22,28 @@ export interface Export2DefineResult extends AbstractResult {
 
 export function export2define(config: Export2DefineConfig): Export2DefineResult {
   const project = new Project({
-    tsConfigFilePath: config.tsconfigFilePath
+    tsConfigFilePath: config.tsconfigFilePath,
+    addFilesFromTsConfig: true,
   })
-  return export2defineProject({ project, tsconfigFilePath: config.tsconfigFilePath })
+  const result= export2defineProject({ project, tsconfigFilePath: config.tsconfigFilePath })
+  
+  if(config.ouputProjectPath){
+    mkdir('-p', config.ouputProjectPath)
+    cp(config.tsconfigFilePath, config.ouputProjectPath)
+
+    const tsConfigFolder=dirname(resolve(config.tsconfigFilePath))
+    const project2 = new Project({
+      tsConfigFilePath: join(config.tsconfigFilePath, config.ouputProjectPath),
+      addFilesFromTsConfig: false
+    })
+    result.perFileResults.forEach(r=>{
+      const p = resolve(r.sourceFile.getFilePath())
+      const name = p.substring(tsConfigFolder.length+1, p.length)
+      project2.createSourceFile(name, printExport2DefineFileResult(r))
+    })
+    project2.saveSync()
+  }
+  return result
 }
 
 export function export2defineProject(config: Export2DefineConfig & { project: Project }): Export2DefineResult {
@@ -69,8 +92,15 @@ export interface Export2DefineSingleFileResultImport {
 
 export const defaultCustomImportSpecifiers: CustomImportSpecifier[] = [
   {
-    predicate: (id: ImportDeclaration, ni: ImportSpecifier) => id.getModuleSpecifier().getLiteralText() === 'suitecommerce',
-    getImportSpecifier: (id: ImportDeclaration, ni: ImportSpecifier) => ni.getName()
+    predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText() === 'suitecommerce',
+    getImportSpecifier: (id: ImportDeclaration, ni: string) => ni
+  },  
+  {
+    predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText().endsWith('.tpl'),
+    getImportSpecifier: (id: ImportDeclaration, ni: string) => {
+      const name = id.getModuleSpecifier().getLiteralText()
+      return name.substring(name.lastIndexOf('/')+1, name.length)
+    }
   }
 ]
 
@@ -99,8 +129,8 @@ export function export2defineSingleFile(config: Export2DefineConfig, sourceFile:
       result.errors = [...result.errors, 'not import clause found / not supported:' + id.getText()]
       return
     }
-    const namedImports = clause.getNamedImports()
-    if (!namedImports) {
+    const namedImports: string[] = clause.getNamedImports().length ? clause.getNamedImports().map(ni=>ni.getName()) : [clause.getDefaultImport().getText()]
+    if (!namedImports.length) {
       result.errors = [...result.errors, 'not named import found / not supported:' + id.getText()]
       return
     }
@@ -109,10 +139,10 @@ export function export2defineSingleFile(config: Export2DefineConfig, sourceFile:
     
     namedImports.forEach(ni => {
       const customImportSpecifier = config.customImportSpecifiers.find(i=>i.predicate(id, ni))
-      const customImportSpecifierFn = customImportSpecifier ? customImportSpecifier.getImportSpecifier : ((id: ImportDeclaration, is: ImportSpecifier) => moduleSpecifier)
+      const customImportSpecifierFn = customImportSpecifier ? customImportSpecifier.getImportSpecifier : ((id: ImportDeclaration, is: string) => moduleSpecifier)
       // || ((id: ImportDeclaration, is: ImportSpecifier) => moduleSpecifier)
       imports.push({
-        name: ni.getName(),
+        name: ni,
         moduleSpecifier: customImportSpecifierFn(id, ni),
         importSpecifierSourceFile: (!id.getModuleSpecifierSourceFile()) ? undefined : id.getModuleSpecifierSourceFile()
       })

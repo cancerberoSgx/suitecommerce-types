@@ -1,5 +1,5 @@
 import { Backbone } from 'suitecommerce'
-import { template } from './frontend_simple1_listview.tpl'
+import template from './frontend_simple1_listview.tpl'
 
 
 export const FrontEndSimple1ListView = Backbone.View.extend<Simple1ListView>({
