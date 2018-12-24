@@ -11,7 +11,9 @@
         "build-watch": "tsc -w",
         "copy": "cp -r spec/support_js dist/spec/support && cp -r spec/fixtures dist/spec",
         "clean": "rm -rf dist",
-        "test": "ts-node node_modules/jasmine/bin/jasmine"
+        "generateHelp": "sh scripts/generateHelp.sh",
+        "test": "ts-node node_modules/jasmine/bin/jasmine", 
+        "prepare": "npm run build && npm run generateHelp"
     },
     "keywords": [],
     "author": "sg",
@@ -27,7 +29,7 @@
         "@types/minimist": "^1.2.0",
         "@types/node": "^10.12.18",
         "@types/shelljs": "^0.8.1",
-        "generate-cli-api-help": "0.0.3",
+        "generate-cli-api-help": "0.0.7",
         "jasmine": "^3.3.1",
         "ts-node": "^7.0.1",
         "typescript": "^3.2.2"

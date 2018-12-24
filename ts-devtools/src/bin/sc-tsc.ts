@@ -1,5 +1,6 @@
 import minimist from 'minimist'
 import { AllConfig, import2defineCompileAndFix } from '../util/import2defineCompileAndFix';
+import { help } from './help';
 
 export function main() {
   const args = minimist((process.argv.slice(2)))
@@ -18,7 +19,6 @@ ${JSON.stringify(config, null, 2)}
     console.log(`Results: 
 ${JSON.stringify({
       ...result,
-      // tscFinalCommand: result.tscFinalCommand, tslibFinalDest: result.tslibFinalDest, emittedFilePaths: result.emittedFilePaths, errors: result.errors, 
       perFileResults: (result.perFileResults || []).map(r => ({
         ...r,
         sourceFile: r.sourceFile && r.sourceFile.getFilePath(), imports: r.imports.map(i => ({
@@ -27,7 +27,6 @@ ${JSON.stringify({
         }))
       })),
     })
-      // postProcessResults: (result.postProcessResults||[]).map(r=>({...r, r: r.}))
       }, null, 2)}
 `);
 
@@ -46,17 +45,18 @@ function checkRequiredParams(config: AllConfig) {
 }
 
 function exit(msg: string, code: number = 0, showHelp = false) {
-  const log = code === 0 ? console.log : console.error
+  const log = code === 0 ? console.log.bind(console) : console.error.bind(console)
   log(msg);
   if (showHelp) {
-    console.log(help());
+    console.log(getHelp());
   }
   process.exit(code)
 }
 
-function help() {
+function getHelp() {
   return `
 Usage: sc-tsc --tsconfigFilePath my/ts/project/tsconfig.json --outputFolder my/compiled/project
-
-  `
+Options: 
+${help}
+  `.trim()
 }
