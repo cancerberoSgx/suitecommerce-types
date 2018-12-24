@@ -4,10 +4,34 @@ import { AllConfig, import2defineCompileAndFix } from '../util/import2defineComp
 export function main() {
   const args = minimist((process.argv.slice(2)))
   const config: AllConfig = args as any
+  if (config.debug) {
+    console.log(`Config: 
+${JSON.stringify(config, null, 2)}
+`);
+
+  }
   if (!checkRequiredParams(config)) {
     exit('Invalid call, insufficient arguments. ', 1, true)
   }
   const result = import2defineCompileAndFix(config)
+  if (config.debug) {
+    console.log(`Results: 
+${JSON.stringify({
+      ...result,
+      // tscFinalCommand: result.tscFinalCommand, tslibFinalDest: result.tslibFinalDest, emittedFilePaths: result.emittedFilePaths, errors: result.errors, 
+      perFileResults: (result.perFileResults || []).map(r => ({
+        ...r,
+        sourceFile: r.sourceFile && r.sourceFile.getFilePath(), imports: r.imports.map(i => ({
+          ...i,
+          importSpecifierSourceFile: i.importSpecifierSourceFile&&i.importSpecifierSourceFile.getFilePath()
+        }))
+      })),
+    })
+      // postProcessResults: (result.postProcessResults||[]).map(r=>({...r, r: r.}))
+      }, null, 2)}
+`);
+
+  }
   if (result.errors.length) {
     exit(`There where errors: 
 ${result.errors.map(e => e).join('\n')}`, 1)

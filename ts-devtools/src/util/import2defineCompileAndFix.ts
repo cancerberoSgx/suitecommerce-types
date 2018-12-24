@@ -1,7 +1,7 @@
 import { CompileAndFixConfig, CompileAndFixResult, compileAndFix } from "../compileAndFix/compileAndFix";
 import { Export2DefineConfig, Export2DefineResult, export2define } from "../import2define/import2define";
 import { dirname, resolve } from "path";
-import { rm } from "shelljs";
+import { rm , config as shellconfig} from "shelljs";
 
 export interface AllConfig extends CompileAndFixConfig, Export2DefineConfig {
   outputFolder: string
@@ -13,6 +13,7 @@ export interface AllResult extends CompileAndFixResult, Export2DefineResult {
 
 /** will execute export2define() first using a tmp project folder and then compileAndFix() over that one to generate a valid JS AMD project that SC understand */
 export function import2defineCompileAndFix(config: AllConfig): AllResult {
+  shellconfig.silent = !config.debug
   let inputFolder = dirname(resolve(config.tsconfigFilePath));
   let outputFolder = `${config.outputFolder}_ts`, outputFolderFirst=outputFolder
   rm('-rf', outputFolder)
@@ -21,7 +22,7 @@ export function import2defineCompileAndFix(config: AllConfig): AllResult {
     outputFolder
   })
   if (export2defineResult.errors.length) {
-    rm('-rf', outputFolder)
+    config.debug && rm('-rf', outputFolder)
     return { ...export2defineResult, tscFinalCommand: '' }
   }
 
@@ -37,6 +38,6 @@ export function import2defineCompileAndFix(config: AllConfig): AllResult {
     addTslibJsInFolder: `${resolve(config.outputFolder)}/src`
   })
   
-  rm('-rf', outputFolderFirst)
+  config.debug && rm('-rf', outputFolderFirst)
   return {...export2defineResult, ...result}
 }

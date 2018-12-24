@@ -10,7 +10,9 @@ export function linkInputProjectFiles(config: AbstractConfig) {
       .filter(f => !f.startsWith('node_modules') && !test('-e', `${config.outputFolder}/${f}`))
       .forEach(f => {
         mkdir('-p', `${config.outputFolder}/${dirname(f)}`);
-        ln('-sf', `${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`);
+        if(!test('-e', `${config.outputFolder}/${f}`)){
+          ln('-sf', `${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`);
+        }
       });
   }
 }

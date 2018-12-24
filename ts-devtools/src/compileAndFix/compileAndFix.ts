@@ -1,9 +1,8 @@
-import { tempdir } from "shelljs";
 import { readFileSync, writeFileSync } from "fs";
 import { fixJsFileAmdTslib } from "../fixAmdTslib/fixJsFileAmdTslib";
 import { FixAmdTslibResult } from "../fixAmdTslib/types";
-import { addTslibAmd } from "./addTslibAmd";
 import { compileTsProject } from "../util/compileTsProject";
+import { addTslibAmd } from "./addTslibAmd";
 
 export interface AbstractConfig {
   /** assumes tsconfig.json file is in the root project path. The project must have typescript installed locally and that will be used to compile */
@@ -26,6 +25,8 @@ export interface AbstractConfig {
    * Note that the target project needs to have support for eslint (all dependencies installed locally)
    * and have a tslintrc file available since the project will be defining indentation style.*/
   eslintFix?: boolean,
+
+  debug?: boolean
 }
 
 export interface CompileAndFixConfig extends AbstractConfig {
@@ -36,11 +37,13 @@ export interface CompileAndFixConfig extends AbstractConfig {
 export interface AbstractResult {
   errors: string[]
   emittedFilePaths?: string[]
+  tslibFinalDest?:string
 }
 
 export interface CompileAndFixResult extends AbstractResult {
   /** the final tsc command used to compile the project */
   tscFinalCommand: string
+  emittedFileNames?: string[]
   postProcessResults?: (FixAmdTslibResult & { fileName: string })[]
 }
 
@@ -52,10 +55,13 @@ export interface CompileAndFixResult extends AbstractResult {
  * Notice that input project can import only types (ie: sc-types-frontend)
  * */
 export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult {
-  const { emittedFileNames, tscFinalCommand } = compileTsProject(config)
+  const result = compileTsProject(config)
+  if(result.errors.length){
+    return 
+  }
   let error = false
   const filesWithErrors = []
-  const postProcessResults = emittedFileNames
+  const postProcessResults = result.emittedFileNames
     .map(fileName => {
       const result = fixJsFileAmdTslib({
         inputCode: readFileSync(fileName).toString()
@@ -69,10 +75,10 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
       return { ...result, fileName }
     })
     .filter(r => !!r)
-  addTslibAmd(config)
+  const tslibFinalDest = addTslibAmd(config)
   return {
-    errors: error ? [`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : [], tscFinalCommand,
-    emittedFilePaths: emittedFileNames,
-    postProcessResults
+    errors: error ? [`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : [], tscFinalCommand: result.tscFinalCommand,
+    emittedFilePaths: result.emittedFileNames,
+    postProcessResults, tslibFinalDest
   }
 }

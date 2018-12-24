@@ -1,11 +1,11 @@
 {
-    "name": "sample-frontend-simple1",
+    "name": "sc-tsc",
     "version": "2018.1.0",
     "description": "SuiteCommerce Development Tools to develop new themes or extensions",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
-    "bin":"bin/sc-tsc.js",
+    "bin":"bin/sc-tsc",
     "scripts": {
         "build": "npm run clean && tsc && npm run copy",
         "build-watch": "tsc -w",
@@ -15,7 +15,7 @@
     },
     "keywords": [],
     "author": "sg",
-    "license": "ISC",
+    "license": "MIT",
     "dependencies": {
         "minimist": "^1.2.0",
         "shelljs": "^0.8.3",

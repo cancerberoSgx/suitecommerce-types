@@ -1,5 +1,5 @@
 import { dirname, join, resolve } from "path";
-import { cp, mkdir } from "shelljs";
+import { cp, mkdir, config as shellconfig } from "shelljs";
 import { ImportDeclaration, Project, QuoteKind } from "ts-simple-ast";
 import { AbstractConfig, AbstractResult } from "../compileAndFix/compileAndFix";
 import { export2defineOne, Export2DefineOneResult, printExport2DefineOneResult } from "./export2defineOne";
@@ -24,6 +24,7 @@ export interface Export2DefineResult extends AbstractResult {
 }
 
 export function export2define(config: Export2DefineConfig): Export2DefineResult {
+  shellconfig.silent = !config.debug
   const project = new Project({
     tsConfigFilePath: config.tsconfigFilePath,
     addFilesFromTsConfig: true,

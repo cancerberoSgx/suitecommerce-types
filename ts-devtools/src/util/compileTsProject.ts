@@ -1,8 +1,7 @@
 import { dirname, resolve } from "path";
-import { cd, config, exec, mkdir, pwd, rm } from "shelljs";
-import { AbstractConfig } from "../compileAndFix/compileAndFix";
+import { cd, config as shellconfig, exec, mkdir, pwd, rm } from "shelljs";
+import { AbstractConfig, AbstractResult, CompileAndFixResult } from "../compileAndFix/compileAndFix";
 
-config.silent = true
 
 export const forceTsConfig: { [name: string]: string | boolean } = {
   module: "commonjs",
@@ -12,7 +11,9 @@ export const forceTsConfig: { [name: string]: string | boolean } = {
   sourceMap: false // since we modify the output sourcemaps get invalid
 }
 
-export function compileTsProject(config: AbstractConfig) {
+export function compileTsProject(config: AbstractConfig): CompileAndFixResult {
+  shellconfig.silent = !config.debug
+  
   const outputFolder = config.outputFolder ? resolve(config.outputFolder) : false;
   if (outputFolder) {
     if (config.cleanOutputFolder) {
@@ -40,5 +41,5 @@ export function compileTsProject(config: AbstractConfig) {
     .map(l => l.substring(prefix.length, l.length))
     .filter(f => f.endsWith('.js'));
   cd(cwd);
-  return { emittedFileNames, tscFinalCommand };
+  return { emittedFileNames, tscFinalCommand, errors: [] };
 }
