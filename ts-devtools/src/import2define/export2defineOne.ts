@@ -2,7 +2,6 @@ import { ImportDeclaration, SourceFile, SyntaxKind, TypeGuards } from "ts-simple
 import { defaultCustomImportSpecifiers, defaultIgnoreImportSpecifiers } from "./import2defineDefaults";
 import { Export2DefineConfig, Export2DefineResult } from "./import2define";
 
-
 export function export2defineOne(config: Export2DefineConfig, sourceFile: SourceFile, result: Export2DefineResult): Export2DefineOneResult {
   config.customImportSpecifiers = (config.customImportSpecifiers && config.customImportSpecifiers.length) ? config.customImportSpecifiers : defaultCustomImportSpecifiers;
   config.ignoreImportSpecifiers = (config.ignoreImportSpecifiers && config.ignoreImportSpecifiers.length) ? config.ignoreImportSpecifiers : defaultIgnoreImportSpecifiers;
@@ -84,6 +83,7 @@ export function export2defineOne(config: Export2DefineConfig, sourceFile: Source
     importsToIgnore, statementOutsideHandler: statementOutsideHandler.join('\n')
   };
 }
+
 export interface Export2DefineOneResult {
   sourceFile: SourceFile;
   exportName: string;
@@ -93,11 +93,13 @@ export interface Export2DefineOneResult {
   statementOutsideHandler: string;
   importsToIgnore: string[];
 }
+
 export interface Export2DefineOneResultImport {
   name: string;
   moduleSpecifier: string;
   importSpecifierSourceFile: SourceFile | undefined;
 }
+
 export function printExport2DefineOneResult(r: Export2DefineOneResult): string {
   return `
 ${r.importsToIgnore.join('\n')}

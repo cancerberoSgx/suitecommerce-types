@@ -1,12 +1,11 @@
 import { dirname, join, resolve } from "path";
-import { cp, mkdir, ln, ls, test } from "shelljs";
+import { cp, mkdir } from "shelljs";
 import { ImportDeclaration, Project, QuoteKind } from "ts-simple-ast";
 import { AbstractConfig, AbstractResult } from "../compileAndFix/compileAndFix";
 import { export2defineOne, Export2DefineOneResult, printExport2DefineOneResult } from "./export2defineOne";
+import { linkInputProjectFiles } from "../util/linkInputProjectFiles";
 
 export interface Export2DefineConfig extends AbstractConfig {
-  /** if outputFolder is declared then all input project files like node_modules, package.json, etc need to be present in the new project for it work. Set this to true to not do it so. */
-  skipLinkInputFiles?: boolean;
   customImportSpecifiers?: CustomImportSpecifier[]
   ignoreImportSpecifiers?: IgnoreImportSpecifier[]
 }
@@ -47,16 +46,7 @@ export function export2define(config: Export2DefineConfig): Export2DefineResult 
     })
     project2.saveSync()
 
-
-    if (!config.skipLinkInputFiles) {
-      ln('-sf', `${tsConfigFolder}/node_modules`, `${config.outputFolder}/node_modules`)
-      ls('-R', tsConfigFolder)
-        .filter(f => !f.startsWith('node_modules') && !test('-e', `${config.outputFolder}/${f}`))
-        .forEach(f => {
-          mkdir('-p', `${config.outputFolder}/${dirname(f)}`)
-          ln('-sf', `${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`)
-        })
-    }
+    linkInputProjectFiles(config)
   }
 
   return result

@@ -12,22 +12,27 @@ export interface AbstractConfig {
   /** if not given will use given tsconfig.json default dest */
   outputFolder?: string
 
-  /**user can pass some custom config here . TODO*/
-  tsConfig?: {
-    target: 'es5' | 'es6' //TODO
-  }
+  // /**user can pass some custom config here . TODO*/
+  // tsConfig?: {
+  //   target: 'es5' | 'es6' //TODO
+  // }
   cleanOutputFolder?: boolean
   breakOnFirstError?: boolean
+
+  /** if outputFolder is declared then all input project files like node_modules, package.json, etc need to be present in the new project for it work. Set this to true to not do it so. */
+  skipLinkInputProjectFiles?: boolean;
+
   /**if true will run `npx eslint --fix` before writing the files using the target project cwd. 
    * Note that the target project needs to have support for eslint (all dependencies installed locally)
    * and have a tslintrc file available since the project will be defining indentation style.*/
   eslintFix?: boolean,
-  /** if set, it will add tslib.js (AMD module) in given path that must be relative to `tsconfigJsonPath`*/
 }
-export interface CompileAndFixConfig extends AbstractConfig {
 
+export interface CompileAndFixConfig extends AbstractConfig {
+  /** if set, it will add tslib.js (AMD module) in given path that must be relative to `tsconfigJsonPath`*/
   addTslibJsInFolder?: string
 }
+
 export interface AbstractResult {
   errors: string[]
   emittedFilePaths?: string[]
@@ -39,15 +44,13 @@ export interface CompileAndFixResult extends AbstractResult {
   postProcessResults?: (FixAmdTslibResult & { fileName: string })[]
 }
 
-
-export const forceTsConfig: { [name: string]: string | boolean } = {
-  module: "commonjs",
-  noEmitHelpers: true,
-  importHelpers: true,
-  listEmittedFiles: true,
-  sourceMap: false // since we modify the output sourcemaps get invalid
-}
-
+/** 
+ * given an input TS project using define() (not import/export) will 
+ * will run tsc with approrpiate args (target) and then fixJsFileAmdTslib() and addTslibAmd() 
+ * so the output JS project is AMD understandable by SC
+ * 
+ * Notice that input project can import only types (ie: sc-types-frontend)
+ * */
 export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult {
   const { emittedFileNames, tscFinalCommand } = compileTsProject(config)
   let error = false
@@ -62,7 +65,6 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
         filesWithErrors.push(fileName)
         return undefined
       }
-      // const output=config.eslintFix ? eslintFix(fileName)
       writeFileSync(fileName, result.outputCode)
       return { ...result, fileName }
     })
@@ -74,11 +76,3 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
     postProcessResults
   }
 }
-
-// function eslintFix(fileName:string) {
-//     if
-//  //TODO
-//  return f
-// }
-
-//TODO watcher

@@ -17,17 +17,18 @@
     "author": "sg",
     "license": "ISC",
     "dependencies": {
-        "minimatch": "^3.0.4",
+        "minimist": "^1.2.0",
         "shelljs": "^0.8.3",
-        "ts-simple-ast": "^20.0.0"
+        "ts-simple-ast": "^20.0.0",
+        "tslib": "^1.9.3"
     },
     "devDependencies": {
         "@types/jasmine": "^3.3.5",
+        "@types/minimist": "^1.2.0",
         "@types/node": "^10.12.18",
         "@types/shelljs": "^0.8.1",
         "jasmine": "^3.3.1",
         "ts-node": "^7.0.1",
-        "tslib": "^1.9.3",
         "typescript": "^3.2.2"
     }
 }
