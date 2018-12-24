@@ -16,6 +16,7 @@
     "author": "sg",
     "license": "ISC",
     "dependencies": {
+        "minimatch": "^3.0.4",
         "shelljs": "^0.8.3",
         "ts-simple-ast": "^20.0.0"
     },

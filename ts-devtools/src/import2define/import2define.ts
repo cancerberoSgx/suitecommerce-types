@@ -1,13 +1,17 @@
+import { ImportDeclaration, ImportSpecifier, Project, SourceFile, SyntaxKind, TypeGuards } from "ts-simple-ast";
 import { AbstractConfig, AbstractResult } from "../compileAndFix/compileAndFix";
-import { compileTsProject } from "../util/compileTsProject";
-import { Project, TypeGuards, CallExpression, SyntaxKind, SourceFile, ts, SyntaxList, ImportDeclaration, NamedImports, ImportSpecifier } from "ts-simple-ast";
 
 export interface Export2DefineConfig extends AbstractConfig {
-  // replaceNamedImportExpression(variableName: string, dependencyName: string): string
-  customImportSpecifiers?: { [importSpecifier: string]: (id: ImportDeclaration, ni: ImportSpecifier) => string }
-  ignoreImportSpecifiers?: string[]
+  customImportSpecifiers?: CustomImportSpecifier[]
+  ignoreImportSpecifiers?: IgnoreImportSpecifier[]
 }
-
+export interface IgnoreImportSpecifier {
+  predicate: (id: ImportDeclaration) => boolean
+}
+export interface CustomImportSpecifier {
+  predicate: (id: ImportDeclaration, ni: ImportSpecifier) => boolean,
+  getImportSpecifier: (id: ImportDeclaration, ni: ImportSpecifier) => string
+}
 export interface Export2DefineResult extends AbstractResult {
   perFileResults: Export2DefineSingleFileResult[]
 }
@@ -18,7 +22,6 @@ export function export2define(config: Export2DefineConfig): Export2DefineResult 
   })
   return export2defineProject({ project, tsconfigFilePath: config.tsconfigFilePath })
 }
-
 
 export function export2defineProject(config: Export2DefineConfig & { project: Project }): Export2DefineResult {
   const result: Export2DefineResult = {
@@ -46,39 +49,48 @@ export function export2defineProject(config: Export2DefineConfig & { project: Pr
       })
       return r
     })
-
   return result
 }
 
-
-
 export interface Export2DefineSingleFileResult {
-  sourceFile: SourceFile,
-  exportName: string,
-  imports: Export2DefineSingleFileResultImport[],
+  sourceFile: SourceFile
+  exportName: string
+  imports: Export2DefineSingleFileResultImport[]
   exportValue: string
   body: string
+  importsToIgnore: string[]
 }
 
 export interface Export2DefineSingleFileResultImport {
-  name: string,
-  moduleSpecifier: string,
+  name: string
+  moduleSpecifier: string
   importSpecifierSourceFile: SourceFile | undefined
 }
 
-export const defaultCustomImportSpecifiers = {
-  'suitecommerce': (id: ImportDeclaration, ni: ImportSpecifier) => ni.getName()
-}
+export const defaultCustomImportSpecifiers: CustomImportSpecifier[] = [
+  {
+    predicate: (id: ImportDeclaration, ni: ImportSpecifier) => id.getModuleSpecifier().getLiteralText() === 'suitecommerce',
+    getImportSpecifier: (id: ImportDeclaration, ni: ImportSpecifier) => ni.getName()
+  }
+]
+
+export const defaultIgnoreImportSpecifiers = [
+  {
+    predicate: (id: ImportDeclaration) => id.getModuleSpecifier().getLiteralText() === 'sc-types-frontend'
+  }
+]
 
 export function export2defineSingleFile(config: Export2DefineConfig, sourceFile: SourceFile, result: Export2DefineResult): Export2DefineSingleFileResult {
   config.customImportSpecifiers = (config.customImportSpecifiers && config.customImportSpecifiers.length) ? config.customImportSpecifiers : defaultCustomImportSpecifiers
+  config.ignoreImportSpecifiers = (config.ignoreImportSpecifiers && config.ignoreImportSpecifiers.length) ? config.ignoreImportSpecifiers : defaultIgnoreImportSpecifiers
 
-  config.ignoreImportSpecifiers = (config.ignoreImportSpecifiers && config.ignoreImportSpecifiers.length) ? config.ignoreImportSpecifiers : ['sc-types-frontend']
   const importDeclarations = sourceFile.getDescendantsOfKind(SyntaxKind.ImportDeclaration)
   const imports: Export2DefineSingleFileResultImport[] = []
+  const importsToIgnore: string[] = []
   importDeclarations.forEach(id => {
     const moduleSpecifier = id.getModuleSpecifier().getLiteralText()
-    if (config.ignoreImportSpecifiers.includes(moduleSpecifier)) {
+    if (config.ignoreImportSpecifiers.find(i=>i.predicate(id))) {
+      importsToIgnore.push(id.getText())
       id.remove()
       return
     }
@@ -92,12 +104,16 @@ export function export2defineSingleFile(config: Export2DefineConfig, sourceFile:
       result.errors = [...result.errors, 'not named import found / not supported:' + id.getText()]
       return
     }
-    const customImportSpecifier = config.customImportSpecifiers[moduleSpecifier] || ((id: ImportDeclaration, is: ImportSpecifier) => moduleSpecifier)
 
-    namedImports.map(ni => {
+    // const imports:Export2DefineSingleFileResultImport[] = 
+    
+    namedImports.forEach(ni => {
+      const customImportSpecifier = config.customImportSpecifiers.find(i=>i.predicate(id, ni))
+      const customImportSpecifierFn = customImportSpecifier ? customImportSpecifier.getImportSpecifier : ((id: ImportDeclaration, is: ImportSpecifier) => moduleSpecifier)
+      // || ((id: ImportDeclaration, is: ImportSpecifier) => moduleSpecifier)
       imports.push({
         name: ni.getName(),
-        moduleSpecifier: customImportSpecifier(id, ni),
+        moduleSpecifier: customImportSpecifierFn(id, ni),
         importSpecifierSourceFile: (!id.getModuleSpecifierSourceFile()) ? undefined : id.getModuleSpecifierSourceFile()
       })
     })
@@ -142,12 +158,13 @@ export function export2defineSingleFile(config: Export2DefineConfig, sourceFile:
   if (exportedVarDecl.getText().trim() === exportedVar.getText().trim()) {
     exportStatement.remove()
   }
-  return { exportName, imports, exportValue, sourceFile, body: sourceFile.getText() }
+  return { exportName, imports, exportValue, sourceFile, body: sourceFile.getText(), importsToIgnore }
 }
 
-export function export2defineSingleFileString(r: Export2DefineSingleFileResult): string {
+export function printExport2DefineFileResult(r: Export2DefineSingleFileResult): string {
   return `
-define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier}'`).join(', ')}], function(${r.imports.map(i => `${i.name}`).join(', ')}){
+${r.importsToIgnore.join('\n')}
+define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier}'`).join(', ')}], function(${r.imports.map(i => `${i.name}: any`).join(', ')}){
   ${r.body}
   return ${r.exportValue}
 })

@@ -1,4 +1,5 @@
-user tool that, given a folder with .ts files will transpile to .js files that SuiteCOmmertce understand. 
+ * fixJsFileAmdTslib: user tool that, given a folder with .ts files will transpile to .js files that SuiteCommertce understand. 
+ * import2define: user writes ts project using ES modules (import/export) and the tool transpile to .ts files that use define() that SuiteCommertce understand
 
 # Requirements:
 
@@ -9,13 +10,15 @@ user tool that, given a folder with .ts files will transpile to .js files that S
 
 # status
 
- * .js file fixer, see spec/fixJsFileAmdTslibSpec.ts
+ * amd .js file fixer, see spec/fixJsFileAmdTslibSpec.ts
  * compile project and fix emitted files, see spec/compileAndFix/compileAndFixSpec.ts
-
+ * add tslib.js AMD module see spec/fixJsFileAmdTslib/addTslibAmdDependencySpec.ts
+ * import2define - given a project it transform import/export ES modules to AMD 
 
 
  # TODO
- * add tslib.js AMD module and perhaps generate ns.package.json
+ * add tslib to import2define
+ *  generate ns.package.json ?
  * watch mode so it compiles .ts files on change
  * preserve indentation (probably we need to ask the user for a eslintrc and reindent)
 

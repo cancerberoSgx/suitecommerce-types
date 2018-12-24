@@ -1,5 +1,5 @@
 import { Project } from "ts-simple-ast";
-import { export2defineSingleFileString, Export2DefineResult, export2defineProject, export2defineSingleFile } from "../../src/import2define/import2define";
+import { export2defineProject, Export2DefineResult, export2defineSingleFile, Export2DefineSingleFileResult, printExport2DefineFileResult } from "../../src/import2define/import2define";
 
 describe('export2define', () => {
 
@@ -16,7 +16,7 @@ describe('export2define', () => {
         tsconfigFilePath: 'doesntMatter.json',
 
       }, sourceFile, result)
-      const output = export2defineSingleFileString(resultSingle)
+      const output = printExport2DefineFileResult(resultSingle)
       expect(result.errors).toEqual(expectedErrors)
       expectCodeEquals(output, expectedOutput)
     }
@@ -28,7 +28,7 @@ describe('export2define', () => {
 import {a, b} from 'foo' 
 export const bar = 1
     `, `
-define('bar', ['foo', 'foo'], function(a, b){
+define('bar', ['foo', 'foo'], function(a: any, b: any){
   return 1
 })`,
         [])
@@ -44,7 +44,8 @@ const obj: ExtensionEntryPoint = {
 }
 export const extension = obj
     `, `
-define('extension', ['Util'], function(Util){
+import {ExtensionEntryPoint} from 'sc-types-frontend'
+define('extension', ['Util'], function(Util: any){
   const obj: ExtensionEntryPoint = {
   mountToApp: (container){}
 }
@@ -85,11 +86,12 @@ export const MyExtensionView = View.extend({
         tsconfigFilePath: '',
         project
       })
-      result.perFileResults.forEach(pr => console.log(export2defineSingleFileString(pr)))
+      result.perFileResults.forEach(pr => console.log(printExport2DefineFileResult(pr)))
 
-      const strs = result.perFileResults.map(pr => export2defineSingleFileString(pr))
+      const strs = result.perFileResults.map(pr => printExport2DefineFileResult(pr))
       expectCodeEquals(strs[0], `
-define('MyExtensionMain', ['Util', 'MyExtensionView'], function(Util, MyExtensionView){
+import {ExtensionEntryPoint} from 'sc-types-frontend'
+define('MyExtensionMain', ['Util', 'MyExtensionView'], function(Util: any, MyExtensionView: any){
   const obj: ExtensionEntryPoint = {
     mountToApp: (container){
       const view = new MyExtensionView()
@@ -100,7 +102,8 @@ define('MyExtensionMain', ['Util', 'MyExtensionView'], function(Util, MyExtensio
 })
       `)
       expectCodeEquals(strs[1], `
-define('MyExtensionView', ['./my_extension_view.tpl'], function(template){
+import {Util, View} from 'sc-types-frontend'
+define('MyExtensionView', ['./my_extension_view.tpl'], function(template: any){
   return View.extend({
     template
   })
@@ -115,3 +118,13 @@ define('MyExtensionView', ['./my_extension_view.tpl'], function(template){
 function expectCodeEquals(a: string, b: string) {
   expect(a.replace(/\s+/gm, ' ').trim()).toEqual(b.replace(/\s+/gm, ' ').trim())
 }
+
+// function printExport2DefineFileResult(r: Export2DefineSingleFileResult): string {
+//   return `
+// ${r.importsToIgnore.join('\n')}
+// define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier}'`).join(', ')}], function(${r.imports.map(i => `${i.name}`).join(', ')}){
+//   ${r.body}
+//   return ${r.exportValue}
+// })
+//   `
+// }
