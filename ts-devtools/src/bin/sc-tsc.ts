@@ -1,7 +1,7 @@
 import minimist from 'minimist'
 import { AllConfig, import2defineCompileAndFix } from '../util/import2defineCompileAndFix';
 
-function main() {
+export function main() {
   const args = minimist((process.argv.slice(2)))
   const config: AllConfig = args as any
   if (!checkRequiredParams(config)) {

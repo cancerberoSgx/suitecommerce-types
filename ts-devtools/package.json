@@ -1,11 +1,11 @@
 {
     "name": "sample-frontend-simple1",
     "version": "2018.1.0",
-    "private": true,
     "description": "SuiteCommerce Development Tools to develop new themes or extensions",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
+    "bin":"bin/sc-tsc.js",
     "scripts": {
         "build": "npm run clean && tsc && npm run copy",
         "build-watch": "tsc -w",

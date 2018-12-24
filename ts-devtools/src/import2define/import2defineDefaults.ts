@@ -1,6 +1,8 @@
 import { ImportDeclaration } from "ts-simple-ast";
 import { CustomImportSpecifier } from "./import2define";
-export const import2defineDefaults = 0;
+
+// export const import2defineDefaults = 0;
+
 export const defaultCustomImportSpecifiers: CustomImportSpecifier[] = [
   {
     predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText() === 'suitecommerce',
