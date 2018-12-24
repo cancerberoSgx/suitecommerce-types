@@ -1,6 +1,7 @@
 import { dirname, resolve } from "path";
-import { cd, exec, mkdir, rm, pwd } from "shelljs";
+import { cd, exec, mkdir, rm, pwd, config } from "shelljs";
 import { AbstractConfig, forceTsConfig } from "../compileAndFix/compileAndFix";
+config.silent=true
 export function compileTsProject(config: AbstractConfig) {
   const outputFolder = config.outputFolder ? resolve(config.outputFolder) : false;
   if (outputFolder) {

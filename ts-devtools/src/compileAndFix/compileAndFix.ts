@@ -30,12 +30,11 @@ export interface CompileAndFixConfig extends AbstractConfig {
 }
 export interface AbstractResult {
   errors: string[]
-  /** the final tsc command used to compile the project */
-
   emittedFilePaths?: string[]
 }
 
 export interface CompileAndFixResult extends AbstractResult {
+  /** the final tsc command used to compile the project */
   tscFinalCommand: string
   postProcessResults?: (FixAmdTslibResult & { fileName: string })[]
 }

@@ -1,6 +1,7 @@
 import { Project } from "ts-simple-ast";
 import { export2defineProject, Export2DefineResult, export2define } from "../../src/import2define/import2define";
 import { export2defineOne, printExport2DefineOneResult } from "../../src/import2define/export2defineOne";
+import {expectCodeEquals} from '../testUtil'
 import { resolve } from "path";
 import { rm, test } from "shelljs";
 
@@ -166,9 +167,3 @@ define('MyExtensionView', ['my_extension_view.tpl'], function(template: any){
   })
 
 })
-
-
-function expectCodeEquals(a: string, b: string) {
-  // console.log(a, b);
-  expect(a.replace(/\s+/gm, ' ').trim()).toEqual(b.replace(/\s+/gm, ' ').trim())
-}

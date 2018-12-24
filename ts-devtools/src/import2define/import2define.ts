@@ -49,15 +49,12 @@ export function export2define(config: Export2DefineConfig): Export2DefineResult 
 
 
     if (!config.skipLinkInputFiles) {
-      ln(`${tsConfigFolder}/node_modules`, `${config.outputFolder}/node_modules`)
+      ln('-sf', `${tsConfigFolder}/node_modules`, `${config.outputFolder}/node_modules`)
       ls('-R', tsConfigFolder)
         .filter(f => !f.startsWith('node_modules') && !test('-e', `${config.outputFolder}/${f}`))
         .forEach(f => {
-          console.log(`${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`);
-          
           mkdir('-p', `${config.outputFolder}/${dirname(f)}`)
-          // ln(`${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`)
-          ln(`${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`)
+          ln('-sf', `${tsConfigFolder}/${f}`, `${config.outputFolder}/${f}`)
         })
     }
   }
@@ -73,7 +70,6 @@ export function export2defineProject(config: Export2DefineConfig & { project: Pr
   result.perFileResults = config.project.getSourceFiles()
 
     .filter(f => {
-      // console.log(f.getBaseName());
       return !f.isFromExternalLibrary() && !f.isDeclarationFile() && !f.isInNodeModules()
     })
 
