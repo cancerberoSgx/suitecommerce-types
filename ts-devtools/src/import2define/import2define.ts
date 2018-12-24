@@ -1,44 +1,85 @@
 import { AbstractConfig, AbstractResult } from "../compileAndFix/compileAndFix";
 import { compileTsProject } from "../util/compileTsProject";
-import { Project, TypeGuards, CallExpression, SyntaxKind, SourceFile, ts, SyntaxList } from "ts-simple-ast";
+import { Project, TypeGuards, CallExpression, SyntaxKind, SourceFile, ts, SyntaxList, ImportDeclaration, NamedImports, ImportSpecifier } from "ts-simple-ast";
 
 export interface Export2DefineConfig extends AbstractConfig {
   // replaceNamedImportExpression(variableName: string, dependencyName: string): string
-  fakeImportSpecifiers?: string[]
+  customImportSpecifiers?: { [importSpecifier: string]: (id: ImportDeclaration, ni: ImportSpecifier) => string }
   ignoreImportSpecifiers?: string[]
 }
 
 export interface Export2DefineResult extends AbstractResult {
-
+  perFileResults: Export2DefineSingleFileResult[]
 }
 
 export function export2define(config: Export2DefineConfig): Export2DefineResult {
-  const result: Export2DefineResult = {
-    errors: []
-  }
-
   const project = new Project({
-    tsConfigFilePath: config.tsconfigJsonPath
+    tsConfigFilePath: config.tsconfigFilePath
   })
-  const results: { sourceFile: SourceFile, result: string }[] = project.getSourceFiles().map(sourceFile => ({ sourceFile, result: export2defineSingleFile(config, sourceFile, result) }))
-
-  // const sourceFile = project.createSourceFile('test3.ts', code)
-  // const { emittedFileNames, tscFinalCommand } = compileTsProject(config)
-  return null
+  return export2defineProject({ project, tsconfigFilePath: config.tsconfigFilePath })
 }
 
-// export interface Export2DefineSingleFileResult extends Export2DefineResult{
 
-// }
-export function export2defineSingleFile(config: Export2DefineConfig, sourceFile: SourceFile, result: Export2DefineResult): string {
-  config.fakeImportSpecifiers = (config.fakeImportSpecifiers && config.fakeImportSpecifiers.length) ? config.fakeImportSpecifiers : ['suitecommerce']
+export function export2defineProject(config: Export2DefineConfig & { project: Project }): Export2DefineResult {
+  const result: Export2DefineResult = {
+    errors: [],
+    perFileResults: []
+  }
+  result.perFileResults = config.project.getSourceFiles()
+
+    .map(sourceFile => {
+      return result.errors.length ? undefined : export2defineSingleFile(config, sourceFile, result)
+      //TODO support config.breakOnFirstError
+    })
+    .filter(r => !!r)
+
+    // now that we have import informatoin for all files we fix imports to relative files to point to the export name
+    .map((r, i, arr) => {
+      r.imports = r.imports.map(im => {
+        if (im.moduleSpecifier.startsWith('.') && im.importSpecifierSourceFile) {
+          //TODO: error if !im.importSpecifierSourceFile
+          const importSpecifierResult = arr.find(rr => rr.sourceFile === im.importSpecifierSourceFile)
+          //TODO error if !importSpecifierResult
+          im.moduleSpecifier = importSpecifierResult.exportName
+        }
+        return im
+      })
+      return r
+    })
+
+  return result
+}
+
+
+
+export interface Export2DefineSingleFileResult {
+  sourceFile: SourceFile,
+  exportName: string,
+  imports: Export2DefineSingleFileResultImport[],
+  exportValue: string
+  body: string
+}
+
+export interface Export2DefineSingleFileResultImport {
+  name: string,
+  moduleSpecifier: string,
+  importSpecifierSourceFile: SourceFile | undefined
+}
+
+export const defaultCustomImportSpecifiers = {
+  'suitecommerce': (id: ImportDeclaration, ni: ImportSpecifier) => ni.getName()
+}
+
+export function export2defineSingleFile(config: Export2DefineConfig, sourceFile: SourceFile, result: Export2DefineResult): Export2DefineSingleFileResult {
+  config.customImportSpecifiers = (config.customImportSpecifiers && config.customImportSpecifiers.length) ? config.customImportSpecifiers : defaultCustomImportSpecifiers
 
   config.ignoreImportSpecifiers = (config.ignoreImportSpecifiers && config.ignoreImportSpecifiers.length) ? config.ignoreImportSpecifiers : ['sc-types-frontend']
   const importDeclarations = sourceFile.getDescendantsOfKind(SyntaxKind.ImportDeclaration)
-  const imports: { name: string, moduleSpecifier: string }[] = []
+  const imports: Export2DefineSingleFileResultImport[] = []
   importDeclarations.forEach(id => {
     const moduleSpecifier = id.getModuleSpecifier().getLiteralText()
     if (config.ignoreImportSpecifiers.includes(moduleSpecifier)) {
+      id.remove()
       return
     }
     const clause = id.getImportClause()
@@ -51,10 +92,14 @@ export function export2defineSingleFile(config: Export2DefineConfig, sourceFile:
       result.errors = [...result.errors, 'not named import found / not supported:' + id.getText()]
       return
     }
+    const customImportSpecifier = config.customImportSpecifiers[moduleSpecifier] || ((id: ImportDeclaration, is: ImportSpecifier) => moduleSpecifier)
 
     namedImports.map(ni => {
-
-      imports.push({ name: ni.getName(), moduleSpecifier })
+      imports.push({
+        name: ni.getName(),
+        moduleSpecifier: customImportSpecifier(id, ni),
+        importSpecifierSourceFile: (!id.getModuleSpecifierSourceFile()) ? undefined : id.getModuleSpecifierSourceFile()
+      })
     })
     id.remove()
   })
@@ -73,12 +118,16 @@ export function export2defineSingleFile(config: Export2DefineConfig, sourceFile:
     return
   }
 
-  if (exportedVarStatements[0].getDescendantsOfKind(SyntaxKind.VariableDeclaration).length !== 1) {
+  const exportStatement = exportedVarStatements[0]
+  if (exportStatement.getDescendantsOfKind(SyntaxKind.VariableDeclaration).length !== 1) {
     result.errors = [...result.errors, 'multiple variables exported not supported: ' + exportedVarStatements[0].getText()]
     return
   }
-  const exportedVar = exportedVarStatements[0].getDescendantsOfKind(SyntaxKind.VariableDeclaration)[0]
-  const exportedVariableDeclarations = exportedVar.findReferences().map(r => r.getDefinition().getDeclarationNode())
+  const exportedVar = exportStatement.getDescendantsOfKind(SyntaxKind.VariableDeclaration)[0]
+  const exportedVariableDeclarations = exportedVar.findReferences()
+    .map(r => r.getDefinition().getDeclarationNode())
+    .filter(r => !!r)
+
   if (exportedVariableDeclarations.length !== 1) {
     result.errors = [...result.errors, 'exported variable declaration is not 1: ' + exportedVariableDeclarations.map(vs => vs.getText())]
     return
@@ -88,23 +137,19 @@ export function export2defineSingleFile(config: Export2DefineConfig, sourceFile:
     result.errors = [...result.errors, 'not a variable declaration  ' + exportedVarDecl.getText()]
     return
   }
-
   const exportName = exportedVarDecl.getName()
   const exportValue = exportedVarDecl.getInitializer().getText()
-
-  // exportedVarStatements[0]
-  // const exportedVarDeclarations = flat(exportedVarStatements.map(vs=>)
-
-  exportedVarStatements[0].remove()
-  return `
-define('${exportName}', [${imports.map(imp => `'${config.fakeImportSpecifiers.includes(imp.moduleSpecifier) ? imp.name : imp.moduleSpecifier}'`).join(', ')}], function(${imports.map(i => `'${i.name}'`).join(', ')}){
-  return ${exportValue}
-})
-  `
-
+  if (exportedVarDecl.getText().trim() === exportedVar.getText().trim()) {
+    exportStatement.remove()
+  }
+  return { exportName, imports, exportValue, sourceFile, body: sourceFile.getText() }
 }
 
-
-// export function flat<T>(arr: T[][]): T[] {
-//   return arr.reduce((a, b) => a.concat(b))
-// }
+export function export2defineSingleFileString(r: Export2DefineSingleFileResult): string {
+  return `
+define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier}'`).join(', ')}], function(${r.imports.map(i => `${i.name}`).join(', ')}){
+  ${r.body}
+  return ${r.exportValue}
+})
+  `
+}

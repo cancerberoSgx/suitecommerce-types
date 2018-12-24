@@ -7,7 +7,7 @@ import { compileTsProject } from "../util/compileTsProject";
 
 export interface AbstractConfig {
   /** assumes tsconfig.json file is in the root project path. The project must have typescript installed locally and that will be used to compile */
-  tsconfigJsonPath: string
+  tsconfigFilePath: string
 
   /** if not given will use given tsconfig.json default dest */
   outputFolder?: string

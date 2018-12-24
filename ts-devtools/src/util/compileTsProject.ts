@@ -10,7 +10,7 @@ export function compileTsProject(config: AbstractConfig) {
     mkdir('-p', outputFolder);
   }
   const cwd = pwd();
-  cd(dirname(config.tsconfigJsonPath));
+  cd(dirname(config.tsconfigFilePath));
   const tscFinalCommand = `npx tsc ${outputFolder ? `--outDir '${outputFolder}'` : ``} ${Object.keys(forceTsConfig).filter(name => !!forceTsConfig[name]).map(name => `--${name} ${forceTsConfig[name] === true ? '' : forceTsConfig[name]}`).join(' ')}`;
   const p = exec(tscFinalCommand);
   if (p.code !== 0) {

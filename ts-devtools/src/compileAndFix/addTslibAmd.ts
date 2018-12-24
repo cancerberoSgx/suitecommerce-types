@@ -11,7 +11,7 @@ export function addTslibAmd(config: CompileAndFixConfig): string | undefined {
     if (!config.addTslibJsInFolder) {
         return
     }
-    const finalDest = isAbsolute(config.addTslibJsInFolder) ? config.addTslibJsInFolder : resolve(relative(config.tsconfigJsonPath, config.addTslibJsInFolder))
+    const finalDest = isAbsolute(config.addTslibJsInFolder) ? config.addTslibJsInFolder : resolve(relative(config.tsconfigFilePath, config.addTslibJsInFolder))
     mkdir('-p', finalDest)
     // console.log(finalDest);
     const tslibJsPath = 'node_modules/tslib/tslib.js'

@@ -8,8 +8,8 @@ describe('compileAndFix', () => {
     it('basic', () => {
         const outputFolder = './dist/testdist'
         rm('-rf', outputFolder)
-        const tsconfigJsonPath=`../sample-projects/frontend-simple1/tsconfig.json` //: './tsconfig.json'
-        const config={ outputFolder, tsconfigJsonPath, breakOnFirstError: true, addTslibJsInFolder: `${resolve(outputFolder)}/src` }
+        const tsconfigFilePath=`../sample-projects/frontend-simple1/tsconfig.json` //: './tsconfig.json'
+        const config={ outputFolder, tsconfigFilePath, breakOnFirstError: true, addTslibJsInFolder: `${resolve(outputFolder)}/src` }
         console.log(config);
         
         const result = compileAndFix(config)
