@@ -14,13 +14,15 @@
  * compile project and fix emitted files, see spec/compileAndFix/compileAndFixSpec.ts
  * add tslib.js AMD module see spec/fixJsFileAmdTslib/addTslibAmdDependencySpec.ts
  * import2define - given a project it transform import/export ES modules to AMD 
+ * add tslib to import2define
 
 
  # TODO
- * add tslib to import2define
- *  generate ns.package.json ?
+
+ * import2define copy .tpl files to output
+ * generate ns.package.json ?
  * watch mode so it compiles .ts files on change
- * preserve indentation (probably we need to ask the user for a eslintrc and reindent)
+ * preserve indentation (probably we need to ask the user for a eslintrc and reindent) / or let ts/simple/ast infer
 
 
 

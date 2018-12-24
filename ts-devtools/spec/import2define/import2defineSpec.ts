@@ -1,12 +1,13 @@
 import { Project } from "ts-simple-ast";
-import { export2defineProject, Export2DefineResult, export2defineSingleFile, Export2DefineSingleFileResult, printExport2DefineFileResult, export2define } from "../../src/import2define/import2define";
+import { export2defineProject, Export2DefineResult, export2define } from "../../src/import2define/import2define";
+import { export2defineOne, printExport2DefineOneResult } from "../../src/import2define/export2defineOne";
 import { resolve } from "path";
 import { rm, test } from "shelljs";
 
 describe('export2define', () => {
 
 
-  describe('export2defineSingleFile', () => {
+  describe('export2defineOne', () => {
 
     function test(source: string, expectedOutput: string, expectedErrors: string[]) {
       const project = new Project()
@@ -14,11 +15,11 @@ describe('export2define', () => {
       const result: Export2DefineResult = {
         errors: [], perFileResults: []
       }
-      const resultSingle = export2defineSingleFile({
+      const resultSingle = export2defineOne({
         tsconfigFilePath: 'doesntMatter.json',
 
       }, sourceFile, result)
-      const output = printExport2DefineFileResult(resultSingle)
+      const output = printExport2DefineOneResult(resultSingle)
       expect(result.errors).toEqual(expectedErrors)
       expectCodeEquals(output, expectedOutput)
     }
@@ -122,7 +123,7 @@ export const MyExtensionView = View.extend({
       // result.perFileResults.forEach(pr => console.log(printExport2DefineFileResult(pr)))
       expect(result.errors).toEqual([])
 
-      const strs = result.perFileResults.map(pr => printExport2DefineFileResult(pr))
+      const strs = result.perFileResults.map(pr => printExport2DefineOneResult(pr))
       expectCodeEquals(strs[0], `
 import {ExtensionEntryPoint} from 'sc-types-frontend'
 define('MyExtensionMain', ['Util', 'MyExtensionView'], function(Util: any, MyExtensionView: any){
