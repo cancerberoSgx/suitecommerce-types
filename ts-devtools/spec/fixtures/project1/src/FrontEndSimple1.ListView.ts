@@ -1,8 +1,9 @@
-import { Backbone } from 'suitecommerce'
+// import { Backbone } from 'suitecommerce'
 import template from './frontend_simple1_listview.tpl'
+import { Model, View } from 'sc-types-frontend';
 
-
-export const FrontEndSimple1ListView = Backbone.View.extend<Simple1ListView>({
+const Backbone:any=null
+export const FrontEndSimple1ListView = Backbone.View.extend({
   template,
   events:{
       '[data-action="validate"]': 'customValidation'

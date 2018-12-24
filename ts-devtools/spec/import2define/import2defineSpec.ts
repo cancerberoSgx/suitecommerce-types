@@ -1,5 +1,7 @@
 import { Project } from "ts-simple-ast";
-import { export2defineProject, Export2DefineResult, export2defineSingleFile, Export2DefineSingleFileResult, printExport2DefineFileResult } from "../../src/import2define/import2define";
+import { export2defineProject, Export2DefineResult, export2defineSingleFile, Export2DefineSingleFileResult, printExport2DefineFileResult, export2define } from "../../src/import2define/import2define";
+import { resolve } from "path";
+import { rm, test } from "shelljs";
 
 describe('export2define', () => {
 
@@ -54,6 +56,37 @@ define('extension', ['Util'], function(Util: any){
 `,
         [])
     })
+
+    it('other export decls in statements before should be preserved if interface decl', () => { //should work
+      test(`
+import {Util, View} from 'sc-types-frontend'
+import template from './my_extension_view.tpl'
+export interface IMyExtensionView {
+  play(): void
+}
+export const MyExtensionView:IMyExtensionView = View.extend({
+  template, 
+  play(){}
+})
+    `, `
+
+import {Util, View} from 'sc-types-frontend'
+define('MyExtensionView', ['my_extension_view.tpl'], function(template: any){
+  return View.extend({
+  template, 
+  play(){}
+})
+})
+export interface IMyExtensionView {
+  play(): void
+}
+    
+`,
+        [])
+    })
+
+
+
   })
 
   describe('export2defineProject', () => {
@@ -86,7 +119,7 @@ export const MyExtensionView = View.extend({
         tsconfigFilePath: '',
         project
       })
-      result.perFileResults.forEach(pr => console.log(printExport2DefineFileResult(pr)))
+      // result.perFileResults.forEach(pr => console.log(printExport2DefineFileResult(pr)))
       expect(result.errors).toEqual([])
 
       const strs = result.perFileResults.map(pr => printExport2DefineFileResult(pr))
@@ -112,20 +145,29 @@ define('MyExtensionView', ['my_extension_view.tpl'], function(template: any){
       `)
     })
 
+
+    describe('export2define', () => {
+
+      it('write output project', () => {
+        rm('-rf', 'dist/project1')
+        const result = export2define({
+          tsconfigFilePath: resolve('spec/fixtures/project1/tsconfig.json'),
+          outputFolder: resolve('dist/project1')
+        })
+        expect(result.errors).toEqual([])
+        expect(test('-f', 'dist/project1/src/FrontEndSimple1.ListView.ts'))
+        expect(test('-f', 'dist/project1/src/FrontEndSimpleEntry.ts'))
+      })
+
+    })
+
+
   })
+
 })
 
 
 function expectCodeEquals(a: string, b: string) {
+  // console.log(a, b);
   expect(a.replace(/\s+/gm, ' ').trim()).toEqual(b.replace(/\s+/gm, ' ').trim())
 }
-
-// function printExport2DefineFileResult(r: Export2DefineSingleFileResult): string {
-//   return `
-// ${r.importsToIgnore.join('\n')}
-// define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier}'`).join(', ')}], function(${r.imports.map(i => `${i.name}`).join(', ')}){
-//   ${r.body}
-//   return ${r.exportValue}
-// })
-//   `
-// }
