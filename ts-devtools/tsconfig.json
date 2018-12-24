@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    // "moduleResolution":"node",
+    "moduleResolution":"node",
     "lib": [
       "es2018"
     ],
@@ -10,12 +10,9 @@
     "rootDir": ".",
     "strict": true,
     "strictNullChecks": false,
-    // "noEmitHelpers": true,
-    // "importHelpers": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    
-    // "declaration": true,
+    "declaration": true,
   },
   "include":["src", "spec"]
 }

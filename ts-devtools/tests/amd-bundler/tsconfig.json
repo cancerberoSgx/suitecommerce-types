@@ -18,5 +18,4 @@
     
     // "declaration": true,
   },
-  "include":["src", "spec"]
 }

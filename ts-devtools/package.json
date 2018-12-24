@@ -7,7 +7,7 @@
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
-        "build": "tsc",
+        "build": "npm run clean && tsc && cp -r spec/support_js dist/spec/support",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist",
         "test": "ts-node node_modules/jasmine/bin/jasmine"
