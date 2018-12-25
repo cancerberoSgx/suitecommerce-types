@@ -1,5 +1,5 @@
 import { expectType } from 'tsd-check';
-import { View, BackboneModel, BackboneView } from '../src';
+import { BackboneModel, BackboneView } from '../../src';
 import * as jQuery from 'jQuery'
 
 describe('View', () => {
@@ -28,8 +28,7 @@ describe('View', () => {
     }
   }
 
-  it('generic views', async done => {
-   
+  it('generic view types', async done => {
     expectType<BackboneView<Model1, View1Context> >(new View1());
     expectType<View1Context>(new View1().getContext());
     expectType<Model1>(new View1().model);
@@ -37,11 +36,27 @@ describe('View', () => {
     done()
   })
 
-  it('runs', async done=>{
+  it('basic running example', async done=>{
     const v = new  View1()
     v.model.set('validation', 2)
     const r = await v.customValidation()
     expect(r).toBe(4)
     done()
   })
+  
+
+  describe('initialize and constructor', ()=>{
+    it('constructor', async done => {
+
+      class View2 extends BackboneView{
+        constructor(){
+          super()
+          this.model=new BackboneModel({foo: 2})
+        }
+      }
+      expect(new View2().model.get('foo')).toBe(2)
+      done()
+    })
+  })
+  
 })

@@ -9,7 +9,8 @@
         "build": "tsc",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist",
-        "test": "npx tsc && node dist/spec"
+        "test-js": "npm run clean && npm run build && node dist/spec",
+        "test": "ts-node spec"
     },
     "repository": {
       "type": "git",
