@@ -65,8 +65,6 @@ export interface Deferred<ResolvedType=any, RejectedType=any> {
 	 */
 	done(doneCallbacks:Fn|Fn[]):this
 
-
-
 	/**
 	 * Add handlers to be called when the Deferred object generates progress notifications.
 	 * @param {Function|Function[]}  progressCallbacks
@@ -74,7 +72,6 @@ export interface Deferred<ResolvedType=any, RejectedType=any> {
 	 * @return {Deferred}
 	 */
 	progress(progressCallbacks:Fn|Fn[]) :this
-
 
 	/**
 	 * Add handlers to be called when the Deferred object is either resolved or rejected.
@@ -86,14 +83,12 @@ export interface Deferred<ResolvedType=any, RejectedType=any> {
 	 */
 	always(alwaysCallbacks:Fn|Fn[]):this
 
-
 	/**
 	 * @param {Function} doneFilter A function that is called when the Deferred is resolved.
 	 * @param {Function=} [failFilter]  An optional function that is called when the Deferred is rejected.
 	 * @param {Function=} [progressFilter] An optional function that is called when progress notifications are sent.
 	 */
 	then(doneFilter:Fn, failFilter?:Fn, progressFilter?: Fn) :this
-
 
 	/**
 	 * Resolve a Deferred object and call any doneCallbacks with the given args.

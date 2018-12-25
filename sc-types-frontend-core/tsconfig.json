@@ -8,13 +8,16 @@
     ],
     "outDir": "./dist",
     "rootDir": ".",
-    "strict": false,
-    "strictNullChecks": false,
+    // "strict": true,
+    // "strictNullChecks": false,
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": true,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true
+    // "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    // "emitDeclarationOnly": true,
+    // "noEmit": true,
+    
   },
-  "include":["src", "spec"]
+  // "include":["src", "spec"]
 }

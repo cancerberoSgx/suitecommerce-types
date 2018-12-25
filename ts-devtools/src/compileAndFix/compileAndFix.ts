@@ -55,7 +55,7 @@ export interface CompileAndFixResult extends AbstractResult {
  * so the output JS project is AMD understandable by SC
  * 
  * Notice that input project can import only types (ie: sc-types-frontend)
- * */
+ */
 export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult {
   config.tsconfigFilePath=resolve(config.tsconfigFilePath)
   config.outputFolder=config.outputFolder?resolve(config.outputFolder) : config.outputFolder

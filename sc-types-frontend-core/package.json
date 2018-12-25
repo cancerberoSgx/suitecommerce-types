@@ -9,7 +9,7 @@
         "build": "tsc",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist",
-        "test": "exit 0"
+        "test": "tsc"
     },
     "keywords": [],
     "author": "sg",
