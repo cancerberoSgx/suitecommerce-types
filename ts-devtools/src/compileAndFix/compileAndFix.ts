@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync, fstat } from "fs";
 import { fixJsFileAmdTslib } from "../fixAmdTslib/fixJsFileAmdTslib";
 import { FixAmdTslibResult } from "../fixAmdTslib/types";
 import { compileTsProject } from "../util/compileTsProject";
@@ -77,6 +77,8 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
         filesWithErrors.push(fileName)
         return undefined
       }
+      // call a post process chain for a last modification and save it
+      result.outputCode = postProcessEmittedJs(result.outputCode)
       writeFileSync(fileName, result.outputCode)
       return { ...result, fileName }
     })
@@ -86,6 +88,14 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
     errors: errors.concat( error ?[`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : []), 
     tscFinalCommand: result.tscFinalCommand,
     emittedFileNames: result.emittedFileNames,
-    postProcessResults, tslibFinalDest
+    postProcessResults, 
+    tslibFinalDest
   }
+}
+
+function postProcessEmittedJs(s:string):string{
+  //removing ts commonsjs module Object.define... statemnt since it breaks with 'exports' is not defined in the browser since we are not bundling
+  // TODO: do this better / quotes/format might change and this fails
+  const toRemove=`Object.defineProperty(exports, "__esModule", { value: true });`
+  return s.replace(toRemove, ``)
 }

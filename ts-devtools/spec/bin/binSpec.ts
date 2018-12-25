@@ -19,7 +19,6 @@ describe('CLI bin', () => {
 
     const aFile = readFileSync(`${outputFolder}/src/FrontEndSimpleView2.js`).toString()
     expectCodeToContain(aFile, `
-Object.defineProperty(exports, "__esModule", { value: true });
 define('FrontEndView2', ['frontend_simple1_listview.tpl', 'Backbone.View', 'Backbone.Model', "tslib"], function (template, BackboneView, BackboneModel, tslib_1) {
     return BackboneView.extend({
         template: template,

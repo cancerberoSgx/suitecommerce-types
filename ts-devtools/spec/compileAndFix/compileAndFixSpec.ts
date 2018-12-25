@@ -14,11 +14,11 @@ describe('compileAndFix', () => {
     const outputFolder = getPathRelativeToProjectFolder('tmp/testdist')
     const tsconfigFilePath = getPathRelativeToProjectFolder(`../sample-projects/frontend-simple1/tsconfig.json`)
     rm('-rf', outputFolder)
-    const config = { 
-      outputFolder, tsconfigFilePath, 
-      breakOnFirstError: true, 
-      addTslibJsInFolder: `src`, 
-      debug: true 
+    const config = {
+      outputFolder, tsconfigFilePath,
+      breakOnFirstError: true,
+      addTslibJsInFolder: `src`,
+      debug: true
     }
     const result = compileAndFix(config)
     expect(result.errors).toEqual([])
@@ -26,6 +26,9 @@ describe('compileAndFix', () => {
     expect(aFile).toContain(`define('FrontEndSimple1.ListView', ['frontend_simple1_listview.tpl', 'Backbone', "tslib"], function (template, Backbone, tslib_1)`)
     expect(aFile).not.toContain(`require("tslib")`)
     expect(test('-f', `${outputFolder}/src/tslib.js`)).toBe(true)
+    result.emittedFileNames.forEach(f =>
+      expect(readFileSync(f).toString()).not.toContain(`Object.defineProperty(exports, "__esModule", { value: true });`)
+    )
   })
 
   it('together with export2define, project: spec/fixtures/project1/', () => {
@@ -53,7 +56,6 @@ describe('compileAndFix', () => {
     const aFile = readFileSync(`${outputFolder}/src/FrontEndSimple1.ListView.js`).toString()
     expectCodeToContain(aFile, `
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 define('FrontEndSimple1ListView', ['frontend_simple1_listview.tpl', 'Backbone.Model', 'Backbone.View', "tslib"], function (template, BackboneModel, BackboneView, tslib_1) {
     var v = 1234;
     return BackboneView.extend({

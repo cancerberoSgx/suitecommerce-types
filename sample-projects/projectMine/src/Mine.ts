@@ -3,6 +3,7 @@ import { MineModel } from './MineModel';
 
 export const Mine = {
     mountToApp(application: Application) {
+      alert('seba')
       application.getLayout().on("afterAppendView", async view=>{
         const m = new MineModel()
         const r = await m.magick(2)

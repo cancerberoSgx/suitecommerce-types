@@ -4,7 +4,6 @@ describe('removeVariableDeclaration', () => {
     it('basic', () => {
         const inputCode = `
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 define('FrontEndSimple1.ListView', ['frontend_simple1_listview.tpl', 'Backbone'], function (template, Backbone) {
    return 1 
