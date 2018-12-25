@@ -1,0 +1,1 @@
+npx jsdoc -t node_modules/tsd-jsdoc/dist -r src

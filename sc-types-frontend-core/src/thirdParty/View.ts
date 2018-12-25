@@ -1,5 +1,6 @@
 import * as Backbone from 'backbone';
 import { Fn } from "..";
+import { BackboneModel } from './Model';
 
 export type TemplateContext = {}
 export type Template<Context=TemplateContext> = Fn<string, [Context]>
@@ -38,7 +39,7 @@ export interface View<Context extends TemplateContext = TemplateContext> {
   destroy(): void
 }
 
-export class BackboneView<VModel extends Backbone.Model=Backbone.Model, Context extends TemplateContext = TemplateContext> extends Backbone.View<VModel> implements View<Context> {
+export class BackboneView<VModel extends Backbone.Model=BackboneModel, Context extends TemplateContext = TemplateContext> extends Backbone.View<VModel> implements View<Context> {
   template: Template<Context>;
 	bindings?: { [selector: string]: (string | Fn) }
   _render(): void {

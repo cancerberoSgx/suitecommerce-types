@@ -1,4 +1,5 @@
 import { BaseComponent } from "./BaseComponent";
+import { EnvironmentComponent } from "./concrete/EnvironmentComponent";
 
 /**
  * Manager of components. Extensions can get components implementations and register new component
@@ -17,6 +18,9 @@ export interface ComponentContainer {
 	 * Returns the requested component based on its name if there is no component with that name registered in this container
 	 * @param {String} component_name
 	 */
+  getComponent<ComponentType extends BaseComponent = BaseComponent>(component_name: string): ComponentType
+  getComponent(component_name: 'Environment'): EnvironmentComponent
+  getComponent<ComponentType extends BaseComponent = BaseComponent>(component_name: string): ComponentType
   getComponent<ComponentType extends BaseComponent = BaseComponent>(component_name: string): ComponentType
 }
 

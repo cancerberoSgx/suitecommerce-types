@@ -48,12 +48,12 @@ describe('View', () => {
   describe('initialize and constructor', ()=>{
     it('constructor', async done => {
       class View2 extends BackboneView{
-        constructor(){
+        constructor(foo:number){
           super()
-          this.model=new BackboneModel({foo: 2})
+          this.model=new BackboneModel({foo})
         }
       }
-      expect(new View2().model.get('foo')).toBe(2)
+      expect(new View2(2).model.get('foo')).toBe(2)
       done()
     })
     it('initialize', async done => {
@@ -65,18 +65,45 @@ describe('View', () => {
       expect(new View3().model.get('foo')).toBe(3)
       done()
     })
-  })
-  describe('events', ()=>{
-    it('model events', async done => {
-      debugger
-      class View5 extends BackboneView<BackboneModel>{
-        initialize(){
-          this.model=new BackboneModel({foo: 5})
-          this.model.on('change', )
+
+    xit('initialize with options', async done => {
+      class Model3 extends BackboneModel{
+        initialize(attributes, options){
+          super.initialize(attributes, options)
         }
       }
-      expect(new View5().model.get('foo')).toBe(5)
+      class View3 extends BackboneView<Model3>{
+        initialize(options){
+          super.initialize(options)
+        }
+      }
+      expect(new View3(new Model3({foo: 5})).model.get('foo')).toBe(5)
       done()
+    })
+  })
+
+  xdescribe('events', ()=>{
+    it('model events', async done => {
+      let f:string
+      // debugger
+      class View5 extends BackboneView<BackboneModel>{
+        foo(arg0: number): any {
+          this.model.set('foo', arg0)
+        }
+        initialize(options){
+          super.initialize(options)
+          // this.model=new BackboneModel({foo: 5})
+          this.model.on('change', function(model, ){
+            debugger
+          })
+        }
+      }
+      const v =new View5({model:new BackboneModel({foo: 5})})
+      expect(v.model.get('foo')).toBe(5)
+      v.foo(6)
+
+      // expect(v.model.get('foo')).toBe(5)
+      // done()
     })
   })
 })

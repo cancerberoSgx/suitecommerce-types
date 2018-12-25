@@ -1,0 +1,15 @@
+{
+  "name": "jsdoc2tsd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsdoc": "^3.5.5",
+    "tsd-jsdoc": "^2.1.0"
+  }
+}
