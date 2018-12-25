@@ -1,6 +1,5 @@
-// import { Backbone } from 'suitecommerce'
 import template from './frontend_simple1_listview.tpl'
-import { Model, View, BackboneView, BackboneModel } from 'sc-types-frontend';
+import { BackboneView, BackboneModel } from 'sc-types-frontend';
 
 export const FrontEndView2 = BackboneView.extend({
   template,
@@ -24,7 +23,6 @@ export interface Simple1ListViewContext {
     foo: number
 }
 
-export interface Simple1ListView extends View<Simple1ListViewContext, Model>{
-    customValidation(e?:MouseEvent): Promise<boolean>
-    model:Model
-}
+// export interface Simple1ListView extends BackboneView{
+//     customValidation(e?:MouseEvent): Promise<boolean>
+// }

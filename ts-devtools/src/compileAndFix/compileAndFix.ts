@@ -3,6 +3,7 @@ import { fixJsFileAmdTslib } from "../fixAmdTslib/fixJsFileAmdTslib";
 import { FixAmdTslibResult } from "../fixAmdTslib/types";
 import { compileTsProject } from "../util/compileTsProject";
 import { addTslibAmd } from "./addTslibAmd";
+import { resolve } from "path";
 
 export interface AbstractConfig {
   /** assumes tsconfig.json file is in the root project path. The project must have typescript installed locally and that will be used to compile */
@@ -32,6 +33,7 @@ export interface AbstractConfig {
 export interface CompileAndFixConfig extends AbstractConfig {
   /** if set, it will add tslib.js (AMD module) in given path that must be relative to `tsconfigJsonPath`*/
   addTslibJsInFolder?: string
+  outputFolder: string
 }
 
 export interface AbstractResult {
@@ -55,15 +57,18 @@ export interface CompileAndFixResult extends AbstractResult {
  * Notice that input project can import only types (ie: sc-types-frontend)
  * */
 export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult {
+  config.tsconfigFilePath=resolve(config.tsconfigFilePath)
+  config.outputFolder=config.outputFolder?resolve(config.outputFolder) : config.outputFolder
   const result = compileTsProject(config)
   if(result.errors.length){
-    return 
+    return {...result}
   }
   let error = false
   const filesWithErrors = []
   let errors : string[]=[]
   const postProcessResults = result.emittedFileNames
     .map(fileName => {
+      debugger
       const result = fixJsFileAmdTslib({
         inputCode: readFileSync(fileName).toString()
       })
@@ -76,7 +81,7 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
       writeFileSync(fileName, result.outputCode)
       return { ...result, fileName }
     })
-    .filter(r => !!r)
+    .filter(r => r)
   const tslibFinalDest = addTslibAmd(config)
   return {
     errors: errors.concat( error ?[`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : []), 

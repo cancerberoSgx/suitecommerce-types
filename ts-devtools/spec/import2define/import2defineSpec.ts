@@ -3,7 +3,7 @@ import { import2defineProject, Import2DefineResult, import2define } from "../../
 import { import2defineOne, printImport2DefineOneResult } from "../../src/import2define/import2defineOne";
 import {expectCodeEquals} from '../testUtil'
 import { resolve } from "path";
-import { rm, test } from "shelljs";
+import { rm, test, mkdir } from "shelljs";
 
 describe('import2define', () => {
 
@@ -39,7 +39,6 @@ define('bar', ['foo', 'foo'], function(a: any, b: any){
     })
 
     it('single file export declared separately', () => { //should work
-      // import { Utils } from 'suitecommerce' 
       test(`
 import { ExtensionEntryPoint, Utils } from 'sc-types-frontend'
 const obj: ExtensionEntryPoint = {
@@ -94,9 +93,33 @@ export interface IMyExtensionView extends View {
         [])
     })
 
-
-
+xit('classed can be exported', ()=>{
+  const code1 =`
+import { Model, BackboneModel } from 'sc-types-frontend';
+export class MineModel extends BackboneModel {
+  async magick(t: 1 | 2 | 3 | 4): Promise<number> {
+    await sleep(t)
+    return t + 1
+  }
+}
+  `
   })
+
+
+
+  // fails because it tranlate to define('x', [], function(){ const y = x + 2 return 1 }) / basically we 
+  // cannot use the exported variable after the export statament. SOlution is to create a new variable 
+  // and replace the return statemtn with it and then at the end return that.s
+  xit('fails using exported variable below', ()=>{
+    const code1 =`
+export const x = 1
+const y = x + 2
+    `
+    test(code1, '', [])
+  
+    })
+})
+
 
   describe('import2defineProject', () => {
 
@@ -151,24 +174,23 @@ define('MyExtensionView', ['Utils', 'Backbone.View', 'my_extension_view.tpl'], f
 })
       `)
     })
+  })
 
 
-    describe('import2define', () => {
 
-      it('write output project', () => {
-        rm('-rf', 'dist/project1')
-        const result = import2define({
-          tsconfigFilePath: resolve('spec/fixtures/project1/tsconfig.json'),
-          outputFolder: resolve('dist/project1')
-        })
-        expect(result.errors).toEqual([])
-        expect(test('-f', 'dist/project1/src/FrontEndSimple1.ListView.ts'))
-        expect(test('-f', 'dist/project1/src/FrontEndSimpleEntry.ts'))
+  describe('import2define', () => {
+    it('write output project', () => {
+      mkdir('-p', 'tmp')
+      const outputFolder = 'tmp/project1Outtt'
+      rm('-rf', `${outputFolder}`)
+      const result = import2define({
+        tsconfigFilePath: resolve(`spec/fixtures/project1/tsconfig.json`),
+        outputFolder: outputFolder
       })
-
+      expect(result.errors).toEqual([])
+      expect(test(`-f`, `${outputFolder}/src/FrontEndSimple1.ListView.ts`)).toBe(true)
+      expect(test(`-f`, `${outputFolder}/src/FrontEndSimpleEntry.ts`)).toBe(true)
     })
-
-
   })
 
 })

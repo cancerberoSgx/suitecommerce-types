@@ -1,18 +1,20 @@
-import { exec, rm, test } from "shelljs";
-import { readFileSync } from "fs";
+import { exec, rm, test, mkdir } from "shelljs";
+import { readFileSync,  } from "fs";
 import { expectCodeToContain, expectCodeNotToContain } from "../testUtil";
 
 
-describe('bin', () => {
-  it('minimun params', () => {
-    rm('-rf', 'dist/foo1233')
-    const cmd = `sc-tsc --tsconfigFilePath spec/fixtures/project1/tsconfig.json  --outputFolder dist/foo1233 --debug --addTslibJsInFolder src`
+describe('CLI bin', () => {
+  it('minimun params should work', () => {
+    const outputFolder ='tmp/foo1233'
+    rm('-rf', outputFolder)
+    mkdir('-p', outputFolder)
+    const cmd = `node bin/sc-tsc --tsconfigFilePath spec/fixtures/project1/tsconfig.json  --outputFolder ${outputFolder} --debug --addTslibJsInFolder src`
     const p = exec(cmd)
     expect(p.code).toBe(0)
-    expect(test('-f','dist/foo1233/src/FrontEndSimpleEntry.js')).toBe(true)
-    expect(test('-f','dist/foo1233/src/tslib.js')).toBe(true)
+    expect(test('-f',`${outputFolder}/src/FrontEndSimpleEntry.js`)).toBe(true)
+    expect(test(`-f`,`${outputFolder}/src/tslib.js`)).toBe(true)
 
-    const aFile = readFileSync(`dist/foo1233/src/FrontEndSimpleView2.js`).toString()
+    const aFile = readFileSync(`${outputFolder}/src/FrontEndSimpleView2.js`).toString()
     expectCodeToContain(aFile, `
 Object.defineProperty(exports, "__esModule", { value: true });
 define('FrontEndView2', ['frontend_simple1_listview.tpl', 'Backbone.View', 'Backbone.Model', "tslib"], function (template, BackboneView, BackboneModel, tslib_1) {

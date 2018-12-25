@@ -1,7 +1,7 @@
-import { ModuleEntryPoint, ViewConstructor } from 'sc-types-frontend';
+import { ModuleEntryPoint, } from 'sc-types-frontend';
 import { Simple1ListView } from './FrontEndSimple1.ListView';
 
-define<ModuleEntryPoint, [ViewConstructor<Simple1ListView>]>('FrontEndSimpleEntry', ['FrontEndSimple1.ListView'], (Simple1ListViewConstructor) => ({
+define('FrontEndSimpleEntry', ['FrontEndSimple1.ListView'], (Simple1ListViewConstructor) => ({
     mountToApp(application) {
         application.getLayout().on('afterAppendView', async view => {
             const myView = new Simple1ListViewConstructor()
@@ -11,5 +11,5 @@ define<ModuleEntryPoint, [ViewConstructor<Simple1ListView>]>('FrontEndSimpleEntr
             }
         })
     }
-})
+} as ModuleEntryPoint)
 )

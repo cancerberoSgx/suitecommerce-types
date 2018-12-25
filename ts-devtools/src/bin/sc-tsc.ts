@@ -25,12 +25,12 @@ ${JSON.stringify({
         exportValue: ministr(r.exportValue),
         statementOutsideHandler: ministr(r.statementOutsideHandler),
         sourceFile: r.sourceFile && r.sourceFile.getFilePath(),
-        imports: r.imports.map(i => ({
+        imports: (r.imports||[]).map(i => ({
           ...i,
           importSpecifierSourceFile: i.importSpecifierSourceFile && i.importSpecifierSourceFile.getFilePath()
         }))
       })),
-      postProcessResults: result.postProcessResults.map(pr => ({
+      postProcessResults: (result.postProcessResults||[]).map(pr => ({
         ...pr,
         outputCode: ministr(pr.outputCode)
       })),

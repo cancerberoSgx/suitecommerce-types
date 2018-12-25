@@ -9,6 +9,7 @@
       "request": "launch",
       "name": "test",
       "program": "${workspaceFolder}/node_modules/jasmine/bin/jasmine",
+      "args": [],
       "outFiles": [
         "${workspaceFolder}/**/*.js"
       ],

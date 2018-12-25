@@ -33,7 +33,9 @@ export const defaultIgnoreImportSpecifiers: IgnoreImportSpecifier[] = [
 
 
 const suitecommerceSpecifiers: {[name: string]: string} = {
-  'BackboneView':'Backbone.View',
   'Utils': 'Utils',
-  'BackboneModel': 'Backbone.Model'
+  'BackboneView':'Backbone.View',
+  'BackboneModel': 'Backbone.Model',
+  'BackboneCollection': 'Backbone.Collection',
+  'BackboneRouter': 'Backbone.Router',
 }

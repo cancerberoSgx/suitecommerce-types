@@ -1,5 +1,5 @@
 import { dirname, resolve } from "path";
-import { cd, config as shellconfig, exec, mkdir, pwd, rm } from "shelljs";
+import { cd, config as shellconfig, exec, mkdir, pwd, rm, test } from "shelljs";
 import { AbstractConfig, AbstractResult, CompileAndFixResult } from "../compileAndFix/compileAndFix";
 
 
@@ -8,27 +8,34 @@ export const forceTsConfig: { [name: string]: string | boolean } = {
   noEmitHelpers: true,
   importHelpers: true,
   listEmittedFiles: true,
-  sourceMap: false // since we modify the output sourcemaps get invalid
+  sourceMap: false, // since we modify the output sourcemaps get invalid
+  skipLibCheck: true
 }
 
 export function compileTsProject(config: AbstractConfig): CompileAndFixResult {
   shellconfig.silent = !config.debug
-  
   const outputFolder = config.outputFolder ? resolve(config.outputFolder) : false;
   if (outputFolder) {
-    if (config.cleanOutputFolder) {
+    if (config.cleanOutputFolder && !config.debug) {
       rm('-rf', outputFolder);
+      mkdir('-p', outputFolder);
     }
-    mkdir('-p', outputFolder);
+  }
+  if(!test('-f', config.tsconfigFilePath)){
+    return {errors: [`tsconfig.json file doesnt exist: ${config.tsconfigFilePath}`], tscFinalCommand: ''}
   }
   const cwd = pwd();
-  cd(dirname(config.tsconfigFilePath));
+  const tsConfigFolder =dirname(config.tsconfigFilePath)
+  cd(tsConfigFolder);
   const tscFinalCommand = `npx tsc ${outputFolder ? `--outDir '${outputFolder}'` : ``} ${
     Object.keys(forceTsConfig)
     .filter(name => !!forceTsConfig[name])
     .map(name => `--${name} ${forceTsConfig[name] === true ? '' : forceTsConfig[name]}`)
     .join(' ')
   }`;
+  if(config.debug){
+    console.log(`About to execute command ${tscFinalCommand}, current folder is : ${process.cwd()} and should be also this: ${tsConfigFolder}`);
+  }
   const p = exec(tscFinalCommand);
   if (p.code !== 0) {
     cd(cwd);

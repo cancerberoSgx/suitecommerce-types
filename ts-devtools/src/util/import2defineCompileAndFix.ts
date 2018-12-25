@@ -14,31 +14,35 @@ export interface AllResult extends CompileAndFixResult, Import2DefineResult {
 /** will execute import2define() first using a tmp project folder and then compileAndFix() over that one 
  * to generate a valid JS AMD project that SC understand */
 export function import2defineCompileAndFix(config: AllConfig): AllResult {
+  config.tsconfigFilePath=resolve(config.tsconfigFilePath)
+  config.outputFolder=config.outputFolder?resolve(config.outputFolder) : config.outputFolder
   shellconfig.silent = !config.debug
   let inputFolder = dirname(resolve(config.tsconfigFilePath));
   let outputFolder = `${config.outputFolder}_ts`, outputFolderFirst = outputFolder
-  rm('-rf', outputFolder)
+
+  !config.debug && rm('-rf', outputFolder)
+
   const import2defineResult = import2define({
     ...config,
     outputFolder
   })
   if (import2defineResult.errors.length) {
-    config.debug && rm('-rf', outputFolder)
+    !config.debug && rm('-rf', outputFolder)
     return { ...import2defineResult, tscFinalCommand: '' }
   }
 
   inputFolder = outputFolder
   outputFolder = config.outputFolder
-  if (config.cleanOutputFolder) {
+  if (config.cleanOutputFolder&& !config.debug) {
     rm('-rf', config.outputFolder)
   }
   const result = compileAndFix({
     ...config,
     tsconfigFilePath: `${inputFolder}/tsconfig.json`,
     breakOnFirstError: true,
-    addTslibJsInFolder: `${resolve(config.outputFolder)}/src`
+    addTslibJsInFolder: `src`
   })
 
-  config.debug && rm('-rf', outputFolderFirst)
+  !config.debug && rm('-rf', outputFolderFirst)
   return { ...import2defineResult, ...result }
 }

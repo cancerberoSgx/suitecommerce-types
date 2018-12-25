@@ -1,19 +1,17 @@
-// import { Backbone } from 'suitecommerce'
 import template from './frontend_simple1_listview.tpl'
-import { Model, View } from 'sc-types-frontend';
+import { View , BackboneModel, BackboneView} from 'sc-types-frontend';
 
-const Backbone:any=null
-export const FrontEndSimple1ListView = Backbone.View.extend({
+export const FrontEndSimple1ListView = BackboneView.extend({
   template,
   events:{
       '[data-action="validate"]': 'customValidation'
   },
   getContext() {
       return {
-          foo: 1
+          foo: 1 
       }
   },
-  model: new Backbone.Model(),
+  model: new BackboneModel(),
   async customValidation(e:MouseEvent): Promise<boolean>{
       await this.model.fetch()
       await this.render()
@@ -21,11 +19,14 @@ export const FrontEndSimple1ListView = Backbone.View.extend({
   }
 })
 
+
 export interface Simple1ListViewContext {
     foo: number
 }
 
-export interface Simple1ListView extends View<Simple1ListViewContext, Model>{
+export interface Simple1ListView extends View{
     customValidation(e?:MouseEvent): Promise<boolean>
-    model:Model
 }
+
+// const v=new FrontEndSimple1ListView() // this is currently failing
+const v=1234

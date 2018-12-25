@@ -26,24 +26,24 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
       return;
     }
 
-    let importNamesToBeIgnored: string[]=[]
+    let importNamesToBeIgnored: string[] = []
     // let importNeedsToRemain=false
     namedImports.forEach(ni => {
       const customImportSpecifier = config.customImportSpecifiers.find(i => i.predicate(id, ni));
       const customImportSpecifierFn = customImportSpecifier ? customImportSpecifier.getImportSpecifier : ((id: ImportDeclaration, is: string) => moduleSpecifier);
       const finalImportSpecififier = customImportSpecifierFn(id, ni)
-      if(finalImportSpecififier){
+      if (finalImportSpecififier) {
         imports.push({
           name: ni,
           moduleSpecifier: finalImportSpecififier,
           importSpecifierSourceFile: !id.getModuleSpecifierSourceFile() ? undefined : id.getModuleSpecifierSourceFile()
         });
-      }else {
+      } else {
         importNamesToBeIgnored.push(ni)
         // importNeedsToRemain=true
       }
     });
-    if(importNamesToBeIgnored.length){
+    if (importNamesToBeIgnored.length) {
       // if(importNeedsToRemain){
       // importsToIgnore.push(id.getText());
       importsToIgnore.push(`import { ${importNamesToBeIgnored.join(', ')} } from '${moduleSpecifier}'`);
@@ -68,7 +68,11 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
   const exportedVar = exportStatement.getDescendantsOfKind(SyntaxKind.VariableDeclaration)[0];
   const exportedVariableDeclarations = exportedVar.findReferences()
     .map(r => r.getDefinition().getDeclarationNode())
-    .filter(r => !!r && r.getKindName().endsWith('Declaration')); //TODO> do this better, perhaps negatively filtering importspecifier
+    //TODO> do this better, perhaps negatively filtering importspecifier
+    .filter(r => r && r.getKindName().endsWith('Declaration') && r.getSourceFile() === sourceFile);
+  // if(config.debug){
+    
+  // }
   if (exportedVariableDeclarations.length !== 1) {
     result.errors = [...result.errors, 'exported variable declaration is not 1: ' + exportedVariableDeclarations.map(vs => vs.getKindName() + ' - ' + vs.getText())];
     return;
@@ -79,6 +83,7 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     return;
   }
   const exportName = exportedVarDecl.getName();
+  debugger
   const exportValue = exportedVarDecl.getInitializer().getText();
   if (exportedVarDecl.getText().trim() === exportedVar.getText().trim()) {
     exportStatement.remove();

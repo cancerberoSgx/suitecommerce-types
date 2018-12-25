@@ -1,9 +1,9 @@
-import { ViewConstructor, Template , View, BackboneType, Model} from 'sc-types-frontend'
+import {  BackboneView ,  BackboneModel} from 'sc-types-frontend'
 
-define<ViewConstructor<Simple1ListView>, [Template, BackboneType]>('FrontEndSimple1.ListView', 
+define('FrontEndSimple1.ListView', 
 ['frontend_simple1_listview.tpl', 'Backbone'], (template, Backbone) => {
 
-    const result = Backbone.View.extend<Simple1ListView>({
+    const result = BackboneView.extend({
         template,
         events:{
             '[data-action="validate"]': 'customValidation'
@@ -13,7 +13,7 @@ define<ViewConstructor<Simple1ListView>, [Template, BackboneType]>('FrontEndSimp
                 foo: 1
             }
         },
-        model: new Backbone.Model(),
+        model: new BackboneModel(),
         async customValidation(e:MouseEvent): Promise<boolean>{
             await this.model.fetch()
             await this.render()
@@ -27,7 +27,6 @@ export interface Simple1ListViewContext {
     foo: number
 }
 
-export interface Simple1ListView extends View<Simple1ListViewContext, Model>{
+export interface Simple1ListView extends BackboneView<BackboneModel, Simple1ListViewContext >{
     customValidation(e?:MouseEvent): Promise<boolean>
-    model:Model
 }
