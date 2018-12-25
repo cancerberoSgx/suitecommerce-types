@@ -47,7 +47,6 @@ describe('View', () => {
 
   describe('initialize and constructor', ()=>{
     it('constructor', async done => {
-
       class View2 extends BackboneView{
         constructor(){
           super()
@@ -57,6 +56,27 @@ describe('View', () => {
       expect(new View2().model.get('foo')).toBe(2)
       done()
     })
+    it('initialize', async done => {
+      class View3 extends BackboneView{
+        initialize(){
+          this.model=new BackboneModel({foo: 3})
+        }
+      }
+      expect(new View3().model.get('foo')).toBe(3)
+      done()
+    })
   })
-  
+  describe('events', ()=>{
+    it('model events', async done => {
+      debugger
+      class View5 extends BackboneView<BackboneModel>{
+        initialize(){
+          this.model=new BackboneModel({foo: 5})
+          this.model.on('change', )
+        }
+      }
+      expect(new View5().model.get('foo')).toBe(5)
+      done()
+    })
+  })
 })

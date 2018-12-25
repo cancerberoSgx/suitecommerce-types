@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    // "target": "es2018",
+    "target": "es2018",
     "module": "commonjs",
     "moduleResolution":"node",
     "lib": [
@@ -16,7 +16,7 @@
     "esModuleInterop": true,
     // "checkJs": false,
     // "allowJs": false,
-    // "sourceMap": true,
+    "sourceMap": true,
     "declaration": true,
     // "skipDefaultLibCheck": true,
     // "skipLibCheck": true,

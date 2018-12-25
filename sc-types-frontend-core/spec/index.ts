@@ -13,7 +13,7 @@ function installJsDom(){
 
 function runJasmine(){
   const Jasmine = require('jasmine')
-  let specFiles = ls('-R', __dirname).map(f=>`${__dirname}/${f}`).filter(f=>f.endsWith('.js')||f.endsWith('.ts'))
+  let specFiles = ls('-R', __dirname).map(f=>`${__dirname}/${f}`).filter(f=>f.endsWith('.js')||(f.endsWith('.ts')&&!f.endsWith('.d.ts')))
   const jasmineRunner = new Jasmine()
   jasmineRunner.specFiles = specFiles
   jasmineRunner.execute()
