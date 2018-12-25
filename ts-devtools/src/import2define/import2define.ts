@@ -30,10 +30,9 @@ export function import2define(config: Import2DefineConfig): Import2DefineResult 
     tsConfigFilePath: config.tsconfigFilePath,
     addFilesFromTsConfig: true,
   })
-  const result = import2defineProject({ project, tsconfigFilePath: config.tsconfigFilePath })
-
   const tsConfigFolder = dirname(resolve(config.tsconfigFilePath))
-  if (config.outputFolder) {
+  const result = import2defineProject({ project, tsconfigFilePath: config.tsconfigFilePath })
+  if (!result.errors.length&&config.outputFolder) {
     mkdir('-p', config.outputFolder)
     cp(config.tsconfigFilePath, config.outputFolder)
     const project2 = new Project({
@@ -71,7 +70,7 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
       return r
     })
 
-    .filter(r => !!r)
+    .filter(r => result.errors.length===0&&r)
 
     // now that we have import informatoin for all files we fix imports to relative files to point to the export name
     .map((r, i, arr) => {
@@ -79,11 +78,12 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
         if (im.moduleSpecifier.startsWith('.') && im.importSpecifierSourceFile) {
           //TODO: error if !im.importSpecifierSourceFile
           const importSpecifierResult = arr.find(rr => rr.sourceFile === im.importSpecifierSourceFile)
-          //TODO error if !importSpecifierResult
-          im.moduleSpecifier = importSpecifierResult.exportName
+          //TODO error if !importSpecifierResult it means it was an error 
+          im.moduleSpecifier = importSpecifierResult && importSpecifierResult.exportName
         }
         return im
       })
+      // .filter(im=>im.moduleSpecifier)
       return r
     })
   return result

@@ -1,8 +1,15 @@
 import { ImportDeclaration, SourceFile, SyntaxKind, TypeGuards } from "ts-simple-ast";
 import { defaultCustomImportSpecifiers, defaultIgnoreImportSpecifiers } from "./import2defineDefaults";
 import { Import2DefineConfig, Import2DefineResult } from "./import2define";
+import { shorter } from "../util/misc";
 
-export function import2defineOne(config: Import2DefineConfig, sourceFile: SourceFile, result: Import2DefineResult): Import2DefineOneResult {
+export function import2defineOne(config: Import2DefineConfig, sourceFile: SourceFile, result: Import2DefineResult): Import2DefineOneResult | undefined {
+  debugger
+  const exportVerificationResults = exportVerification(sourceFile)
+  if (exportVerificationResults.length) {
+    result.errors = [...result.errors, ...exportVerificationResults]
+    return
+  }
   config.customImportSpecifiers = (config.customImportSpecifiers && config.customImportSpecifiers.length) ? config.customImportSpecifiers : defaultCustomImportSpecifiers;
   config.ignoreImportSpecifiers = (config.ignoreImportSpecifiers && config.ignoreImportSpecifiers.length) ? config.ignoreImportSpecifiers : defaultIgnoreImportSpecifiers;
   const importDeclarations = sourceFile.getDescendantsOfKind(SyntaxKind.ImportDeclaration);
@@ -70,9 +77,6 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     .map(r => r.getDefinition().getDeclarationNode())
     //TODO> do this better, perhaps negatively filtering importspecifier
     .filter(r => r && r.getKindName().endsWith('Declaration') && r.getSourceFile() === sourceFile);
-  // if(config.debug){
-    
-  // }
   if (exportedVariableDeclarations.length !== 1) {
     result.errors = [...result.errors, 'exported variable declaration is not 1: ' + exportedVariableDeclarations.map(vs => vs.getKindName() + ' - ' + vs.getText())];
     return;
@@ -83,7 +87,6 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     return;
   }
   const exportName = exportedVarDecl.getName();
-  debugger
   const exportValue = exportedVarDecl.getInitializer().getText();
   if (exportedVarDecl.getText().trim() === exportedVar.getText().trim()) {
     exportStatement.remove();
@@ -128,4 +131,18 @@ define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier}'`).jo
 })
 ${r.statementOutsideHandler}
   `;
+}
+
+function exportVerification(sourceFile: SourceFile): string[] {
+  // debugger
+  const exportsNotInTypeDeclaration = sourceFile
+    .getDescendantsOfKind(SyntaxKind.ExportKeyword)
+    .filter(e => !TypeGuards.isInterfaceDeclaration(e.getParent()) &&
+      !TypeGuards.isTypeAliasDeclaration(e.getParent()))
+  if (exportsNotInTypeDeclaration.length > 1) {
+    return [`Sorry you can only have one export for a non interface/type declaration and you have these: ${exportsNotInTypeDeclaration.map(e => shorter(e.getParent().getText())).join('"\n , "\n')}`]
+  }
+  else {
+    return []
+  }
 }

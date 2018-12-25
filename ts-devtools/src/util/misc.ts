@@ -8,3 +8,6 @@ export function getNodeModulesFolderPath(): string{
 export function getPathRelativeToProjectFolder(s:string):string{
   return resolve(join(getNodeModulesFolderPath(), '..', s))
 }
+export function shorter(text:string, much:number=10):string {
+  return text.trim().substring(0, Math.min(text.length, much))+'...'
+}

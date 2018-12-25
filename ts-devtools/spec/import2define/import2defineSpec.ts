@@ -150,7 +150,6 @@ export const MyExtensionView = BackboneView.extend({
         tsconfigFilePath: '',
         project
       })
-      // result.perFileResults.forEach(pr => console.log(printimport2defineFileResult(pr)))
       expect(result.errors).toEqual([])
 
       const strs = result.perFileResults.map(pr => printImport2DefineOneResult(pr))

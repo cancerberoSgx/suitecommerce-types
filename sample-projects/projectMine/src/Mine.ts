@@ -1,5 +1,5 @@
 import { Application } from 'sc-types-frontend';
-import { MineModel, sleep } from './MineModel';
+import { MineModel } from './MineModel';
 
 export const Mine = {
     mountToApp(application: Application) {
@@ -10,9 +10,3 @@ export const Mine = {
       })
     }
 }
-
-async function magick(t:1|2|3|4): Promise<number>{
-    await sleep(t)
-    const s= `${Math.random()<0.5 ? 1:2}`
-    return s.length>4?2:1
-  }

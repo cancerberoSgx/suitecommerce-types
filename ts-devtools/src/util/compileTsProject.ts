@@ -39,7 +39,10 @@ export function compileTsProject(config: AbstractConfig): CompileAndFixResult {
   const p = exec(tscFinalCommand);
   if (p.code !== 0) {
     cd(cwd);
-    return { tscFinalCommand, errors: [`Executing command '${tscFinalCommand}' throwed error: stderr: ${p.stderr}`] };
+    return { 
+      tscFinalCommand, 
+      errors: [`Executing command '${tscFinalCommand}' throwed error: stderr: ${p.stderr}`] 
+    };
   }
   const prefix = 'TSFILE: ';
   const emittedFileNames = p.stdout.split('\n')
