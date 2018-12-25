@@ -16,9 +16,14 @@
         "prepare": "npm run build && npm run generateHelp",
         "all": "npm run clean && npm run build && npm run test"
     },
-    "keywords": [],
-    "author": "sg",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/cancerberoSgx/suitecommerce-types.git"
+    },
+    "keywords": ["SuiteCommrce", "TypeScript", "Netsuite", "devtools", "types", "JavaScript"],
+    "author": "Sebastian Gurin",
     "license": "MIT",
+    "homepage": "https://github.com/cancerberoSgx/suitecommerce-types",
     "dependencies": {
         "minimist": "^1.2.0",
         "shelljs": "^0.8.3",

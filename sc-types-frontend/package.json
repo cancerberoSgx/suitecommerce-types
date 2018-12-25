@@ -11,9 +11,14 @@
         "clean":"rm -rf dist",
         "test": "echo 'no tests yet' && exit 0"
     },
-    "keywords": [],
-    "author": "sg",
-    "license": "ISC",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/cancerberoSgx/suitecommerce-types.git"
+    },
+    "keywords": ["SuiteCommrce", "TypeScript", "Netsuite", "devtools", "types", "JavaScript"],
+    "author": "Sebastian Gurin",
+    "license": "MIT",
+    "homepage": "https://github.com/cancerberoSgx/suitecommerce-types",
     "dependencies": {
         "sc-types-frontend-core": "file:../sc-types-frontend-core",
         "sc-types-frontend-globals": "file:../sc-types-frontend-globals"
