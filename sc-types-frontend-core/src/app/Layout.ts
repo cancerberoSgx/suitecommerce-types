@@ -28,11 +28,11 @@ export interface Layout extends View<{}> {
     closeModal(): void
     
     /**triggered before this layout view is appended to the DOM. This is NOT a cancelable event! */
-    on(name: 'beforeAppendToDom', handler: Fn)
+    on(name: 'beforeAppendToDom', handler: Fn): any
     /**Triggered after this layout view is appended to the DOM */
-    on(name: 'afterAppendToDom', handler: Fn)
+    on(name: 'afterAppendToDom', handler: Fn): any
     /**Triggered before the user navigates (current view changes). This is NOT a cancelable event! */
-    on(name: 'beforeAppendView', handler: Fn<void, [View]>)
+    on(name: 'beforeAppendView', handler: Fn<void, [View]>): any
     /**Triggered after the user navigates (current view changes)*/
-    on(name: 'afterAppendView', handler: Fn<void, [View]>)
+    on(name: 'afterAppendView', handler: Fn<void, [View]>): any
 }

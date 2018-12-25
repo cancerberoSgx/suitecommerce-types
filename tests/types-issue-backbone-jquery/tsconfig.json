@@ -9,21 +9,19 @@
     "outDir": "./dist",        
     // "noImplicitAny": true,
     // "noImplicitThis": false,
-    "strictNullChecks": false,
+    // "strictNullChecks": false,
     // "strictFunctionTypes": false,
-    "rootDir": ".",
-    "strict": true,
-    "esModuleInterop": true,
-    // "checkJs": false,
-    // "allowJs": false,
+    // "rootDir": ".",
+    // "strict": true,
+    // "strictNullChecks": false,
+    // "esModuleInterop": true,
     // "sourceMap": true,
-    "declaration": true,
+    // "declaration": true,
     // "skipDefaultLibCheck": true,
     // "skipLibCheck": true,
     // "emitDeclarationOnly": true,
     // "noEmit": true,
     
   },
-  "include":["src", "spec"], 
-  "exclude": ["node_modules", "dist"]
+  "include":["src"]
 }

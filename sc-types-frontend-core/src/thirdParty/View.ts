@@ -40,7 +40,7 @@ export interface View<Context extends TemplateContext = TemplateContext> {
 
 export class BackboneView<VModel extends Backbone.Model=Backbone.Model, Context extends TemplateContext = TemplateContext> extends Backbone.View<VModel> implements View<Context> {
   template: Template<Context>;
-  bindings?;
+	bindings?: { [selector: string]: (string | Fn) }
   _render(): void {
     throw new Error("Method not implemented.");
   }

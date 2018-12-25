@@ -20,6 +20,7 @@ export class Utils {
   formatPhone(phone: string, format: string): string {
     throw new Error("Method not implemented.");
   }
+
   /**
    * Converts a date object to string using international format YYYY-MM-dd. Useful for inputs of type="date"
    * @param {Date} date
@@ -28,6 +29,7 @@ export class Utils {
   dateToString(date: Date): string {
     throw new Error("Method not implemented.");
   }
+
   /**
    * Parse a string date into a date object.
    * @param {String} str_date
@@ -36,12 +38,14 @@ export class Utils {
   stringToDate(str_date: string, options: {format:String,plusMonth:Number}) : Date{
     throw new Error("Method not implemented.");
   }
+
   /**
    * Formats given number and symbol to a currency like string. Example: `Utils.formatCurrency(10, '£')`
    */
   formatCurrency(value: string, symbol: string) : string{
     throw new Error("Method not implemented.");
   }
+  
   /**
    * Formats with commas as thousand separator (e.g. for displaying quantities)
    *

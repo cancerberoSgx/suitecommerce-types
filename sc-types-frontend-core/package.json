@@ -9,7 +9,7 @@
         "build": "tsc",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist",
-        "test": "tsc"
+        "test": "npx tsc && node dist/spec"
     },
     "keywords": [],
     "author": "sg",
@@ -18,11 +18,18 @@
     "devDependencies": {
         "@types/backbone": "^1.3.45",
         "@types/jasmine": "^3.3.4",
-        "@types/jquery": "^1.10.34",
+        "@types/jquery": "^3.3.29",
+        "@types/jsdom": "^12.2.1",
+        "@types/shelljs": "^0.8.1",
         "@types/underscore": "^1.8.9",
+        "backbone": "^1.3.3",
         "jasmine": "^3.3.1",
+        "jquery": "^3.3.1",
+        "jsdom": "^13.1.0",
+        "shelljs": "^0.8.3",
         "ts-node": "^7.0.1",
         "tsd-check": "^0.2.1",
-        "typescript": "^3.2.2"
+        "typescript": "^3.2.2",
+        "underscore": "^1.9.1"
     }
 }

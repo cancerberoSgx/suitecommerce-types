@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "lib": [
+      "es2018"
+    ],
+    "outDir": "./dist",
+    "rootDir": ".",
+    "noImplicitAny": false,
+    "strict": false,
+    "strictNullChecks": false,
+     "plugins": [
+       {
+          "name": "sample-ts-plugin" }
+      ]
+    
+  },
+  "include": ["src"]
+}

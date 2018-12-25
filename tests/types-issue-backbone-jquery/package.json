@@ -1,0 +1,14 @@
+{
+  "name": "issue1",
+  "version": "1.0.0",
+  "private": true,
+  "description": "monorepo containing suitecommerce types for different areas.",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/backbone": "^1.3.45",
+    "typescript": "^3.2.2"
+  }
+}
