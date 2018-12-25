@@ -4,7 +4,7 @@ import { Import2DefineConfig, Import2DefineResult } from "./import2define";
 import { shorter } from "../util/misc";
 
 export function import2defineOne(config: Import2DefineConfig, sourceFile: SourceFile, result: Import2DefineResult): Import2DefineOneResult | undefined {
-  debugger
+  const initialText = sourceFile.getText()
   const exportVerificationResults = exportVerification(sourceFile)
   if (exportVerificationResults.length) {
     result.errors = [...result.errors, ...exportVerificationResults]
@@ -100,10 +100,18 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     statementOutsideHandler.push(s.getText());
     s.remove();
   });
-  return {
-    exportName, imports, exportValue, sourceFile, body: sourceFile.getText(),
-    importsToIgnore, statementOutsideHandler: statementOutsideHandler.join('\n')
-  };
+
+  if(importsToIgnore.length===0){
+    // workaround for tsc issue : tests/tsc-issue-importHelper/README.md
+    importsToIgnore.push("import { Application } from 'sc-types-frontend'")
+  }
+  const response ={
+    exportName, imports, exportValue, sourceFile, 
+    body: sourceFile.getText(), importsToIgnore, 
+    statementOutsideHandler: statementOutsideHandler.join('\n')
+  }
+  config.debug && console.log('import2defineOne finish', {initialText, result, response });
+  return response;
 }
 
 export interface Import2DefineOneResult {

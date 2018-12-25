@@ -17,5 +17,5 @@
     "skipLibCheck": true
   },
   "include":["src", "spec"],
-  "exclude": ["spec/fixtures"]
+  "exclude": ["spec/fixtures", "tests"]
 }

@@ -9,15 +9,11 @@
     "outDir": "./dist",
     "rootDir": ".",
     "strict": true,
-    "strictNullChecks": false,
     "noEmitHelpers": true,
     "importHelpers": true,
     "esModuleInterop": true,
-    // "sourceMap": true,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true
-    
-    // "declaration": true,
+    // "skipDefaultLibCheck": true,
+    // "skipLibCheck": true
   },
   "include":["src"],
   "exclude": ["node_modules", "dist"]

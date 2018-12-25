@@ -31,6 +31,7 @@ describe('import2define', () => {
 import { a, b } from 'foo' 
 export const bar = 1
     `, `
+import { Application } from 'sc-types-frontend' 
 define('bar', ['foo', 'foo'], function(a: any, b: any){
   return 1
 })`,
@@ -166,6 +167,7 @@ define('MyExtensionMain', ['Utils', 'MyExtensionView'], function(Utils: any, MyE
 })
       `)
       expectCodeEquals(strs[1], `
+import { Application } from 'sc-types-frontend'
 define('MyExtensionView', ['Utils', 'Backbone.View', 'my_extension_view.tpl'], function(Utils: any, BackboneView: any, template: any){
   return BackboneView.extend({
     template  

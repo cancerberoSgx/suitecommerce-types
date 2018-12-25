@@ -14,10 +14,7 @@
     "keywords": [],
     "author": "sg",
     "license": "ISC",
-    "dependencies": {
-        "sc-tsc": "file:../../ts-devtools",
-        "sc-types-frontend": "file:../../sc-types-frontend"
-    },
+    "dependencies": {},
     "devDependencies": {
         "typescript": "^3.2.2"
     }

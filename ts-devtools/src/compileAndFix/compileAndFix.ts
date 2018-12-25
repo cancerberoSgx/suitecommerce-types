@@ -38,14 +38,14 @@ export interface CompileAndFixConfig extends AbstractConfig {
 
 export interface AbstractResult {
   errors: string[]
-  emittedFilePaths?: string[]
+  emittedFileNames?: string[]
   tslibFinalDest?:string
 }
 
 export interface CompileAndFixResult extends AbstractResult {
   /** the final tsc command used to compile the project */
   tscFinalCommand: string
-  emittedFileNames?: string[]
+  // emittedFileNames?: string[]
   postProcessResults?: (FixAmdTslibResult & { fileName: string })[]
 }
 
@@ -68,7 +68,6 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
   let errors : string[]=[]
   const postProcessResults = result.emittedFileNames
     .map(fileName => {
-      debugger
       const result = fixJsFileAmdTslib({
         inputCode: readFileSync(fileName).toString()
       })
@@ -86,7 +85,7 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
   return {
     errors: errors.concat( error ?[`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : []), 
     tscFinalCommand: result.tscFinalCommand,
-    emittedFilePaths: result.emittedFileNames,
+    emittedFileNames: result.emittedFileNames,
     postProcessResults, tslibFinalDest
   }
 }
