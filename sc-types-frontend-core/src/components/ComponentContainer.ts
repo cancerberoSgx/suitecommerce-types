@@ -1,5 +1,6 @@
 import { BaseComponent } from "./BaseComponent";
 import { EnvironmentComponent } from "./concrete/EnvironmentComponent";
+import { ProductDetailsComponent, CMSComponent } from "./concrete";
 
 /**
  * Manager of components. Extensions can get components implementations and register new component
@@ -20,8 +21,10 @@ export interface ComponentContainer {
 	 */
   getComponent<ComponentType extends BaseComponent = BaseComponent>(component_name: string): ComponentType
   getComponent(component_name: 'Environment'): EnvironmentComponent
-  getComponent<ComponentType extends BaseComponent = BaseComponent>(component_name: string): ComponentType
-  getComponent<ComponentType extends BaseComponent = BaseComponent>(component_name: string): ComponentType
+  getComponent(component_name: 'PDP'): ProductDetailsComponent
+  getComponent(component_name: 'CMS'): CMSComponent
+  getComponent(component_name: 'Environment'): EnvironmentComponent
+  
 }
 
 /**

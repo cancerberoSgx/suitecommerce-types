@@ -66,4 +66,7 @@ export type CancelableEventHandler<Arguments extends any[]=[], Return=any> = (..
 
 
 
-export type CancelableMethod<Arguments extends any[]=[], Return=any> = (event_name: string, handler: CancelableEventHandler<Arguments, Return>) => void
+// export type CancelableMethod<Arguments extends any[]=[], Return=any> = (event_name: string, handler: CancelableEventHandler<Arguments, Return>) => void
+
+
+export type CancelableMethod <Arguments extends any[]=[], Return=any>=(event_name:string, handler:CancelableEventHandler<Arguments, Return>)=>void

@@ -12,7 +12,7 @@
     "strictNullChecks": false,
     // "strictFunctionTypes": false,
     "rootDir": ".",
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
     "checkJs": false,
     "allowJs": false,

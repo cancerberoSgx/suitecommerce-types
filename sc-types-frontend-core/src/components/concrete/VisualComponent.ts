@@ -12,11 +12,6 @@ import { BackboneView } from "../../thirdParty";
  * See {@tutorial frontend_defining_new_views} to learn how to implement new Views. 
  * 
  * See {@tutorial frontend_view_manipulation} to learn how to manipulate existing views and add new ones. 
- * 
- * @class
- * @extends BaseComponent
- * @hideconstructor
- * @global
  */
 export interface VisualComponent extends BaseComponent {
 	
