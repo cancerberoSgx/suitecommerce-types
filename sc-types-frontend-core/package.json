@@ -13,10 +13,17 @@
         "test": "ts-node spec"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/cancerberoSgx/suitecommerce-types.git"
+        "type": "git",
+        "url": "git+https://github.com/cancerberoSgx/suitecommerce-types.git"
     },
-    "keywords": ["SuiteCommrce", "TypeScript", "Netsuite", "devtools", "types", "JavaScript"],
+    "keywords": [
+        "SuiteCommrce",
+        "TypeScript",
+        "Netsuite",
+        "devtools",
+        "types",
+        "JavaScript"
+    ],
     "author": "Sebastian Gurin",
     "license": "MIT",
     "homepage": "https://github.com/cancerberoSgx/suitecommerce-types",
@@ -32,6 +39,7 @@
         "jasmine": "^3.3.1",
         "jquery": "^3.3.1",
         "jsdom": "^13.1.0",
+        "plugin-container": "^1.0.3",
         "shelljs": "^0.8.3",
         "ts-node": "^7.0.1",
         "tsd-check": "^0.2.1",

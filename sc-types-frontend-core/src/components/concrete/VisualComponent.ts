@@ -1,6 +1,6 @@
+import { ChildViewConstructor, ChildViewsDefinition } from "../../thirdParty";
+import { BackboneEventHandler, Fn } from "../../types";
 import { BaseComponent } from "../BaseComponent";
-import { Fn, BackboneEventHandler } from "../../types";
-import { BackboneView } from "../../thirdParty";
 
 /**
  * Base abstract class supporting components which include a visual aspect. For example, concrete components like {@link ProductDetailsComponent} or {@link ProductListPageeComponent} allow users to manipulate its views and composition, so they inherith from here. 
@@ -68,7 +68,7 @@ export interface VisualComponent extends BaseComponent {
 	 * @return {void} null if everything works as expected. An exception will be thrown otherwise.
 	 * @throws {Error} 
 	 */
-	addChildView(view_id: string, childViewConstuctor: SimpleChildViewConstructor): void
+	addChildView(view_id: string, childViewConstuctor: ChildViewConstructor): void
 
 	/**
 	 * Removes a child view for a given view id
@@ -120,7 +120,3 @@ export interface VisualComponent extends BaseComponent {
 	 */
 	removeToViewEventsDefinition(view_id: string, event_selector:string): void
 }
-
- export type SimpleChildViewConstructor<V extends BackboneView=BackboneView> = Fn<V, any[]>
-
- export type ChildViewsDefinition=any

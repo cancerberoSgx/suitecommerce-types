@@ -1,66 +1,40 @@
-// /*
-// 	© 2017 NetSuite Inc.
-// 	User may not copy, modify, distribute, or re-bundle or otherwise make available this code;
-// 	provided, however, if you are an authorized user with a NetSuite account or log-in, you
-// 	may use this code subject to the terms that govern your access and use.
-// */
+import { BackboneView, Template, BackboneModel } from "../thirdParty";
+import { Context } from "vm";
+import { ViewOptions } from "backbone";
 
-// /*
-// @module BackboneExtras
-// #Collection View
+/**
+A collection view is a concrete tool view for showing a collection of items all of the same type.
+We just create a collection view instance and give it the collection of items (array or backbone collection)
+and the view class used for rendering each item.
 
-// See @?ref Backbone.CollectionView
+It support the high level concept of rows and cells to group / grid the items and let use custom templates
+for cells and rows.
+*/
+export class BackboneCollectionView<m extends BackboneModel=BackboneModel, c extends Context = {}> extends BackboneView<m, c> {
 
-// @class Backbone.CollectionView
-// A collection view is a concrete tool view for showing a collection of items all of the same type.
-// We just create a collection view instance and give it the collection of items (array or backbone collection)
-// and the view class used for rendering each item.
+  initialize(options: BackboneCollectionViewOptions<m>): void{
 
-// It support the high level concept of rows and cells to group / grid the items and let use custom templates
-// for cells and rows.
+  }
 
-// @extends Backbone.View
-// */
-// define('Backbone.CollectionView'
-// ,	[	'Backbone'
-// 	,	'jQuery'
-// 	,	'underscore'
+}
 
-// 	,	'Backbone.View'
-// 	,	'Backbone.View.render'
-// 	]
-// ,	function(
-// 		Backbone
-// 	,	jQuery
-// 	,	_
-// 	)
-// {
-// 	'use strict';
+export interface BackboneCollectionViewOptions <m extends BackboneModel=BackboneModel>extends ViewOptions<m>{
 
-// 	return Backbone.View.extend({
+  /**childView the View class of this collection view children */
+  childView: typeof BackboneView
+  /**the options to be passed to children views */
+  childViewOptions: any
+  viewsPerRow: number
+  /** Total number of rows used by the CSS framework */
+  rowsCount: number
+  /**Template used to override the default child view template */
+  childTemplate: Template
+  cellTemplate: Template
+  rowTemplate: Template
+  /**Defines the data type values used to find the container element of the cells in a row */
+  cellsContainerId: string
 
-// 		// @property {Class} childView the View class of this collection view children
-// 		childView: Backbone.View
 
-// 	,	template: null
-
-// 		// @property {Object} childViewOptions the options to be passed to children views
-// 	,	childViewOptions: {}
-
-// 		// @property {Number} viewsPerRow
-// 	,	viewsPerRow: 3
-
-// 		// @property {Number} rowsCount Total number of rows used by the CSS framework
-// 	,	rowsCount: 12
-
-// 		// @property {Function} childTemplate Template used to override the default child view template
-// 	,	childTemplate: null
-
-// 		// @property {Function} cellTemplate Template used to create a cell
-// 	,	cellTemplate: null
-
-// 		// @property {Function} rowTemplate Template used to create a row
-// 	,	rowTemplate: null
 
 // 		// @property  {String} cellsContainerId Defines the data type values used to find the container element of the cells in a row
 // 	,	cellsContainerId: 'backbone.collection.view.cells'
@@ -73,6 +47,10 @@
 
 // 		// @property {Object} allows the user to define a custom context.
 // 	,	context: {}
+  context: Context
+  cellContainerId: string
+  rowsContainerId: string
+}
 
 // 	,	initialize: function (options)
 // 		{
