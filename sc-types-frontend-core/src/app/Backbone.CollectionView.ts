@@ -13,7 +13,7 @@ for cells and rows.
 export class BackboneCollectionView<m extends BackboneModel=BackboneModel, c extends Context = {}> extends BackboneView<m, c> {
 
   initialize(options: BackboneCollectionViewOptions<m>): void{
-
+    throw new Error("Method not implemented.");
   }
 
 }

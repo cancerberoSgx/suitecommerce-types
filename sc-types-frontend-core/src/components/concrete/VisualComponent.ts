@@ -14,7 +14,7 @@ import { BaseComponent } from "../BaseComponent";
  * See {@tutorial frontend_view_manipulation} to learn how to manipulate existing views and add new ones. 
  */
 export interface VisualComponent extends BaseComponent {
-	
+
 	/**
 	 * Change the position of a Child View inside a container
 	 * @param {string} view_id The identifier of the view, of the current component, that will have the Child View to change the index
@@ -24,9 +24,9 @@ export interface VisualComponent extends BaseComponent {
 	 * @return {void} null if everything works as expected. An exception will be thrown otherwise.
 	 * @throws {Error}
 	 */
-	setChildViewIndex(view_id: string, placeholder_selector: string, view_name: string, index: number): void 
-	
-	
+  setChildViewIndex(view_id: string, placeholder_selector: string, view_name: string, index: number): void
+
+
 	/**
 	 * Adds one or more child views to existing Views which is already appended in the DOM with the given `data-view` HTML attribute. Notice that this is a very flexible method but also very complex. Users rarely will need such flexibility and in general they shoud use {@link addChildView} which is simpler. Usage example: 
 	 * 
@@ -53,7 +53,7 @@ export interface VisualComponent extends BaseComponent {
 	 * @return {void} null if everything works as expected. An exception will be thrown otherwise.
 	 * @throws {Error}
 	 */
-	addChildViews(view_id: string, child_views: ChildViewsDefinition) : void
+  addChildViews(view_id: string, child_views: ChildViewsDefinition): void
 
 	/**
 	 * Adds a child view to an existing View which is already appended in the DOM with the given `data-view` HTML attribute. Example:
@@ -68,7 +68,7 @@ export interface VisualComponent extends BaseComponent {
 	 * @return {void} null if everything works as expected. An exception will be thrown otherwise.
 	 * @throws {Error} 
 	 */
-	addChildView(view_id: string, childViewConstuctor: ChildViewConstructor): void
+  addChildView(view_id: string, childViewConstuctor: ChildViewConstructor): void
 
 	/**
 	 * Removes a child view for a given view id
@@ -78,7 +78,7 @@ export interface VisualComponent extends BaseComponent {
 	 * @return {void} null if everything works as expected. An exception will be thrown otherwise.
 	 * @throws {Error}
 	 */
-	removeChildView(view_id: string, placeholder_selector?: string, view_name?: string) :void
+  removeChildView(view_id: string, placeholder_selector?: string, view_name?: string): void
 
 	/**
 	 * Adds an extra property to the UI context of a view id to extend the interaction with its template
@@ -89,8 +89,8 @@ export interface VisualComponent extends BaseComponent {
 	 * @return {void} null if everything works as expected. An exception will be thrown otherwise.
 	 * @throws {Error}
 	 */
-	addToViewContextDefinition(view_id:string, property_name:string, type:string, callback:Fn<any, any[]>): void
-	
+  addToViewContextDefinition(view_id: string, property_name: string, type: string, callback: Fn<any, any[]>): void
+
 
 	/**
 	 * Removes an extra property to the UI context of a view.
@@ -99,7 +99,7 @@ export interface VisualComponent extends BaseComponent {
 	 * @return {void} null if everything works as expected. An exception will be thrown otherwise.
 	 * @throws {Error}
 	 */
-	removeToViewContextDefinition(view_id: string, property_name:string): void
+  removeToViewContextDefinition(view_id: string, property_name: string): void
 
 	/**
 	 * Allows to add an extra event handler over a particular view for the given event selector
@@ -109,7 +109,7 @@ export interface VisualComponent extends BaseComponent {
 	 * @return {void} null if everything works as expected. An exception will be thrown otherwise.
 	 * @throws {Error}
 	 */
-	addToViewEventsDefinition(view_id: string, event_selector: string, callback: BackboneEventHandler): void
+  addToViewEventsDefinition(view_id: string, event_selector: string, callback: BackboneEventHandler): void
 
 	/**
 	 * Allows to remove and an extra event handler added previously.
@@ -118,5 +118,5 @@ export interface VisualComponent extends BaseComponent {
 	 * @return {void}
 	 * @throws {Error}
 	 */
-	removeToViewEventsDefinition(view_id: string, event_selector:string): void
+  removeToViewEventsDefinition(view_id: string, event_selector: string): void
 }

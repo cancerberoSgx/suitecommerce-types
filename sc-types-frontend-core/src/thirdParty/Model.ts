@@ -5,7 +5,7 @@ export class BackboneModel extends Backbone.Model {
 
 }
 
-export class CachedModel extends BackboneModel {
+export class BackboneCachedModel extends BackboneModel {
   isCached(params: any[] | JQuery.PlainObject | JQuery): boolean {
     throw new Error("Method not implemented.");
   }
@@ -13,6 +13,4 @@ export class CachedModel extends BackboneModel {
   addToCache(data: any, params: any[] | JQuery.PlainObject | JQuery): void {
     throw new Error("Method not implemented.");
   }
-
-
 }
