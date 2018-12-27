@@ -6,7 +6,7 @@ import { getPathRelativeToProjectFolder } from "../../src/util/misc";
 
 describe('CLI bin', () => {
 
-  fit('minimun params should work', () => {
+  it('minimun params should work', () => {
     const outputFolder =getPathRelativeToProjectFolder('tmp/foo1233')
     const tsconfig = getPathRelativeToProjectFolder('spec/fixtures/project1/tsconfig.json')
     rm('-rf', outputFolder)

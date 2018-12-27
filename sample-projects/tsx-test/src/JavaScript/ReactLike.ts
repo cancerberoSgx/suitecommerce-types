@@ -32,4 +32,4 @@
 
 (self as any).ReactLike = ReactLike_
 
-export const ReactLike = ReactLike_
+export default ReactLike_

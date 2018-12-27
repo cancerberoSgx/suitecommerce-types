@@ -1,8 +1,8 @@
-import { ReactLike } from '../JavaScript/ReactLike';
-import { Main } from '../JavaScript/Main';
+import  ReactLike  from '../JavaScript/ReactLike';
+import  Main from '../JavaScript/Main';
 import {jQuery} from 'sc-types-frontend'
 
-export const MainTest = describe('foo', ()=>{
+export  default describe('foo', ()=>{
   it('should', async done =>{
     expect(document.querySelector('.unique-unique123')).toBeFalsy()
     expect( jQuery('.unique-unique123').length).toBe(0)

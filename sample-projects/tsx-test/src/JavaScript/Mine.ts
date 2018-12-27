@@ -1,9 +1,8 @@
+import Main from './Main';
+import MineModel from './MineModel';
+import ReactLike from './ReactLike';
 import { Application } from 'sc-types-frontend';
-import { MineModel } from './MineModel';
-import { ReactLike } from './ReactLike';
-import { Main } from './Main';
-
-export const Mine = {
+export default {
     mountToApp(application: Application) {
       // alert('seba')
       application.getLayout().on("afterAppendView", async view=>{

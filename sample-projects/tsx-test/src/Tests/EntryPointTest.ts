@@ -1,4 +1,4 @@
-import {DeferredSpec} from './DeferredSpec'
-import {MainTest} from './MainTest'
+import DeferredSpec from './DeferredSpec'
+import MainTest from './MainTest'
 
-export const EntryPointTest = [DeferredSpec, MainTest]
+export default [DeferredSpec, MainTest]
