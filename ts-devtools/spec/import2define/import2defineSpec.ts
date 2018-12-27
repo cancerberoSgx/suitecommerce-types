@@ -12,9 +12,9 @@ describe('import2define', () => {
 
   describe('import2defineOne', () => {
 
-    function test(source: string, expectedOutput: string, expectedErrors: string[]) {
+    function test(source: string, expectedOutput: string, expectedErrors: string[], fileName: string= 'test3.ts') {
       const project = new Project()
-      const sourceFile = project.createSourceFile('test3.ts', source)
+      const sourceFile = project.createSourceFile(fileName, source)
       const result: Import2DefineResult = {
         errors: [], perFileResults: []
       }
@@ -83,6 +83,49 @@ define('test3', ['foo', 'foo'], function(a: any, b: any){
 
     })
 
+
+    it('exporting jsx', () => {
+      test(`
+export default <div></div>
+            `,
+            `import { Application } from 'sc-types-frontend' define('foo', [], function(){ return <div></div> })`,
+        [], 'foo.tsx')
+
+    })
+
+
+    it('exporting array of references', () => {
+      test(`
+      import DeferredSpec from './DeferredSpec'
+      import MainTest from './MainTest'
+      
+      export default [DeferredSpec, MainTest]
+            `,
+            `import { Application } from 'sc-types-frontend' define('foo', ['./DeferredSpec', './MainTest'], function(DeferredSpec: any, MainTest: any){ return [DeferredSpec, MainTest] })
+            `,
+        [], 'foo.ts')
+
+    })
+
+
+
+    it('exporting function call', () => {
+      test(`
+      import {a} from './a'
+      export default a()
+            `,`import { Application } from 'sc-types-frontend' define('foo', ['./a'], function(a: any){ return a() })`,
+        [], 'foo.ts')
+
+    })
+
+
+    it('exporting function call 2', () => {
+      test(`
+      export  default describe()
+            `,`import { Application } from 'sc-types-frontend' define('foo', [], function(){ return describe() })`,
+        [], 'foo.ts')
+
+    })
 
 
     it('single variable reference exported separately', () => { //should work

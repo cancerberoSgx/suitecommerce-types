@@ -4,7 +4,16 @@ import { Import2DefineConfig, Import2DefineResult } from "./import2define";
 import { shorter } from "../util/misc";
 import { getDefaultExportValue } from "./getDefaultExportValue";
 
+
 export function import2defineOne(config: Import2DefineConfig, sourceFile: SourceFile, result: Import2DefineResult): Import2DefineOneResult | undefined {
+
+  function postError(m: string): undefined{
+    result.errors = [...result.errors, m];
+    config.debug && console.log(m, ` on file ${sourceFile.getFilePath()}`)
+    return
+  }
+
+
   // if(config.debug){
   // console.log('import2defineOne source file', sourceFile.getFilePath());
 
@@ -29,13 +38,16 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     }
     const clause = id.getImportClause();
     if (!clause) {
-      result.errors = [...result.errors, 'not import clause found / not supported:' + id.getText()];
-      return;
+      // result.errors = [...result.errors, 'not import clause found / not supported:' + id.getText()];
+      return postError('not import clause found / not supported 1:' + id.getText())
+      // return;
     }
     const namedImports: string[] = clause.getNamedImports().length ? clause.getNamedImports().map(ni => ni.getName()) : [clause.getDefaultImport().getText()];
     if (!namedImports.length) {
-      result.errors = [...result.errors, 'not named import found / not supported:' + id.getText()];
-      return;
+
+      return postError('not import clause found / not supported 2:' + id.getText())
+      // result.errors = [...result.errors, 'not named import found / not supported:' + id.getText()];
+      // return;
     }
 
     let importNamesToBeIgnored: string[] = []
@@ -70,23 +82,26 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
   // let exportName
   // let exportValue
   // var exportedVariableResult = getExportedVariable(sourceFile)
-  const {error, exportName, exportValue, exportStatement} = getDefaultExportValue(sourceFile)
+  const {error, exportName, exportValue, exportStatement} = getDefaultExportValue(sourceFile, config)
   if (error) {
 
+    return postError(error)
     // var exportedClassResult = getExportedClass(sourceFile)
     // if (exportedClassResult.error) {
-      result.errors = [...result.errors, error]//, exportedClassResult.error]
+      // result.errors = [...result.errors, error]//, exportedClassResult.error]
     //   // TODO : exported functions
-      return
+      // return
     // }
     // exportName = exportedClassResult.exportName
     // exportValue = exportedClassResult.exportValue
   }
 
   if(!exportStatement){
+    
+    return postError('!exportStatement returned by getDefaultExportValue')
     //ToDO: error
-    result.errors = [...result.errors, '!exportStatement returned by getDefaultExportValue']
-return 
+    // result.errors = [...result.errors, '!exportStatement returned by getDefaultExportValue']
+// return 
   }
   exportStatement.remove()
   // else {

@@ -1,9 +1,17 @@
 import { SourceFile, TypeGuards, SyntaxKind, Identifier, Node, Statement } from "ts-simple-ast";
 import { DefaultExportInfo } from "./import2defineOne";
-export function getDefaultExportValue(f: SourceFile): DefaultExportInfo {
+import { Import2DefineConfig } from "./import2define";
+export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfig): DefaultExportInfo {
+  
+  function postError(error: string): {error: string}{
+    // result.errors = [...result.errors, m];
+    config && config.debug && console.log(error, ` on file ${f.getFilePath()}`)
+    return  { error };
+  }
+
   const s = f.getDefaultExportSymbol();
   if (!s) {
-    return { error: 'No default export found' };
+    return postError('No default export found' )
   }
   let exportValue;
   let vc = s.getValueDeclaration();
@@ -19,9 +27,9 @@ export function getDefaultExportValue(f: SourceFile): DefaultExportInfo {
 
   // debugger
   let ns: Node, decl0: Node
-  if (exportValue === 'unknown' && s.getDeclarations().length) {
-    if ((ns = (decl0 = s.getDeclarations()[0]).getNextSibling()) &&
-      TypeGuards.isVariableStatement(ns)) {
+  if ((!exportValue || exportValue === 'unknown') && s.getDeclarations().length && 
+  (ns = (decl0 = s.getDeclarations()[0]).getNextSibling()) ) {
+    if (TypeGuards.isVariableStatement(ns)) {
       const vd = ns.getFirstDescendantByKind(SyntaxKind.VariableDeclaration)
       if (vd.getName()) {
         exportValue = vd.getName()
@@ -36,20 +44,31 @@ export function getDefaultExportValue(f: SourceFile): DefaultExportInfo {
       // }
     }
 
-    else if (TypeGuards.isExportAssignment(decl0)) {
-      const id2 = decl0.getFirstDescendantByKind(SyntaxKind.Identifier)
-      if (id2) {
-        // return {error}
-        exportValue = id2.getText()
-      }
-    }
+    
   }
-  if (!exportValue || exportValue === 'undefined') {
-    debugger
-    return { error: "No default export for class, variable or function found 2" }
-    //TODO: error
-  }
+  // debugger
+  if ((!exportValue || exportValue === 'unknown' )&& TypeGuards.isExportAssignment(decl0)) {
+    // const expr = decl0.getExpression()
 
+        exportValue =  decl0.getExpression().getText()
+    // if(TypeGuards.isCallExpression(expr)){
+
+    // }
+      // const id2 = decl0.getFirstDescendantByKind(SyntaxKind.Identifier)
+      // if (id2) {
+      //   // return {error}
+      //   exportValue = id2.getText()
+      // }
+    }
+
+  
+  if (!exportValue || exportValue === 'unknown'){
+    // debugger
+    return postError("No default export for class, variable or function found 2")
+    // return { error: "No default export for class, variable or function found 2" }
+    //TODO: error
+
+  }
 
 
   // s.getDeclarations()[0].getNextSibling()
@@ -65,7 +84,8 @@ export function getDefaultExportValue(f: SourceFile): DefaultExportInfo {
   if (!exportStatement) {
     // debugger
     //TODO: error
-    return { error: 'No default export for class, variable or function found 3' }
+    return postError('No default export for class, variable or function found 3' )
+    // return { error: 'No default export for class, variable or function found 3' }
   }
   // if(!exportStatement||!exportStatement.length) {
   //   return {error: 'no default export for class, function or variable found'}
