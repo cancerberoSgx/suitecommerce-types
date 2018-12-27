@@ -1,5 +1,4 @@
 import { ModuleEntryPoint, } from 'sc-types-frontend';
-import { Simple1ListView } from './FrontEndSimple1.ListView';
 
 define('FrontEndSimpleEntry', ['FrontEndSimple1.ListView'], (Simple1ListViewConstructor) => ({
     mountToApp(application) {

@@ -12,15 +12,21 @@
         "copy": "cp -r spec/support_js dist/spec/support",
         "clean": "rm -rf dist tmp",
         "generateHelp": "sh scripts/generateHelp.sh",
-        "test": "ts-node node_modules/jasmine/bin/jasmine", 
-        "prepare": "npm run build && npm run generateHelp",
+        "test": "ts-node node_modules/jasmine/bin/jasmine",
         "all": "npm run clean && npm run build && npm run test"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/cancerberoSgx/suitecommerce-types.git"
+        "type": "git",
+        "url": "git+https://github.com/cancerberoSgx/suitecommerce-types.git"
     },
-    "keywords": ["SuiteCommrce", "TypeScript", "Netsuite", "devtools", "types", "JavaScript"],
+    "keywords": [
+        "SuiteCommrce",
+        "TypeScript",
+        "Netsuite",
+        "devtools",
+        "types",
+        "JavaScript"
+    ],
     "author": "Sebastian Gurin",
     "license": "MIT",
     "homepage": "https://github.com/cancerberoSgx/suitecommerce-types",

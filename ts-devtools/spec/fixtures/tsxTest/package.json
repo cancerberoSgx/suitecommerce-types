@@ -7,16 +7,16 @@
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
-        "build": "npm run clean && tsc && mkdir -p  MyExtension/JavaScript/ &&  node node_modules/.bin/sc-tsc --tsconfigFilePath ./tsconfig.json --addTslibJsInFolder . --outputFolder MyExtension/JavaScript/ && mv MyExtension/JavaScript/src/* MyExtension/JavaScript/ && rm -rf MyExtension/JavaScript/src/",
+        "build": "tsc &&  npx sc-tsc --tsconfigFilePath ./tsconfig.json --addTslibJsInFolder . --outputFolder /Users/sebastiangurin/awa/bundles/18_2_sources/Modules/mine/Mine@1.0.0/JavaScript",
         "build-watch": "tsc -w",
-        "clean": "rm -rf dist && rm -rf MyExtension/JavaScript*"
+        "clean": "rm -rf dist"
     },
     "keywords": [],
     "author": "sg",
     "license": "ISC",
     "dependencies": {
-        "sc-tsc": "file:../../ts-devtools",
-        "sc-types-frontend": "file:../../sc-types-frontend"
+        "sc-tsc": "file:../../..",
+        "sc-types-frontend": "file:../../../../sc-types-frontend"
     },
     "devDependencies": {
         "typescript": "^3.2.2"

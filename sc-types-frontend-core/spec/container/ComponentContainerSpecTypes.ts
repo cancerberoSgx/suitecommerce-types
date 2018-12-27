@@ -1,6 +1,5 @@
 import { expectType } from 'tsd-check';
-import { ComponentContainer } from '../../src';
-import { EnvironmentComponent } from '../../src/components/concrete/EnvironmentComponent';
+import { ComponentContainer, EnvironmentComponent } from '../../src';
 
 describe('ComponentContainer', () => {
   let container: ComponentContainer

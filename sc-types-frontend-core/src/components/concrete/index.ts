@@ -1,3 +1,6 @@
 export * from './CMSComponent'
 export * from './ProductDetailsComponent'
 export * from './VisualComponent'
+export * from './EnvironmentComponent'
+export * from './CartComponent'
+export * from './CMSComponent'

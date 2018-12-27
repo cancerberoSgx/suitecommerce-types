@@ -41,7 +41,7 @@ export function compileTsProject(config: AbstractConfig): CompileAndFixResult {
     cd(cwd);
     return { 
       tscFinalCommand, 
-      errors: [`Executing command '${tscFinalCommand}' throwed error: stderr: ${p.stderr}`] 
+      errors: [`Executing command '${tscFinalCommand}' thrown error! \nstderr: ${p.stderr}\nstdout: ${p.stdout}`] 
     };
   }
   const prefix = 'TSFILE: ';

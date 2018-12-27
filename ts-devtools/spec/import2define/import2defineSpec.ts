@@ -4,6 +4,7 @@ import { import2defineOne, printImport2DefineOneResult } from "../../src/import2
 import {expectCodeEquals} from '../testUtil'
 import { resolve } from "path";
 import { rm, test, mkdir } from "shelljs";
+import { getPathRelativeToProjectFolder } from "../../src/util/misc";
 
 describe('import2define', () => {
 
@@ -175,6 +176,28 @@ define('MyExtensionView', ['Utils', 'Backbone.View', 'my_extension_view.tpl'], f
 })
       `)
     })
+
+
+    it('import ..', () => {
+
+      const project = new Project()
+      project.createSourceFile('foo/bar/boo/a.ts', `import {b} from '../../bb/b' ; export const a = 1   `)
+      project.createSourceFile('foo/bb/b.ts', `import {c} from '../cc/c'  ; export const b  =2  `)
+      project.createSourceFile('foo/cc/c.ts', `export const c  =3  `)
+      const result = import2defineProject({
+        tsconfigFilePath: '',
+        project
+      })
+      // debugger
+      expect(result.errors).toEqual([])
+
+      // result.perFileResults.forEach(f=>{
+      //   if(f.imports.length){
+      //     expect(test('-f', f.imports[0].importSpecifierSourceFile.getFilePath())).toBe(true)
+      //   }
+      // })
+    })
+
   })
 
 
@@ -182,16 +205,48 @@ define('MyExtensionView', ['Utils', 'Backbone.View', 'my_extension_view.tpl'], f
   describe('import2define', () => {
     it('write output project', () => {
       mkdir('-p', 'tmp')
-      const outputFolder = 'tmp/project1Outtt'
+      const outputFolder = getPathRelativeToProjectFolder('tmp/project1Outtt')
       rm('-rf', `${outputFolder}`)
       const result = import2define({
-        tsconfigFilePath: resolve(`spec/fixtures/project1/tsconfig.json`),
+        tsconfigFilePath: getPathRelativeToProjectFolder(`spec/fixtures/project1/tsconfig.json`),
         outputFolder: outputFolder
       })
       expect(result.errors).toEqual([])
       expect(test(`-f`, `${outputFolder}/src/FrontEndSimple1.ListView.ts`)).toBe(true)
       expect(test(`-f`, `${outputFolder}/src/FrontEndSimpleEntry.ts`)).toBe(true)
     })
+
+    it('tsx files', () => {
+      mkdir('-p', 'tmp')
+      const outputFolder = getPathRelativeToProjectFolder('tmp/project1Outtt33')
+      rm('-rf', `${outputFolder}`)
+      const result = import2define({
+        tsconfigFilePath: getPathRelativeToProjectFolder(`spec/fixtures/tsxTest/tsconfig.json`),
+        outputFolder: outputFolder
+      })
+      result.perFileResults.forEach(f=>{
+        if(f.imports.length){
+          expect(test('-f', f.imports[0].importSpecifierSourceFile.getFilePath())).toBe(true)
+        }
+      })
+    })
+
+
+    xit('using .. for importing', () => {
+      // mkdir('-p', 'tmp')
+      // const outputFolder = getPathRelativeToProjectFolder('tmp/another oe')
+      // rm('-rf', `${outputFolder}`)
+      // const result = import2define({
+      //   tsconfigFilePath: getPathRelativeToProjectFolder(`spec/fixtures/tsxTest/tsconfig.json`),
+      //   outputFolder: outputFolder
+      // })
+      // result.perFileResults.forEach(f=>{
+      //   if(f.imports.length){
+      //     expect(test('-f', f.imports[0].importSpecifierSourceFile.getFilePath())).toBe(true)
+      //   }
+      // })
+    })
+
   })
 
 })

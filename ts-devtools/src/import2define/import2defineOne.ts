@@ -4,6 +4,10 @@ import { Import2DefineConfig, Import2DefineResult } from "./import2define";
 import { shorter } from "../util/misc";
 
 export function import2defineOne(config: Import2DefineConfig, sourceFile: SourceFile, result: Import2DefineResult): Import2DefineOneResult | undefined {
+  // if(config.debug){
+    // console.log('import2defineOne source file', sourceFile.getFilePath());
+    
+  // }
   const initialText = sourceFile.getText()
   const exportVerificationResults = exportVerification(sourceFile)
   if (exportVerificationResults.length) {

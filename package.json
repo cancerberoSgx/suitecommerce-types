@@ -5,16 +5,23 @@
   "description": "monorepo containing suitecommerce types for different areas.",
   "main": "index.js",
   "scripts": {
-    "build":"yamat run npm run build",
-    "build-watch":"yamat run npm run build-watch",
-    "clean":"yamat run npm run clean",
-    "test":"yamat run npm run test"
+    "build": "yamat run npm run build",
+    "build-watch": "yamat run npm run build-watch",
+    "clean": "yamat run npm run clean",
+    "test": "yamat run npm run test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cancerberoSgx/suitecommerce-types.git"
   },
-  "keywords": ["SuiteCommrce", "TypeScript", "Netsuite", "devtools", "types", "JavaScript"],
+  "keywords": [
+    "SuiteCommrce",
+    "TypeScript",
+    "Netsuite",
+    "devtools",
+    "types",
+    "JavaScript"
+  ],
   "author": "Sebastian Gurin",
   "license": "MIT",
   "homepage": "https://github.com/cancerberoSgx/suitecommerce-types",

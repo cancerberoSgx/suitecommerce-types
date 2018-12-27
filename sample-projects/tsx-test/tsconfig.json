@@ -10,13 +10,19 @@
     "rootDir": ".",
     "strict": true,
     "strictNullChecks": false,
-    // "noEmitHelpers": true,
-    // "importHelpers": true,
+    "noEmitHelpers": true,
+    "importHelpers": true,
     "esModuleInterop": true,
-    "sourceMap": true,
-    "skipLibCheck": true
+    // "sourceMap": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "jsx": "react",
+    "jsxFactory": "ReactLike.createElement",
+    // "target": "es5",
+    // "module": "none",
     
     // "declaration": true,
   },
-  "include":["src"]
+  "include":["src"],
+  "exclude": ["node_modules", "dist"],
 }

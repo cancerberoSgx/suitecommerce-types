@@ -6,16 +6,23 @@
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
-        "build":"tsc",
-        "build-watch":"tsc -w",
-        "clean":"rm -rf dist",
+        "build": "tsc",
+        "build-watch": "tsc -w",
+        "clean": "rm -rf dist",
         "test": "echo 'no tests yet' && exit 0"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/cancerberoSgx/suitecommerce-types.git"
+        "type": "git",
+        "url": "git+https://github.com/cancerberoSgx/suitecommerce-types.git"
     },
-    "keywords": ["SuiteCommrce", "TypeScript", "Netsuite", "devtools", "types", "JavaScript"],
+    "keywords": [
+        "SuiteCommrce",
+        "TypeScript",
+        "Netsuite",
+        "devtools",
+        "types",
+        "JavaScript"
+    ],
     "author": "Sebastian Gurin",
     "license": "MIT",
     "homepage": "https://github.com/cancerberoSgx/suitecommerce-types",

@@ -1,6 +1,6 @@
 import { expectType } from 'tsd-check';
 import { BackboneModel, BackboneView } from '../../src';
-import * as jQuery from 'jQuery'
+// import * as jQuery from 'jQuery'
 
 describe('View', () => {
   class Model1 extends BackboneModel {

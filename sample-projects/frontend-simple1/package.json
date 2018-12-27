@@ -7,9 +7,9 @@
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
-        "build":"tsc",
-        "build-watch":"tsc -w",
-        "clean":"rm -rf dist"
+        "build": "tsc",
+        "build-watch": "tsc -w",
+        "clean": "rm -rf dist"
     },
     "keywords": [],
     "author": "sg",
