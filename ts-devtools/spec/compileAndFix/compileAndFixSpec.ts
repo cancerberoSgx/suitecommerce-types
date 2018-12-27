@@ -55,22 +55,37 @@ describe('compileAndFix', () => {
     expect(result.errors).toEqual([])
     const aFile = readFileSync(`${outputFolder}/src/FrontEndSimple1.ListView.js`).toString()
     expectCodeToContain(aFile, `
-"use strict";
-define('FrontEndSimple1ListView', ['frontend_simple1_listview.tpl', 'Backbone.Model', 'Backbone.View', "tslib"], function (template, BackboneModel, BackboneView, tslib_1) {
-    var v = 1234;
-    return BackboneView.extend({
-        template: template,
-        events: {
-            '[data-action="validate"]': 'customValidation'
-        },
-        getContext: function () {
-            return {
-                foo: 1
-            };
-        },
-        model: new BackboneModel(),
-        customValidation: function (e) {
-            return tslib_1.__awaiter(this, void 0, void 0, function () {
+    "use strict";
+    define('FrontEndSimple1.ListView', ['frontend_simple1_listview.tpl', 'Backbone.Model', 'Backbone.View', "tslib"], function (template, BackboneModel, BackboneView, tslib_1) {
+        var v = 1234;
+        return BackboneView.extend({
+            template: template,
+            events: {
+                '[data-action="validate"]': 'customValidation'
+            },
+            getContext: function () {
+                return {
+                    foo: 1
+                };
+            },
+            model: new BackboneModel(),
+            customValidation: function (e) {
+                return tslib_1.__awaiter(this, void 0, void 0, function () {
+                    return tslib_1.__generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, this.model.fetch()];
+                            case 1:
+                                _a.sent();
+                                return [4 /*yield*/, this.render()];
+                            case 2:
+                                _a.sent();
+                                return [2 /*return*/, this.model.get('validation')];
+                        }
+                    });
+                });
+            }
+        });
+    
     `)
 
     expectCodeNotToContain(aFile, `require("tslib")`)

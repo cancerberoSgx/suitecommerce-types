@@ -1,6 +1,6 @@
 import { BackboneModel } from 'sc-types-frontend';
 
-export const MineModel = BackboneModel.extend({
+export default BackboneModel.extend({
   async magick(t:1|2|3|4): Promise<number>{
     await sleep(t)
     return t+1

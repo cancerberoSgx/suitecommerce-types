@@ -1,7 +1,7 @@
 import { Application } from 'sc-types-frontend';
-import { MineModel } from './MineModel';
+import MineModel  from './MineModel';
 
-export const Mine = {
+export default {
     mountToApp(application: Application) {
       alert('seba')
       application.getLayout().on("afterAppendView", async view=>{
