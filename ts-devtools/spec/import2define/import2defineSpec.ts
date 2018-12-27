@@ -109,6 +109,40 @@ export class MineModel extends BackboneModel {
 
 
 
+
+    fit('sc-types-frontend imports should not be converted unless they are contained in import2defineDefaults.suitecommerceSpecifiers', () => { //should work
+      test(`
+import { Utils, BackboneView, View, Foo, jQuery, BackboneModel, Model, BackboneCollection, Color, BackboneRouter } from 'sc-types-frontend'
+import template from './my_extension_view.tpl'
+export interface IMyExtensionView extends View {
+  play(): void
+}
+export const MyExtensionView: IMyExtensionView = BackboneView.extend({
+  template, 
+  play(){
+    alert(Utils.translate('hello'))
+  }
+})
+    `, `
+import { View, Foo, Model, Color } from 'sc-types-frontend'
+define('MyExtensionView', ['Utils', 'Backbone.View', 'jQuery', 'Backbone.Model', 'Backbone.Collection', 'Backbone.Router', 'my_extension_view.tpl'], function(Utils: any, BackboneView: any, jQuery: any, BackboneModel: any, BackboneCollection: any, BackboneRouter: any, template: any){
+  
+  return BackboneView.extend({
+  template, 
+  play(){
+    alert(Utils.translate('hello'))
+  }
+})
+})
+export interface IMyExtensionView extends View {
+  play(): void
+}
+
+`,
+        [])
+    })
+
+
   // fails because it tranlate to define('x', [], function(){ const y = x + 2 return 1 }) / basically we 
   // cannot use the exported variable after the export statament. SOlution is to create a new variable 
   // and replace the return statemtn with it and then at the end return that.s

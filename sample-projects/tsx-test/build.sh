@@ -1,5 +1,12 @@
 # this command will deploy to a new SCA module /Modules/suitecommerce/MyCoolModule@1.0.0 so from there you can enter `npx gulp unit-test --modules MyCoolModule --dont-exit` tu run its tests
 
+# CWD=`pwd`
+# #first compile dependencies
+# ROOT=/home/sg/git/suitecommerce-types
+# cd /home/sg/git/suitecommerce-types
+# npm run build
+# cd $CWD
+
 OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/MyCoolModule@1.0.0
 rm -rf $OUTPUT_FOLDER/* && \
 npm run clean && \

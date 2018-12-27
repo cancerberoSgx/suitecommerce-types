@@ -10,6 +10,9 @@
                 if (value === true) {
                     element.setAttribute(name, name);
                 } else if (value !== false && value != null) {
+                    if(name==='className') {
+                        name='class'
+                    }
                     element.setAttribute(name, value.toString());
                 }
             }

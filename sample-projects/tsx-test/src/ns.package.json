@@ -7,7 +7,7 @@
             "Tests/*.js"
         ],
         "unit-test-entry-point": [
-            "Tests/MainTest.js"
+            "Tests/EntryPointTest.js"
         ]
     }
 }

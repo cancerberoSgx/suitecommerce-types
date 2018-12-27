@@ -1,5 +1,3 @@
-import { Fn } from "..";
-
 /**
  * Deferred object. In SCA the implementation of deferred object is actually 
  * [```jQuery.Deferred```](https://api.jquery.com/category/deferred-object/).
