@@ -40,7 +40,8 @@ define('bar', ['foo', 'foo'], function(a: any, b: any){
 
     })
 
-    it('single file export declared separately', () => { //should work
+
+    it('single variable reference exported separately', () => { //should work
       test(`
 import { ExtensionEntryPoint, Utils } from 'sc-types-frontend'
 const obj: ExtensionEntryPoint = {
@@ -62,6 +63,7 @@ define('extension', ['Utils'], function(Utils: any){
 `,
         [])
     })
+
 
     it('other export decls in statements before should be preserved if interface decl', () => { //should work
       test(`
@@ -110,7 +112,7 @@ export class MineModel extends BackboneModel {
 
 
 
-    fit('sc-types-frontend imports should not be converted unless they are contained in import2defineDefaults.suitecommerceSpecifiers', () => { //should work
+    it('sc-types-frontend imports should not be converted unless they are contained in import2defineDefaults.suitecommerceSpecifiers', () => { //should work
       test(`
 import { Utils, BackboneView, View, Foo, jQuery, BackboneModel, Model, BackboneCollection, Color, BackboneRouter } from 'sc-types-frontend'
 import template from './my_extension_view.tpl'

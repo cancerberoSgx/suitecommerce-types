@@ -39,7 +39,6 @@
         "jasmine": "^3.3.1",
         "jquery": "^3.3.1",
         "jsdom": "^13.1.0",
-        "plugin-container": "^1.0.3",
         "shelljs": "^0.8.3",
         "ts-node": "^7.0.1",
         "tsd-check": "^0.2.1",
