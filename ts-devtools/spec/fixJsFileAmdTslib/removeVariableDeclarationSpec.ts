@@ -1,5 +1,4 @@
 import { removeVariableDeclaration } from "../../src/fixAmdTslib/removeVariableDeclaration";
-
 describe('removeVariableDeclaration', () => {
     it('basic', () => {
         const inputCode = `

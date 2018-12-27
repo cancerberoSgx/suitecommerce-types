@@ -1,6 +1,6 @@
 import { dirname, join, resolve } from "path";
 import { cp, mkdir, config as shellconfig, test } from "shelljs";
-import { ImportDeclaration, Project, QuoteKind } from "ts-simple-ast";
+import { ImportDeclaration, Project, QuoteKind, SourceFile, Node, TypeGuards } from "ts-simple-ast";
 import { AbstractConfig, AbstractResult } from "../compileAndFix/compileAndFix";
 import { import2defineOne, Import2DefineOneResult, printImport2DefineOneResult } from "./import2defineOne";
 import { linkInputProjectFiles } from "../util/linkInputProjectFiles";
@@ -57,6 +57,8 @@ export function import2define(config: Import2DefineConfig): Import2DefineResult 
 
   return result
 }
+
+
 
 export function import2defineProject(config: Import2DefineConfig & { project: Project }): Import2DefineResult {
   const result: Import2DefineResult = {

@@ -1,5 +1,5 @@
 export function expectCodeEquals(a: string, b: string) {
-  console.log(a, b);
+  // console.log(a, b);
   expect(a.replace(/\s+/gm, ' ').trim()).toEqual(b.replace(/\s+/gm, ' ').trim())
 }
 

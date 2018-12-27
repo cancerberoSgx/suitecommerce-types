@@ -1,12 +1,13 @@
-import { ImportDeclaration, SourceFile, SyntaxKind, TypeGuards } from "ts-simple-ast";
+import { ImportDeclaration, SourceFile, SyntaxKind, TypeGuards, Node, Statement } from "ts-simple-ast";
 import { defaultCustomImportSpecifiers, defaultIgnoreImportSpecifiers } from "./import2defineDefaults";
 import { Import2DefineConfig, Import2DefineResult } from "./import2define";
 import { shorter } from "../util/misc";
+import { getDefaultExportValue } from "./getDefaultExportValue";
 
 export function import2defineOne(config: Import2DefineConfig, sourceFile: SourceFile, result: Import2DefineResult): Import2DefineOneResult | undefined {
   // if(config.debug){
-    // console.log('import2defineOne source file', sourceFile.getFilePath());
-    
+  // console.log('import2defineOne source file', sourceFile.getFilePath());
+
   // }
   const initialText = sourceFile.getText()
   const exportVerificationResults = exportVerification(sourceFile)
@@ -61,29 +62,37 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     }
     id.remove();
   });
-  if (sourceFile.getDescendantsOfKind(SyntaxKind.ExportAssignment).length) {
-    result.errors = [...result.errors, 'not supported export statement found> ' + sourceFile.getDescendantsOfKind(SyntaxKind.ExportAssignment)[0].getText()];
-    return;
+  // if (sourceFile.getDescendantsOfKind(SyntaxKind.ExportAssignment).length) {
+  //   result.errors = [...result.errors, 'not supported export statement found> ' + sourceFile.getDescendantsOfKind(SyntaxKind.ExportAssignment)[0].getText()];
+  //   return;
+  // }
+
+  // let exportName
+  // let exportValue
+  // var exportedVariableResult = getExportedVariable(sourceFile)
+  const {error, exportName, exportValue, exportStatement} = getDefaultExportValue(sourceFile)
+  if (error) {
+
+    // var exportedClassResult = getExportedClass(sourceFile)
+    // if (exportedClassResult.error) {
+      result.errors = [...result.errors, error]//, exportedClassResult.error]
+    //   // TODO : exported functions
+      return
+    // }
+    // exportName = exportedClassResult.exportName
+    // exportValue = exportedClassResult.exportValue
   }
 
-  let exportName
-  let exportValue
-  var exportedVariableResult = getExportedVariable(sourceFile)
-  if(exportedVariableResult.error) {
-    
-    var exportedClassResult = getExportedClass(sourceFile)
-    if(exportedClassResult.error){
-      result.errors = [...result.errors, exportedVariableResult.error, exportedClassResult.error]
-      // TODO : exported functions
-      return 
-    }
-    exportName = exportedClassResult.exportName
-    exportValue = exportedClassResult.exportValue
+  if(!exportStatement){
+    //ToDO: error
+    result.errors = [...result.errors, '!exportStatement returned by getDefaultExportValue']
+return 
   }
-  else {
-    exportName = exportedVariableResult.exportName
-    exportValue = exportedVariableResult.exportValue
-  }
+  exportStatement.remove()
+  // else {
+  //   exportName = info.exportName
+  //   exportValue = info.exportValue
+  // }
 
   //There could be other exports for interfaces and types - we want to keep them but outside define( handler)
   const statementOutsideHandler: string[] = [];
@@ -95,16 +104,16 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     s.remove();
   });
 
-  if(importsToIgnore.length===0){
+  if (importsToIgnore.length === 0) {
     // workaround for tsc issue : tests/tsc-issue-importHelper/README.md
     importsToIgnore.push("import { Application } from 'sc-types-frontend'")
   }
-  const response ={
-    exportName, imports, exportValue, sourceFile, 
-    body: sourceFile.getText(), importsToIgnore, 
+  const response = {
+    exportName, imports, exportValue, sourceFile,
+    body: sourceFile.getText(), importsToIgnore,
     statementOutsideHandler: statementOutsideHandler.join('\n')
   }
-  config.debug && console.log('import2defineOne finish', {initialText, result, response });
+  config.debug && console.log('import2defineOne finish', { initialText, result, response });
   return response;
 }
 
@@ -149,50 +158,61 @@ function exportVerification(sourceFile: SourceFile): string[] {
   }
 }
 
-export function getExportedVariable(sourceFile: SourceFile): {error?: string, exportName?: string, exportValue?: string}{
- 
-  // sourceFile.getExportDeclarations()
-  const varStmts = sourceFile.getDescendantsOfKind(SyntaxKind.VariableStatement);
-  let exportedVarStatements = varStmts.filter(vs => vs.getDescendantsOfKind(SyntaxKind.ExportKeyword).length);
-  
-  if (!exportedVarStatements.length) {
-    return {error: 'no exported variable found in file ' + sourceFile.getFilePath()}
-  }
-  if (exportedVarStatements.length > 1) {
-    return {error: 'multiple variables exported not supported A: ' + exportedVarStatements.map(vs => vs.getText()).join(', ')}
-  }
-  const exportStatement = exportedVarStatements[0];
-  const exportedVar = exportStatement.getDescendantsOfKind(SyntaxKind.VariableDeclaration)[0];
-  const exportedVariableDeclarations = exportedVar.findReferences()
-    .map(r => r.getDefinition().getDeclarationNode())
-    //TODO> do this better, perhaps negatively filtering importspecifier
-    .filter(r => r && r.getKindName().endsWith('Declaration') && r.getSourceFile() === sourceFile);
-  if (exportedVariableDeclarations.length !== 1) {
-    return {error: 'exported variable declaration is not 1: ' + exportedVariableDeclarations.map(vs => vs.getKindName() + ' - ' + vs.getText())}
-  }
-  const exportedVarDecl = exportedVariableDeclarations[0];
-  if (!TypeGuards.isVariableDeclaration(exportedVarDecl)) {
-    
-    return {error:  'not a variable declaration  ' + exportedVarDecl.getText()}
-  }
-  const exportName = exportedVarDecl.getName();
-  const exportValue = exportedVarDecl.getInitializer().getText();
-  if (exportedVarDecl.getText().trim() === exportedVar.getText().trim()) {
-    exportStatement.remove();
-  } 
-  return {exportName, exportValue}
-}
-
-function getExportedClass(sourceFile: SourceFile): {error?: string, exportName?: string, exportValue?: string}{
-  const exportedClassDeclarations = sourceFile.getExportDeclarations().filter(TypeGuards.isClassDeclaration)
-  return {error: 'not implemented class exported extraction'}
-}
 
 
-function getExportedNameAndValue(sourceFile: SourceFile): {error?: string, exportName?: string, exportValue?: string}{
-  const exportedDecl = sourceFile.getExportDeclarations().filter(d=>TypeGuards.isVariableDeclaration(d)||TypeGuards.isClassDeclaration(d))
-  if(!exportedDecl){
-    return {error: 'no variable or class exported found'}
-  }
-}
+
+export interface DefaultExportInfo { error?: string, exportValue?: string, exportStatement?: Statement, exportName?: string }
+
+
+
+
+// export function getExportedVariable(sourceFile: SourceFile): { error?: string, exportName?: string, exportValue?: string } {
+
+//   // sourceFile.getExportDeclarations()
+//   const varStmts = sourceFile.getDescendantsOfKind(SyntaxKind.VariableStatement);
+//   let exportedVarStatements = varStmts.filter(vs => vs.getDescendantsOfKind(SyntaxKind.ExportKeyword).length);
+
+//   if (!exportedVarStatements.length) {
+//     return { error: 'no exported variable found in file ' + sourceFile.getFilePath() }
+//   }
+//   if (exportedVarStatements.length > 1) {
+//     return { error: 'multiple variables exported not supported A: ' + exportedVarStatements.map(vs => vs.getText()).join(', ') }
+//   }
+//   const exportStatement = exportedVarStatements[0];
+//   const exportedVar = exportStatement.getDescendantsOfKind(SyntaxKind.VariableDeclaration)[0];
+//   const exportedVariableDeclarations = exportedVar.findReferences()
+//     .map(r => r.getDefinition().getDeclarationNode())
+//     //TODO> do this better, perhaps negatively filtering importspecifier
+//     .filter(r => r && r.getKindName().endsWith('Declaration') && r.getSourceFile() === sourceFile);
+//   if (exportedVariableDeclarations.length !== 1) {
+//     return { error: 'exported variable declaration is not 1: ' + exportedVariableDeclarations.map(vs => vs.getKindName() + ' - ' + vs.getText()) }
+//   }
+//   const exportedVarDecl = exportedVariableDeclarations[0];
+//   if (!TypeGuards.isVariableDeclaration(exportedVarDecl)) {
+
+//     return { error: 'not a variable declaration  ' + exportedVarDecl.getText() }
+//   }
+//   const exportName = exportedVarDecl.getName();
+//   const exportValue = exportedVarDecl.getInitializer().getText();
+//   if (exportedVarDecl.getText().trim() === exportedVar.getText().trim()) {
+//     exportStatement.remove();
+//   }
+//   return { exportName, exportValue }
+// }
+
+// function getExportedClass(sourceFile: SourceFile): { error?: string, exportName?: string, exportValue?: string } {
+//   const exportedClassDeclarations = sourceFile.getExportDeclarations().filter(TypeGuards.isClassDeclaration)
+//   return { error: 'not implemented class exported extraction' }
+// }
+
+
+// function getExportedNameAndValue(sourceFile: SourceFile): { error?: string, exportName?: string, exportValue?: string } {
+//   const exportedDecl = sourceFile.getExportDeclarations().filter(d => TypeGuards.isVariableDeclaration(d) || TypeGuards.isClassDeclaration(d) || TypeGuards.isFunctionDeclaration(d))
+
+//   const def = sourceFile.getDefaultExportSymbol()
+//   // def.
+//   if (!exportedDecl) {
+//     return { error: 'no variable, class or function exported found' }
+//   }
+// }
 
