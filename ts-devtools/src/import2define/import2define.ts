@@ -2,7 +2,8 @@ import { dirname, join, resolve } from "path";
 import { cp, mkdir, config as shellconfig, test } from "shelljs";
 import { ImportDeclaration, Project, QuoteKind, SourceFile, Node, TypeGuards } from "ts-simple-ast";
 import { AbstractConfig, AbstractResult } from "../compileAndFix/compileAndFix";
-import { import2defineOne, Import2DefineOneResult, printImport2DefineOneResult } from "./import2defineOne";
+import { import2defineOne, Import2DefineOneResult } from "./import2defineOne";
+import { import2DefineOnePrintResult } from "./import2DefineOnePrintResult";
 import { linkInputProjectFiles } from "../util/linkInputProjectFiles";
 import { JsxEmit } from "typescript";
 
@@ -47,7 +48,7 @@ export function import2define(config: Import2DefineConfig): Import2DefineResult 
     result.perFileResults.forEach(r => {
       const p = resolve(r.sourceFile.getFilePath())
       const name = join(config.outputFolder, p.substring(tsConfigFolder.length + 1, p.length))
-      const file = project2.createSourceFile(name, printImport2DefineOneResult(r), { overwrite: true })
+      const file = project2.createSourceFile(name, import2DefineOnePrintResult(r), { overwrite: true })
       file.saveSync()
     })
     project2.saveSync()

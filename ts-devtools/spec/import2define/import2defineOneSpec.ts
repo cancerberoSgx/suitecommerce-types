@@ -1,6 +1,7 @@
 import { Project } from "ts-simple-ast";
 import { Import2DefineResult } from "../../src/import2define/import2define";
-import { import2defineOne, printImport2DefineOneResult } from "../../src/import2define/import2defineOne";
+import { import2defineOne } from "../../src/import2define/import2defineOne";
+import { import2DefineOnePrintResult } from "../../src/import2define/import2DefineOnePrintResult";
 import { expectCodeEquals, expectCodeToContain } from '../testUtil';
 
 describe('import2defineOne', () => {
@@ -19,7 +20,7 @@ describe('import2defineOne', () => {
       expect(result.errors).toEqual(expectedErrors)
     }
     if (resultSingle) {
-      const output = printImport2DefineOneResult(resultSingle, false)
+      const output = import2DefineOnePrintResult(resultSingle, false)
       expectCodeEquals(output, expectedOutput)
     }
     // else {

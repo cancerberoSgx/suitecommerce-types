@@ -10,6 +10,8 @@
     "rootDir": ".",
     "strict": true,
     "strictNullChecks": false,
+    "noImplicitAny": false,
+    
     "noEmitHelpers": true,
     "importHelpers": true,
     "esModuleInterop": true,

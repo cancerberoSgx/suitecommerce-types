@@ -8,7 +8,8 @@ export const forceTsConfig: { [name: string]: string | boolean } = {
   noEmitHelpers: true,
   importHelpers: true,
   strictNullChecks: false,
-  emit: false,
+  strict: false,
+  noImplicitAny: false,
   listEmittedFiles: true, 
   sourceMap: false, // since we modify the output sourcemaps get invalid
   skipLibCheck: true,

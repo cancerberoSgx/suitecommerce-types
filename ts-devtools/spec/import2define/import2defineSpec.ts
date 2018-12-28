@@ -2,7 +2,8 @@ import { mkdir, rm, test } from "shelljs";
 import { Project, Statement } from "ts-simple-ast";
 import { getDefaultExportValue } from "../../src/import2define/getDefaultExportValue";
 import { import2define, import2defineProject, Import2DefineResult } from "../../src/import2define/import2define";
-import { import2defineOne, printImport2DefineOneResult } from "../../src/import2define/import2defineOne";
+import { import2defineOne } from "../../src/import2define/import2defineOne";
+import { import2DefineOnePrintResult } from "../../src/import2define/import2DefineOnePrintResult";
 import { getPathRelativeToProjectFolder } from "../../src/util/misc";
 import { expectCodeEquals } from '../testUtil';
 
@@ -10,7 +11,7 @@ import { expectCodeEquals } from '../testUtil';
 describe('import2define', () => {
 
 
-  
+
   describe('import2defineProject', () => {
 
     it('simple', () => {
@@ -42,7 +43,7 @@ export default const MyExtensionView = BackboneView.extend({
       })
       expect(result.errors).toEqual([])
 
-      const strs = result.perFileResults.map(pr => printImport2DefineOneResult(pr, false))
+      const strs = result.perFileResults.map(pr => import2DefineOnePrintResult(pr, false))
       expectCodeEquals(strs[0], `
 
       import { ExtensionEntryPoint } from 'sc-types-frontend'
@@ -84,7 +85,7 @@ export default const MyExtensionView = BackboneView.extend({
       })
       expect(result.errors).toEqual([])
 
-      const a2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'a'), false)
+      const a2 = import2DefineOnePrintResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'a'), false)
       expectCodeEquals(a2, `
       import { Application } from 'sc-types-frontend'
 define('a', ['b'], function(b: any){
@@ -93,7 +94,7 @@ define('a', ['b'], function(b: any){
 })
 `)
 
-      const b2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'), false)
+      const b2 = import2DefineOnePrintResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'), false)
       expectCodeEquals(b2, `
       import { Application } from 'sc-types-frontend'
 define('b', ['c'], function(c: any){
@@ -101,7 +102,7 @@ define('b', ['c'], function(c: any){
   return b
 })
 `)
-      const c2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'c'), false)
+      const c2 = import2DefineOnePrintResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'c'), false)
       expectCodeEquals(c2, `
       import { Application } from 'sc-types-frontend'
 define('c', [], function(){
@@ -113,38 +114,64 @@ define('c', [], function(){
     })
 
 
-    it('import a .tsx file', () => {
-
+    fit('import a .tsx file', () => {
       const project = new Project()
-      project.createSourceFile('foo/bar/boo/a.ts', `import b from '../../bb/b' ; export default const a = 1   `)
-      project.createSourceFile('foo/bb/b.tsx', `export default <div></div> `)
+      project.createSourceFile('foo/bar/boo/a.ts', `import b from '../../bb/b' ; export default const a = b`)
+      project.createSourceFile('foo/bb/b.tsx', `
+import ReactLike  from './ReactLike';
+export default (context:CoolFeature56MainViewContext): JSX.Element =>
+  <div className="jojojo">
+    <p>name: {context.name}</p>
+  </div>
+;
+export interface CoolFeature56MainViewContext {
+  name: string;
+}
+`)
       const result = import2defineProject({
         tsconfigFilePath: '',
         project
       })
-      debugger
+      // debugger
       expect(result.errors).toEqual([])
 
-      const a2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'a'), false)
-//       expectCodeEquals(a2, `
-//       import { Application } from 'sc-types-frontend'
-// define('a', ['b'], function(b: any){
-//   const a = 1   
-//   return a
-// })
-// `)
-      const b2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'), false)
-//       expectCodeEquals(b2, `
-//       import { Application } from 'sc-types-frontend'
-// define('b', ['c'], function(c: any){
-//   const b  =2  
-//   return b
-// })
-// `)
+      const a2 = import2DefineOnePrintResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'a'))
+            expectCodeEquals(a2, `
+type _un1_iQu3_<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+type _un2_iQu3_<I=any,J=any,K=any,L=any,M=any>=any
+type b = _un1_iQu3_
+type a = _un1_iQu3_
 
-const p2 = new Project()
-p2.createSourceFile
-debugger
+import { Application } from 'sc-types-frontend'
+define('a', ['b'], function(b: any){
+  const a = b
+  return a
+})     
+      `)
+      const b2 = import2DefineOnePrintResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'))
+            expectCodeEquals(b2, `
+type _un1_iQu3_<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+type _un2_iQu3_<I=any,J=any,K=any,L=any,M=any>=any
+type ReactLike = _un1_iQu3_
+type b = _un1_iQu3_
+import { Application } from 'sc-types-frontend'
+define('b', ['./ReactLike'], function(ReactLike: any){
+  return  (context:CoolFeature56MainViewContext): JSX.Element =>
+  <div className="jojojo">
+    <p>name: {context.name}</p>
+  </div>
+;
+})
+export interface CoolFeature56MainViewContext {
+  name: string;
+}
+      `)
+
+      // console.log(a2, b2);
+
+      // const p2 = new Project()
+      // p2.createSourceFile
+      // debugger
     })
 
 
@@ -163,7 +190,7 @@ debugger
       rm('-rf', `${outputFolder}`)
       const result = import2define({
         tsconfigFilePath: getPathRelativeToProjectFolder(`spec/fixtures/project1/tsconfig.json`),
-        outputFolder: outputFolder, 
+        outputFolder: outputFolder,
         debug: true
       })
       expect(result.errors).toEqual([])
@@ -177,7 +204,7 @@ debugger
       rm('-rf', `${outputFolder}`)
       const result = import2define({
         tsconfigFilePath: getPathRelativeToProjectFolder(`spec/fixtures/tsxTest/tsconfig.json`),
-        outputFolder: outputFolder, 
+        outputFolder: outputFolder,
         debug: true
       })
       result.perFileResults.forEach(f => {
@@ -188,21 +215,21 @@ debugger
     })
 
 
-  xit('strongly typed projects', ()=>{
-    mkdir('-p', 'tmp/')
-    let inputFolder = getPathRelativeToProjectFolder('../sample-projects/jsx-view-tests')
-    let outputFolder = getPathRelativeToProjectFolder('tmp/jxs-view-tests_ts_out')
-    rm('-rf', outputFolder)
-    const export2defineResult = import2define({
-      tsconfigFilePath: `${inputFolder}/tsconfig.json`,
-      outputFolder
+    xit('strongly typed projects', () => {
+      mkdir('-p', 'tmp/')
+      let inputFolder = getPathRelativeToProjectFolder('../sample-projects/jsx-view-tests')
+      let outputFolder = getPathRelativeToProjectFolder('tmp/jxs-view-tests_ts_out')
+      rm('-rf', outputFolder)
+      const export2defineResult = import2define({
+        tsconfigFilePath: `${inputFolder}/tsconfig.json`,
+        outputFolder
+      })
+      expect(export2defineResult.errors).toEqual([])
+      const p = new Project({ tsConfigFilePath: `${outputFolder}/tsconfig.json` })
+      const s = p.getPreEmitDiagnostics().map(d => `${d.getCode()} ${d.getCategory()} ${d.getMessageText()} ${d.getSourceFile().getBaseName()}`).join('\n')
+      // console.log(s);
+
     })
-    expect(export2defineResult.errors).toEqual([])
-    const p = new Project({tsConfigFilePath: `${outputFolder}/tsconfig.json`})
-    const s = p.getPreEmitDiagnostics().map(d=>`${d.getCode()} ${d.getCategory()} ${d.getMessageText()} ${d.getSourceFile().getBaseName()}`).join('\n')
-    // console.log(s);
-    
-  })
 
 
   })
