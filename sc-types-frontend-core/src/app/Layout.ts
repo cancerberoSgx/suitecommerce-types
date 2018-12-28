@@ -1,4 +1,5 @@
 import { Deferred, Fn, View as View } from "..";
+import { BackboneView } from "../thirdParty";
 
 /**
  * The root view of the application. It is installed in a container_element HTML element that must exists in the HTML DOM (div `#main`).
@@ -32,7 +33,7 @@ export interface Layout extends View<{}> {
     /**Triggered after this layout view is appended to the DOM */
     on(name: 'afterAppendToDom', handler: Fn): any
     /**Triggered before the user navigates (current view changes). This is NOT a cancelable event! */
-    on(name: 'beforeAppendView', handler: Fn<void, [View]>): any
+    on(name: 'beforeAppendView', handler: Fn<void, [BackboneView]>): any
     /**Triggered after the user navigates (current view changes)*/
-    on(name: 'afterAppendView', handler: Fn<void, [View]>): any
+    on(name: 'afterAppendView', handler: Fn<void, [BackboneView]>): any
 }

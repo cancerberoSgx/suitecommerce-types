@@ -12,7 +12,8 @@ rm -rf $OUTPUT_FOLDER/* && \
 npm run clean && \
 tsc && \
 mkdir -p  $OUTPUT_FOLDER && \
-node node_modules/.bin/sc-tsc --tsconfigFilePath ./tsconfig.json --addTslibJsInFolder $OUTPUT_FOLDER/ --outputFolder  $OUTPUT_FOLDER && \
+node node_modules/.bin/sc-tsc --tsconfigFilePath ./tsconfig.json --debug \
+  --addTslibJsInFolder $OUTPUT_FOLDER/ --outputFolder  $OUTPUT_FOLDER && \
 mv $OUTPUT_FOLDER/src/* $OUTPUT_FOLDER && \
 rm -rf $OUTPUT_FOLDER/src/
 cp src/ns.package.json  $OUTPUT_FOLDER

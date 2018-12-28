@@ -1,17 +1,32 @@
 import { SourceFile, TypeGuards, SyntaxKind, Identifier, Node, Statement } from "ts-simple-ast";
 import { DefaultExportInfo } from "./import2defineOne";
 import { Import2DefineConfig } from "./import2define";
+import { shorter } from "../util/misc";
+import { join } from "path";
 export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfig): DefaultExportInfo {
   
-  function postError(error: string): {error: string}{
-    // result.errors = [...result.errors, m];
-    config && config.debug && console.log(error, ` on file ${f.getFilePath()}`)
-    return  { error };
-  }
+  const err1 = checkNonDefaultExportedValueNodes(f)
+  if(err1){return{error: err1}}
 
+  // function postError(error: string): {error: string}{
+  //   // result.errors = [...result.errors, m];
+  //   // console.log({config})
+  //   // config && config.debug && console.log(error, ` on file ${f.getFilePath()}`)
+  //   return  { error };
+  // }
+
+  // function isDataDeclaration(n: Node): boolean {
+  //   return TypeGuards.isClassDeclaration(n)||TypeGuards.isFunctionDeclaration(n)||
+  // }
+  
+// debugger
   const s = f.getDefaultExportSymbol();
   if (!s) {
-    return postError('No default export found' )
+    //  means file doesn't have any default export, however, is valid for exporting only types. 
+  //   return postError('No default export found' )
+  return {
+    exportValue: 'undefined'
+  }
   }
   let exportValue;
   let vc = s.getValueDeclaration();
@@ -64,10 +79,9 @@ export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfi
   
   if (!exportValue || exportValue === 'unknown'){
     // debugger
-    return postError("No default export for class, variable or function found 2")
+    return {error: "No default export for class, variable or function found 2"}
     // return { error: "No default export for class, variable or function found 2" }
     //TODO: error
-
   }
 
 
@@ -84,8 +98,7 @@ export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfi
   if (!exportStatement) {
     // debugger
     //TODO: error
-    return postError('No default export for class, variable or function found 3' )
-    // return { error: 'No default export for class, variable or function found 3' }
+    return {error: 'No default export for class, variable or function found 3' }
   }
   // if(!exportStatement||!exportStatement.length) {
   //   return {error: 'no default export for class, function or variable found'}
@@ -95,4 +108,29 @@ export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfi
   const error = (!exportStatement ? 'No default export for class, variable or function found' : undefined) || (!exportValue ? '!exportValue' : undefined) || (!exportName ? '!exportName' : undefined);
   // ||((diagnostics && diagnostics.length) ? ('Compiler errors detected: '+diagnostics.map(d=>d.toString()).join(', ')) : undefined)
   return { exportValue, exportStatement: exportStatement as any as Statement, exportName, error };
+}
+
+
+function checkNonDefaultExportedValueNodes(f: SourceFile): string|undefined{
+  const allExportSymbols = f.getExportSymbols()
+  const defaultExportSymbol = f.getDefaultExportSymbol()
+  const nonDefaultExportSymbols = allExportSymbols.filter(s=>s!==defaultExportSymbol)
+  const nonDefaultExportedValueNodes=nonDefaultExportSymbols.map(s=>s.getValueDeclaration()).filter(s=>s)//.map(s=>s.getText())
+  if(nonDefaultExportedValueNodes.length) {
+    return 'You cannot export declaration with values unless they are default exports. Currently you have: '+nonDefaultExportedValueNodes.map(n=>`${n.getKindName()} ${shorter(n.getText(), 20)}`).join(', ')
+  }
+
+  const keywords = f.getDescendantsOfKind(SyntaxKind.ExportKeyword)
+  const nonDefaultLiteralExported = keywords.filter(k=>{
+    const expr1 = k.getNextSiblings().find(TypeGuards.isExpressionStatement)
+    if(expr1){
+      const isLiteral = !!TypeGuards.isLiteralExpression(expr1.getExpression())
+      const isDefaultExported = !!expr1.getNextSiblings().find(n=>n.getKind()===SyntaxKind.DefaultKeyword)
+      return isLiteral && !isDefaultExported
+    }
+  })
+'You cannot export a value unless as default export. Currently you have: '+nonDefaultLiteralExported.map(n=>`${n.getKindName()} ${shorter(n.getText(), 20)}`).join(', ')  
+if( nonDefaultLiteralExported.length){
+    return 'You cannot export a literal value unless as default export. Currently you have: '+nonDefaultLiteralExported.map(n=>n.getParent()||n).map(n=>`${n.getKindName()} ${shorter(n.getText(), 20)}`).join(', ')  
+  }
 }

@@ -1,6 +1,3 @@
-import { TemplateContext } from 'sc-types-frontend';
-
-export type JSXTemplate<Context extends TemplateContext> = (context: Context) => JSX.Element
 
 const ReactLike_ ={
     /**
@@ -43,4 +40,4 @@ const ReactLike_ ={
 
 (self as any).ReactLike = ReactLike_
 
-export const ReactLike = ReactLike_
+export default ReactLike_

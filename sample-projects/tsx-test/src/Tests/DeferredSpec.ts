@@ -16,7 +16,7 @@ export default describe('Deferred', () => {
     }
     expect(await h()).toBe(4)
     const v4=await h()
-    debugger
+    // debugger
     done()
   })
 })

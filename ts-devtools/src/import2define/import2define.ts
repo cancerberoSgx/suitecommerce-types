@@ -34,7 +34,7 @@ export function import2define(config: Import2DefineConfig): Import2DefineResult 
     addFilesFromTsConfig: true,
   })
   const tsConfigFolder = dirname(resolve(config.tsconfigFilePath))
-  const result = import2defineProject({ project, tsconfigFilePath: config.tsconfigFilePath })
+  const result = import2defineProject({...config,  project, tsconfigFilePath: config.tsconfigFilePath })
   if (!result.errors.length&&config.outputFolder) {
     mkdir('-p', config.outputFolder)
     cp(config.tsconfigFilePath, config.outputFolder)

@@ -18,12 +18,12 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
   // console.log('import2defineOne source file', sourceFile.getFilePath());
 
   // }
-  const initialText = sourceFile.getText()
-  const exportVerificationResults = exportVerification(sourceFile)
-  if (exportVerificationResults.length) {
-    result.errors = [...result.errors, ...exportVerificationResults]
-    return
-  }
+  // const initialText = sourceFile.getText()
+  // const exportVerificationResults = exportVerification(sourceFile)
+  // if (exportVerificationResults.length) {
+  //   result.errors = [...result.errors, ...exportVerificationResults]
+  //   return
+  // }
   config.customImportSpecifiers = (config.customImportSpecifiers && config.customImportSpecifiers.length) ? config.customImportSpecifiers : defaultCustomImportSpecifiers;
   config.ignoreImportSpecifiers = (config.ignoreImportSpecifiers && config.ignoreImportSpecifiers.length) ? config.ignoreImportSpecifiers : defaultIgnoreImportSpecifiers;
   const importDeclarations = sourceFile.getDescendantsOfKind(SyntaxKind.ImportDeclaration);
@@ -83,6 +83,7 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
   // let exportValue
   // var exportedVariableResult = getExportedVariable(sourceFile)
   const {error, exportName, exportValue, exportStatement} = getDefaultExportValue(sourceFile, config)
+  // HEADS UP:  notice that it's valid that a file doesn't have any default exports - users can group interfaces and type as named exports if they want. 
   if (error) {
 
     return postError(error)
@@ -96,14 +97,16 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     // exportValue = exportedClassResult.exportValue
   }
 
-  if(!exportStatement){
+  // if(!exportStatement){
     
-    return postError('!exportStatement returned by getDefaultExportValue')
+    // return postError('!exportStatement returned by getDefaultExportValue')
     //ToDO: error
     // result.errors = [...result.errors, '!exportStatement returned by getDefaultExportValue']
 // return 
+  // }
+  if(exportStatement){
+    exportStatement.remove()
   }
-  exportStatement.remove()
   // else {
   //   exportName = info.exportName
   //   exportValue = info.exportValue
@@ -128,7 +131,7 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     body: sourceFile.getText(), importsToIgnore,
     statementOutsideHandler: statementOutsideHandler.join('\n')
   }
-  config.debug && console.log('import2defineOne finish', { initialText, result, response });
+  config.debug && console.log('import2defineOne finish', { response });
   return response;
 }
 
@@ -159,19 +162,19 @@ ${r.statementOutsideHandler}
   `;
 }
 
-function exportVerification(sourceFile: SourceFile): string[] {
-  // debugger
-  const exportsNotInTypeDeclaration = sourceFile
-    .getDescendantsOfKind(SyntaxKind.ExportKeyword)
-    .filter(e => !TypeGuards.isInterfaceDeclaration(e.getParent()) &&
-      !TypeGuards.isTypeAliasDeclaration(e.getParent()))
-  if (exportsNotInTypeDeclaration.length > 1) {
-    return [`Sorry you can only have one export for a non interface/type declaration and you have these: ${exportsNotInTypeDeclaration.map(e => shorter(e.getParent().getText())).join('"\n , "\n')}`]
-  }
-  else {
-    return []
-  }
-}
+// function exportVerification(sourceFile: SourceFile): string[] {
+//   // debugger
+//   const exportsNotInTypeDeclaration = sourceFile
+//     .getDescendantsOfKind(SyntaxKind.ExportKeyword)
+//     .filter(e => !TypeGuards.isInterfaceDeclaration(e.getParent()) &&
+//       !TypeGuards.isTypeAliasDeclaration(e.getParent()))
+//   if (exportsNotInTypeDeclaration.length > 1) {
+//     return [`Sorry you can only have one export for a non interface/type declaration and you have these: ${exportsNotInTypeDeclaration.map(e => shorter(e.getParent().getText())).join('"\n , "\n')}`]
+//   }
+//   else {
+//     return []
+//   }
+// }
 
 
 
@@ -230,4 +233,5 @@ export interface DefaultExportInfo { error?: string, exportValue?: string, expor
 //     return { error: 'no variable, class or function exported found' }
 //   }
 // }
+
 

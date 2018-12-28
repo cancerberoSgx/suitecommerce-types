@@ -1,7 +1,7 @@
 // import { Deferred } from "../../src";
 import {jQuery, Deferred} from 'sc-types-frontend'
 
-export const DeferredSpec =  describe('Deferred', () => {
+export default describe('Deferred', () => {
   it('supports await async', async done => {
     async function f(): Promise<number>{
       return 2
@@ -16,7 +16,7 @@ export const DeferredSpec =  describe('Deferred', () => {
     }
     expect(await h()).toBe(4)
     const v4=await h()
-    debugger
+    // debugger
     done()
   })
 })
