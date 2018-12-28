@@ -13,7 +13,8 @@
         "clean": "rm -rf dist tmp",
         "generateHelp": "sh scripts/generateHelp.sh",
         "test": "ts-node node_modules/jasmine/bin/jasmine",
-        "all": "npm run clean && npm run build && npm run test"
+        "all": "npm run clean && npm run build && npm run test", 
+        "prepare": "cd spec/fixtures/project1 && npm i && cd ../projectMine && npm i && cd ../tsxTest && npm i && cd ../../../../sample-projects/frontend-simple1 && npm i && cd ../jsx-view-tests && npm i && cd ../projectMine && npm i && cd ../tsx-test && npm i "
     },
     "repository": {
         "type": "git",

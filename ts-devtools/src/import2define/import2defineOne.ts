@@ -131,7 +131,7 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     body: sourceFile.getText(), importsToIgnore,
     statementOutsideHandler: statementOutsideHandler.join('\n')
   }
-  config.debug && console.log('import2defineOne finish', { response });
+  // config.debug && console.log('import2defineOne finish', { response });
   return response;
 }
 
