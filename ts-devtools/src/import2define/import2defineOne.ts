@@ -1,13 +1,12 @@
-import { ImportDeclaration, SourceFile, SyntaxKind, TypeGuards, Node, Statement } from "ts-simple-ast";
-import { defaultCustomImportSpecifiers, defaultIgnoreImportSpecifiers } from "./import2defineDefaults";
-import { Import2DefineConfig, Import2DefineResult } from "./import2define";
-import { shorter } from "../util/misc";
+import { ImportDeclaration, SourceFile, Statement, SyntaxKind, TypeGuards } from "ts-simple-ast";
 import { getDefaultExportValue } from "./getDefaultExportValue";
+import { Import2DefineConfig, Import2DefineResult } from "./import2define";
+import { defaultCustomImportSpecifiers, defaultIgnoreImportSpecifiers } from "./import2defineDefaults";
 
 
 export function import2defineOne(config: Import2DefineConfig, sourceFile: SourceFile, result: Import2DefineResult): Import2DefineOneResult | undefined {
 
-  function postError(m: string): undefined{
+  function postError(m: string): undefined {
     result.errors = [...result.errors, m];
     config.debug && console.log(m, ` on file ${sourceFile.getFilePath()}`)
     return
@@ -42,13 +41,13 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
       return postError('not import clause found / not supported 1:' + id.getText())
       // return;
     }
-    const namedImports: string[] = [].concat(clause.getNamedImports()).concat([clause.getDefaultImport()]).filter(i=>i).map(i=>i.getText())
+    const namedImports: string[] = [].concat(clause.getNamedImports()).concat([clause.getDefaultImport()]).filter(i => i).map(i => i.getText())
     if (!namedImports.length) {
       return postError('not import clause found / not supported 2:' + id.getText())
     }
 
     let importNamesToBeIgnored: string[] = []
-    if(!namedImports.length) {
+    if (!namedImports.length) {
       debugger
     }
     namedImports.forEach(ni => {
@@ -81,29 +80,29 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
   // let exportName
   // let exportValue
   // var exportedVariableResult = getExportedVariable(sourceFile)
-  const {error, exportName, exportValue, exportStatement} = getDefaultExportValue(sourceFile, config)
+  const { error, exportName, exportValue, exportStatement } = getDefaultExportValue(sourceFile, config)
   // HEADS UP:  notice that it's valid that a file doesn't have any default exports - users can group interfaces and type as named exports if they want. 
   if (error) {
 
     return postError(error)
     // var exportedClassResult = getExportedClass(sourceFile)
     // if (exportedClassResult.error) {
-      // result.errors = [...result.errors, error]//, exportedClassResult.error]
+    // result.errors = [...result.errors, error]//, exportedClassResult.error]
     //   // TODO : exported functions
-      // return
+    // return
     // }
     // exportName = exportedClassResult.exportName
     // exportValue = exportedClassResult.exportValue
   }
 
   // if(!exportStatement){
-    
-    // return postError('!exportStatement returned by getDefaultExportValue')
-    //ToDO: error
-    // result.errors = [...result.errors, '!exportStatement returned by getDefaultExportValue']
-// return 
+
+  // return postError('!exportStatement returned by getDefaultExportValue')
+  //ToDO: error
+  // result.errors = [...result.errors, '!exportStatement returned by getDefaultExportValue']
+  // return 
   // }
-  if(exportStatement){
+  if (exportStatement) {
     exportStatement.remove()
   }
   // else {
@@ -130,7 +129,7 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     body: sourceFile.getText(), importsToIgnore,
     statementOutsideHandler: statementOutsideHandler.join('\n')
   }
-  config.debug && console.log('import2defineOne finish', { exportName: response.exportName, imports: response.imports.map(i=>i.moduleSpecifier).join(', '), importsToIgnore: response.importsToIgnore.join(', ') });
+  config.debug && console.log('import2defineOne finish', { exportName: response.exportName, imports: response.imports.map(i => i.moduleSpecifier).join(', '), importsToIgnore: response.importsToIgnore.join(', ') });
   return response;
 }
 
@@ -150,23 +149,27 @@ export interface Import2DefineOneResultImport {
   importSpecifierSourceFile: SourceFile | undefined;
 }
 
-export function printImport2DefineOneResult(r: Import2DefineOneResult): string {
-const PP2 = '_un2_iQu3_'
-const PP1 = '_un1_iQu3_'
-  const Type = `<I=(any|${PP2}),J=(any|${PP2}),K=(any|${PP2}),L=(any|${PP2}),M=(any|${PP2})>`
+export function printImport2DefineOneResult(r: Import2DefineOneResult, addTypes:boolean=true): string {
+  // heads up - we need to create also types for define handler params since users might be using those values as types.
+  const PP2 = '_un2_iQu3_'
+  const PP1 = '_un1_iQu3_'
+  // const Type = addTypes ? `<I=(any|${PP2}),J=(any|${PP2}),K=(any|${PP2}),L=(any|${PP2}),M=(any|${PP2})>=any|${PP2}` : ''
   return `
-${r.importsToIgnore.join('\n')}
-type ${PP1}${Type}=any
+${addTypes ? `
+type ${PP1}<I=(any|${PP2}),J=(any|${PP2}),K=(any|${PP2}),L=(any|${PP2}),M=(any|${PP2})>=any|${PP2}
 type ${PP2}<I=any,J=any,K=any,L=any,M=any>=any
-${r.imports.map(i => `type ${i.name}${Type}=any|${PP1}`).join('\n')}
-type ${r.exportName}${Type}=any|${PP1}
+${r.imports.map(i => `type ${i.name} = ${PP1}`).join('\n')}
+` : ''}
+${r.importsToIgnore.join('\n')}
 define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier}'`).join(', ')}], function(${r.imports.map(i => `${i.name}: any`).join(', ')}){
   ${r.body}
   return ${r.exportValue}
 })
 ${r.statementOutsideHandler}
-  `;
+`;
 }
+
+
 
 // function exportVerification(sourceFile: SourceFile): string[] {
 //   // debugger
@@ -185,7 +188,6 @@ ${r.statementOutsideHandler}
 
 
 
-export interface DefaultExportInfo { error?: string, exportValue?: string, exportStatement?: Statement, exportName?: string }
 
 
 

@@ -14,7 +14,7 @@ define('FrontEndSimple1.ListView',
             }
         },
         model: new BackboneModel(),
-        async customValidation(e:MouseEvent): Promise<boolean>{
+        customValidation: async function(e:MouseEvent): Promise<boolean>{
             await this.model.fetch()
             await this.render()
             return this.model.get('validation')

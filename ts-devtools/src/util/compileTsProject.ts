@@ -11,7 +11,8 @@ export const forceTsConfig: { [name: string]: string | boolean } = {
   emit: false,
   listEmittedFiles: true, 
   sourceMap: false, // since we modify the output sourcemaps get invalid
-  skipLibCheck: true
+  skipLibCheck: true,
+  skipDefaultLibCheck: true,
 }
 
 export function compileTsProject(config: AbstractConfig): CompileAndFixResult {
@@ -24,7 +25,7 @@ export function compileTsProject(config: AbstractConfig): CompileAndFixResult {
     }
   }
   if(!test('-f', config.tsconfigFilePath)){
-    return {errors: [`tsconfig.json file doesnt exist: ${config.tsconfigFilePath}`], tscFinalCommand: ''}
+    return {errors: [`tsconfig.json file doesn't exist: ${config.tsconfigFilePath}`], tscFinalCommand: ''}
   }
   const cwd = pwd();
   const tsConfigFolder =dirname(config.tsconfigFilePath)

@@ -2,19 +2,20 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "moduleResolution":"node",
+    // "moduleResolution":"node",
     "lib": [
-      "es2018", "dom","es2018.promise"
+      "es2018", "dom",
     ],
     "outDir": "./dist",
     "rootDir": ".",
-    "strict": true,
+    "strict": false,
     "strictNullChecks": false,
-    // "noEmitHelpers": true,
-    // "importHelpers": true,
+    "noEmitHelpers": true,
+    "importHelpers": true,
     "esModuleInterop": true,
-    "sourceMap": true,
-    "skipLibCheck": true
+    // "sourceMap": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     
     // "declaration": true,
   },

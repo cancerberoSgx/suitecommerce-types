@@ -21,7 +21,6 @@
     "devDependencies": {
         "@types/jasmine": "^3.3.5",
         "@types/react": "^16.7.18",
-        "preact": "^8.4.2",
         "tslib": "^1.9.3",
         "typescript": "^3.2.2"
     }

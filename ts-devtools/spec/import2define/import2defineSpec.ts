@@ -42,7 +42,7 @@ export default const MyExtensionView = BackboneView.extend({
       })
       expect(result.errors).toEqual([])
 
-      const strs = result.perFileResults.map(pr => printImport2DefineOneResult(pr))
+      const strs = result.perFileResults.map(pr => printImport2DefineOneResult(pr, false))
       expectCodeEquals(strs[0], `
 
       import { ExtensionEntryPoint } from 'sc-types-frontend'
@@ -84,7 +84,7 @@ export default const MyExtensionView = BackboneView.extend({
       })
       expect(result.errors).toEqual([])
 
-      const a2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'a'))
+      const a2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'a'), false)
       expectCodeEquals(a2, `
       import { Application } from 'sc-types-frontend'
 define('a', ['b'], function(b: any){
@@ -93,7 +93,7 @@ define('a', ['b'], function(b: any){
 })
 `)
 
-      const b2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'))
+      const b2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'), false)
       expectCodeEquals(b2, `
       import { Application } from 'sc-types-frontend'
 define('b', ['c'], function(c: any){
@@ -101,7 +101,7 @@ define('b', ['c'], function(c: any){
   return b
 })
 `)
-      const c2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'c'))
+      const c2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'c'), false)
       expectCodeEquals(c2, `
       import { Application } from 'sc-types-frontend'
 define('c', [], function(){
@@ -125,7 +125,7 @@ define('c', [], function(){
       debugger
       expect(result.errors).toEqual([])
 
-      const a2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'a'))
+      const a2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'a'), false)
 //       expectCodeEquals(a2, `
 //       import { Application } from 'sc-types-frontend'
 // define('a', ['b'], function(b: any){
@@ -133,7 +133,7 @@ define('c', [], function(){
 //   return a
 // })
 // `)
-      const b2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'))
+      const b2 = printImport2DefineOneResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'), false)
 //       expectCodeEquals(b2, `
 //       import { Application } from 'sc-types-frontend'
 // define('b', ['c'], function(c: any){
@@ -188,7 +188,7 @@ debugger
     })
 
 
-  fit('strongly typed projects', ()=>{
+  xit('strongly typed projects', ()=>{
     mkdir('-p', 'tmp/')
     let inputFolder = getPathRelativeToProjectFolder('../sample-projects/jsx-view-tests')
     let outputFolder = getPathRelativeToProjectFolder('tmp/jxs-view-tests_ts_out')
@@ -200,7 +200,7 @@ debugger
     expect(export2defineResult.errors).toEqual([])
     const p = new Project({tsConfigFilePath: `${outputFolder}/tsconfig.json`})
     const s = p.getPreEmitDiagnostics().map(d=>`${d.getCode()} ${d.getCategory()} ${d.getMessageText()} ${d.getSourceFile().getBaseName()}`).join('\n')
-    console.log(s);
+    // console.log(s);
     
   })
 
