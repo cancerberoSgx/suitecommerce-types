@@ -1,8 +1,9 @@
 import CoolFeature56MainViewTemplate, { CoolFeature56MainViewContext } from './CoolFeature56MainViewTemplate';
 import CoolFeature56Model from './CoolFeature56Model';
 import JSXView from './JSXView';
+import { View, BackboneModel } from 'sc-types-frontend';
 
-export default class extends JSXView<CoolFeature56Model, CoolFeature56MainViewContext>{
+export default class extends JSXView<BackboneModel, CoolFeature56MainViewContext>{
   // jsxTemplate = (context: CoolFeature56MainViewContext) =><div>{context.name}</div>
   jsxTemplate = CoolFeature56MainViewTemplate
   events = {
@@ -19,3 +20,6 @@ export default class extends JSXView<CoolFeature56Model, CoolFeature56MainViewCo
   }
 }
 
+// export default interface IJSXView extends View<BackboneModel, CoolFeature56MainViewContext> {
+  
+// }

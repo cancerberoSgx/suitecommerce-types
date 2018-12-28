@@ -8,11 +8,11 @@ export function fixJsFileAmdTslib(config: FixAmdTslibConfig): FixAmdTslibResult 
     return result1
   }
 
-  console.log(`
+  // console.log(`
   
-  ${JSON.stringify({config, result1}, null, 2)}
+  // ${JSON.stringify({config, result1}, null, 2)}
   
-  `);
+  // `);
   
   const result2 = addTslibAmdDependency({ variableName: result1.variableName, inputCode: result1.outputCode })
 

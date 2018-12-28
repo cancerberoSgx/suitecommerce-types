@@ -1,0 +1,31 @@
+{
+  "name": "ts-type-remover",
+  "version": "1.0.0",    
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "typings": "dist/src/index.d.ts",
+  "private": true,  
+  "description": "",
+  "scripts": {
+    "build": "npm run clean && tsc && npm run copy",
+    "build-watch": "tsc -w",
+    "copy": "cp -r spec/support_js dist/spec/support",
+    "clean": "rm -rf dist tmp",
+    "generateHelp": "sh scripts/generateHelp.sh",
+    "test": "ts-node node_modules/jasmine/bin/jasmine",
+    "all": "npm run clean && npm run build && npm run test"
+
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jasmine": "^3.3.5",
+    "jasmine": "^3.3.1",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "ts-simple-ast": "^20.0.0"
+  }
+}

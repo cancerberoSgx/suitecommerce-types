@@ -10,9 +10,9 @@
 OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/MyCoolModule@1.0.0
 rm -rf $OUTPUT_FOLDER/* && \
 npm run clean && \
-tsc && \
+npx tsc && \
 mkdir -p  $OUTPUT_FOLDER && \
-node node_modules/.bin/sc-tsc --tsconfigFilePath ./tsconfig.json  \
+node node_modules/.bin/sc-tsc --tsconfigFilePath ./tsconfig.json --debug \
   --addTslibJsInFolder $OUTPUT_FOLDER/ --outputFolder  $OUTPUT_FOLDER && \
 mv $OUTPUT_FOLDER/src/* $OUTPUT_FOLDER && \
 rm -rf $OUTPUT_FOLDER/src/

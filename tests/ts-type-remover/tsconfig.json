@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "moduleResolution":"node",
+    "lib": [
+      "es6", "dom"
+    ],
+    "outDir": "./dist",        
+    // "noImplicitAny": true,
+    // "noImplicitThis": false,
+    // "strictNullChecks": false,
+    // "strictFunctionTypes": false,
+    "rootDir": ".",
+    "strict": true,
+    "strictNullChecks": false,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    // "declaration": true,
+    // "skipDefaultLibCheck": true,
+    // "skipLibCheck": true,
+    // "emitDeclarationOnly": true,
+    // "noEmit": true,
+    
+  },
+  "include":["src", "spec"]
+}

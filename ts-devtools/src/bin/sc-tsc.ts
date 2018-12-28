@@ -5,40 +5,39 @@ import { help } from './help';
 export function main() {
   const args = minimist((process.argv.slice(2)))
   const config: AllConfig = args as any
-  if (config.debug) {
-    console.log(`Config: 
-${JSON.stringify(config, null, 2)}
-`);
-
-  }
+//   if (config.debug) {
+//     console.log(`Config: 
+// ${JSON.stringify(config)}
+// `);
+  // }
   if (!checkRequiredParams(config)) {
     exit('Invalid call, insufficient arguments. ', 1, true)
   }
   const result = import2defineCompileAndFix(config)
-  if (config.debug) {
-    console.log(`Results: 
-${JSON.stringify({
-      ...result,
-      perFileResults: (result.perFileResults || []).map(r => ({
-        ...r,
-        body: ministr(r.body),
-        exportValue: ministr(r.exportValue),
-        statementOutsideHandler: ministr(r.statementOutsideHandler),
-        sourceFile: r.sourceFile && r.sourceFile.getFilePath(),
-        imports: (r.imports||[]).map(i => ({
-          ...i,
-          importSpecifierSourceFile: i.importSpecifierSourceFile && i.importSpecifierSourceFile.getFilePath()
-        }))
-      })),
-      postProcessResults: (result.postProcessResults||[]).map(pr => ({
-        ...pr,
-        outputCode: ministr(pr.outputCode)
-      })),
-    }, null, 2)
-      }
-`);
+//   if (config.debug) {
+//     console.log(`Results: 
+// ${JSON.stringify({
+//       ...result,
+//       perFileResults: (result.perFileResults || []).map(r => ({
+//         ...r,
+//         body: ministr(r.body),
+//         exportValue: ministr(r.exportValue),
+//         statementOutsideHandler: ministr(r.statementOutsideHandler),
+//         sourceFile: r.sourceFile && r.sourceFile.getFilePath(),
+//         imports: (r.imports||[]).map(i => ({
+//           ...i,
+//           importSpecifierSourceFile: i.importSpecifierSourceFile && i.importSpecifierSourceFile.getFilePath()
+//         }))
+//       })),
+//       postProcessResults: (result.postProcessResults||[]).map(pr => ({
+//         ...pr,
+//         outputCode: ministr(pr.outputCode)
+//       })),
+//     })
+//       }
+// `);
 
-  }
+//   }
   if (result.errors.length) {
     exit(`There where errors: 
 ${result.errors.map(e => e).join('\n')}`, 1)

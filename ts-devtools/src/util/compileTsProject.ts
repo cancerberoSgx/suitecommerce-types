@@ -7,7 +7,9 @@ export const forceTsConfig: { [name: string]: string | boolean } = {
   module: "commonjs",
   noEmitHelpers: true,
   importHelpers: true,
-  listEmittedFiles: true,
+  strictNullChecks: false,
+  emit: false,
+  listEmittedFiles: true, 
   sourceMap: false, // since we modify the output sourcemaps get invalid
   skipLibCheck: true
 }

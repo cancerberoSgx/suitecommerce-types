@@ -34,7 +34,7 @@ describe('compileAndFix', () => {
   it('together with export2define, project: spec/fixtures/project1/', () => {
     mkdir('-p', 'tmp')
     let inputFolder = getPathRelativeToProjectFolder('spec/fixtures/project1/')
-    let outputFolder = getPathRelativeToProjectFolder('tmp/project2')
+    let outputFolder = getPathRelativeToProjectFolder('tmp/project2_ou')
     rm('-rf', outputFolder)
     const export2defineResult = import2define({
       tsconfigFilePath: `${inputFolder}/tsconfig.json`,

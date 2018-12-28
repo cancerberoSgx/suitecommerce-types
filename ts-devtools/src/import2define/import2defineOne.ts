@@ -42,24 +42,23 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
       return postError('not import clause found / not supported 1:' + id.getText())
       // return;
     }
-    const namedImports: string[] = clause.getNamedImports().length ? clause.getNamedImports().map(ni => ni.getName()) : [clause.getDefaultImport().getText()];
+    const namedImports: string[] = [].concat(clause.getNamedImports()).concat([clause.getDefaultImport()]).filter(i=>i).map(i=>i.getText())
     if (!namedImports.length) {
-
       return postError('not import clause found / not supported 2:' + id.getText())
-      // result.errors = [...result.errors, 'not named import found / not supported:' + id.getText()];
-      // return;
     }
 
     let importNamesToBeIgnored: string[] = []
-    // let importNeedsToRemain=false
+    if(!namedImports.length) {
+      debugger
+    }
     namedImports.forEach(ni => {
       const customImportSpecifier = config.customImportSpecifiers.find(i => i.predicate(id, ni));
       const customImportSpecifierFn = customImportSpecifier ? customImportSpecifier.getImportSpecifier : ((id: ImportDeclaration, is: string) => moduleSpecifier);
-      const finalImportSpecififier = customImportSpecifierFn(id, ni)
-      if (finalImportSpecififier) {
+      const finalImportSpecifier = customImportSpecifierFn(id, ni)
+      if (finalImportSpecifier) {
         imports.push({
           name: ni,
-          moduleSpecifier: finalImportSpecififier,
+          moduleSpecifier: finalImportSpecifier,
           importSpecifierSourceFile: !id.getModuleSpecifierSourceFile() ? undefined : id.getModuleSpecifierSourceFile()
         });
       } else {
@@ -131,7 +130,7 @@ export function import2defineOne(config: Import2DefineConfig, sourceFile: Source
     body: sourceFile.getText(), importsToIgnore,
     statementOutsideHandler: statementOutsideHandler.join('\n')
   }
-  // config.debug && console.log('import2defineOne finish', { response });
+  config.debug && console.log('import2defineOne finish', { exportName: response.exportName, imports: response.imports.map(i=>i.moduleSpecifier).join(', '), importsToIgnore: response.importsToIgnore.join(', ') });
   return response;
 }
 
@@ -152,8 +151,15 @@ export interface Import2DefineOneResultImport {
 }
 
 export function printImport2DefineOneResult(r: Import2DefineOneResult): string {
+const PP2 = '_un2_iQu3_'
+const PP1 = '_un1_iQu3_'
+  const Type = `<I=(any|${PP2}),J=(any|${PP2}),K=(any|${PP2}),L=(any|${PP2}),M=(any|${PP2})>`
   return `
 ${r.importsToIgnore.join('\n')}
+type ${PP1}${Type}=any
+type ${PP2}<I=any,J=any,K=any,L=any,M=any>=any
+${r.imports.map(i => `type ${i.name}${Type}=any|${PP1}`).join('\n')}
+type ${r.exportName}${Type}=any|${PP1}
 define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier}'`).join(', ')}], function(${r.imports.map(i => `${i.name}: any`).join(', ')}){
   ${r.body}
   return ${r.exportValue}

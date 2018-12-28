@@ -2,23 +2,23 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    // "moduleResolution":"node",
+    "moduleResolution":"node",
     "lib": [
-      "es2018", "dom","es2018.promise"
+      "es2018", "dom","es2018.promise",
     ],
     "outDir": "./dist",
     "rootDir": ".",
-    "strict": true,
+    "strict": false,
     "strictNullChecks": false,
-    // "noEmitHelpers": true,
-    // "importHelpers": true,
+    "noEmitHelpers": true,
+    "importHelpers": true,
     "esModuleInterop": true,
-    "sourceMap": true,
+    // "sourceMap": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
     
     // "declaration": true,
   },
   "include":["src"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": [ "dist"]
 }

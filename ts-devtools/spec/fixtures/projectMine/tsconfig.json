@@ -14,8 +14,8 @@
     "importHelpers": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true
+    // "skipDefaultLibCheck": true,
+    // "skipLibCheck": true
     
     // "declaration": true,
   },
