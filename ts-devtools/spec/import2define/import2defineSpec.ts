@@ -114,7 +114,7 @@ define('c', [], function(){
     })
 
 
-    fit('import a .tsx file', () => {
+    it('import a .tsx file', () => {
       const project = new Project()
       project.createSourceFile('foo/bar/boo/a.ts', `import b from '../../bb/b' ; export default const a = b`)
       project.createSourceFile('foo/bb/b.tsx', `
@@ -137,25 +137,27 @@ export interface CoolFeature56MainViewContext {
 
       const a2 = import2DefineOnePrintResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'a'))
             expectCodeEquals(a2, `
-type _un1_iQu3_<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
 type _un2_iQu3_<I=any,J=any,K=any,L=any,M=any>=any
-type b = _un1_iQu3_
-type a = _un1_iQu3_
+type b<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+type a<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
 
 import { Application } from 'sc-types-frontend'
 define('a', ['b'], function(b: any){
   const a = b
   return a
-})     
+})
+
+                  
       `)
       const b2 = import2DefineOnePrintResult(result.perFileResults.find(r => r.sourceFile.getBaseNameWithoutExtension() === 'b'))
             expectCodeEquals(b2, `
-type _un1_iQu3_<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
 type _un2_iQu3_<I=any,J=any,K=any,L=any,M=any>=any
-type ReactLike = _un1_iQu3_
-type b = _un1_iQu3_
+type ReactLike<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+type b<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+
 import { Application } from 'sc-types-frontend'
 define('b', ['./ReactLike'], function(ReactLike: any){
+  
   return  (context:CoolFeature56MainViewContext): JSX.Element =>
   <div className="jojojo">
     <p>name: {context.name}</p>
@@ -165,6 +167,7 @@ define('b', ['./ReactLike'], function(ReactLike: any){
 export interface CoolFeature56MainViewContext {
   name: string;
 }
+            
       `)
 
       // console.log(a2, b2);
@@ -215,7 +218,7 @@ export interface CoolFeature56MainViewContext {
     })
 
 
-    xit('strongly typed projects', () => {
+    fit('strongly typed projects', () => {
       mkdir('-p', 'tmp/')
       let inputFolder = getPathRelativeToProjectFolder('../sample-projects/jsx-view-tests')
       let outputFolder = getPathRelativeToProjectFolder('tmp/jxs-view-tests_ts_out')

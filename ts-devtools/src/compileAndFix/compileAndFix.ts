@@ -64,7 +64,7 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
     return {...result}
   }
   let error = false
-  const filesWithErrors = []
+  const filesWithErrors: string[] = []
   let errors : string[]=[]
   const postProcessResults = result.emittedFileNames
     .map(fileName => {
@@ -94,8 +94,20 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
 }
 
 function postProcessEmittedJs(s:string):string{
+  s = removeObjectDefineTopDeclaration(s)
+  s = removeRequireScTypesTopDeclaration(s)
+  return s
+}
+
+function removeObjectDefineTopDeclaration(s: string): string {
   //removing ts commonsjs module Object.define... statemnt since it breaks with 'exports' is not defined in the browser since we are not bundling
   // TODO: do this better / quotes/format might change and this fails
   const toRemove=`Object.defineProperty(exports, "__esModule", { value: true });`
   return s.replace(toRemove, ``)
+}
+function removeRequireScTypesTopDeclaration(s: string): string {
+  //removing require("sc-types-frontend") declarations that might be still there and break SC
+  // TODO: do this better / quotes/format might change and this fails
+  const lines = s.split('\n').filter(line=>!(line.includes(`require("sc-types`)||line.includes(`require('sc-types`)))
+  return lines.join('\n')
 }

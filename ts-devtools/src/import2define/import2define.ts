@@ -107,7 +107,9 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
             im.moduleSpecifier = importSpecifierResult && importSpecifierResult.exportName
           }
         }
-
+        // if(im.moduleSpecifier===undefined){
+        //   im.moduleSpecifier = im.name//`type${(typeModuleSpecifier++)}`
+        // }
         if (!im.importSpecifierSourceFile) {
           console.error('warning local file not found: ' + im.moduleSpecifier);
 
@@ -119,5 +121,6 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
   return result
 }
 
+// let typeModuleSpecifier = 1
 
 

@@ -1,4 +1,4 @@
-import { Application, ComponentContainer } from 'sc-types-frontend';
+import { Application, ComponentContainer,  } from 'sc-types-frontend';
 import CoolFeature56MainView  from './CoolFeature56MainView';
 
 export default {
@@ -9,7 +9,9 @@ export default {
     
 
     application.getLayout().on("afterAppendView", async view=>{
-    //   view.addChildViewInstances()
+    
+    
+        //   view.addChildViewInstances()
     //   const m = new MineModel()
     //   const r = await m.magick(2)
     //   ReactLike.renderDOM(document.body, Main)

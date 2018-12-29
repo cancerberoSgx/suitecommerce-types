@@ -4,14 +4,15 @@ export function import2DefineOnePrintResult(r: Import2DefineOneResult, addTypes:
   const PP2 = '_un2_iQu3_';
   // const PP1 = '_un1_iQu3_';
   const Type = addTypes ? `<I=(any|${PP2}),J=(any|${PP2}),K=(any|${PP2}),L=(any|${PP2}),M=(any|${PP2})>=any|${PP2}` : ''
+  r.exportName = r.exportName || r.sourceFile.getBaseNameWithoutExtension()
   return `
 ${addTypes ? `
 type ${PP2}<I=any,J=any,K=any,L=any,M=any>=any
 ${r.imports.map(i => `type ${i.name}${Type}`).join('\n')}
-${isValidIdentifier(r.exportName) ? `type ${r.exportName}${Type}` : ''}
+${(isValidIdentifier(r.exportName) && (!r.statementOutsideHandler.includes(`type ${r.exportName}`))&& (!r.statementOutsideHandler.includes(`interface ${r.exportName}`))) ? `type ${r.exportName}${Type}` : ''}
 ` : ''}
 ${r.importsToIgnore.join('\n')}
-define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier}'`).join(', ')}], function(${r.imports.map(i => `${i.name}: any`).join(', ')}){
+define('${r.exportName}', [${r.imports.map(imp => `'${imp.moduleSpecifier||imp.name}'`).join(', ')}], function(${r.imports.map(i => `${i.name}: any`).join(', ')}){
   ${r.body}
   return ${r.exportValue}
 })

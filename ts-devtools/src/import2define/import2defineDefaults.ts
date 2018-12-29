@@ -39,4 +39,6 @@ const suitecommerceSpecifiers: {[name: string]: string} = {
   'BackboneCollection': 'Backbone.Collection',
   'BackboneRouter': 'Backbone.Router',
   'jQuery': 'jQuery',
+  'underscore': 'underscore', 
+   'PluginContainer': 'PluginContainer'
 }
