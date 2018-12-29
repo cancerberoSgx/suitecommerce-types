@@ -1,0 +1,1 @@
+fixes all errors in given ts project by adding `//@ts-ignore` comments on all statements that have errors

@@ -1,0 +1,41 @@
+{
+  "name": "ts-fix-all-errors",
+  "version": "0.0.1",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "typings": "dist/src/index.d.ts",
+  "description": "fixes all errors in given ts project by adding `//@ts-ignore` comments on all statements that have errors",
+  "scripts": {
+    "build": "npm run clean && tsc && npm run copy",
+    "build-watch": "tsc -w",
+    "copy": "cp -r spec/support_js dist/spec/support",
+    "clean": "rm -rf dist tmp",
+    "generateHelp": "sh scripts/generateHelp.sh",
+    "test": "ts-node node_modules/jasmine/bin/jasmine",
+    "all": "npm run clean && npm run build && npm run test"
+  },
+  "author": "Sebastián Gurin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cancerberoSgx/suitecommerce-types.git"
+  },
+  "keywords": [
+    "TypeScript",
+    "devtools",
+    "types",
+    "JavaScript"
+  ],
+  "devDependencies": {
+    "@types/jasmine": "^3.3.5",
+    "@types/shelljs": "^0.8.1",
+    "jasmine": "^3.3.1",
+    "shelljs": "^0.8.3",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "misc-utils-of-mine": "0.0.3",
+    "ts-simple-ast": "^20.0.0"
+  }
+}
