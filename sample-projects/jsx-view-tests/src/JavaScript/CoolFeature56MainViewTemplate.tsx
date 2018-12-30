@@ -2,14 +2,15 @@ import ReactLike from './ReactLike';
 
 export default (context: CoolFeature56MainViewContext): JSX.Element =>
   <div className="jojojo">
-    <p>name: {context.name}</p>
+    <p>{context.name} dreams are: </p>
     <ul>
       {context.dreams.map(dream =>
-        <li><strong>{dream.name}</strong>: {dream.description}</li>
+        <li>
+          <strong>{dream.name}</strong>: {dream.description}
+        </li>
       )}
     </ul>
   </div>
-
 
 export interface CoolFeature56MainViewContext {
   name: string

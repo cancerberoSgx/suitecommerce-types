@@ -1,5 +1,6 @@
 import { Application, ComponentContainer, } from 'sc-types-frontend';
 import CoolFeature56MainView from './CoolFeature56MainView';
+import CoolFeature56MainView2 from './CoolFeature56MainView2';
 
 export default {
   mountToApp(application: Application) {
@@ -12,18 +13,16 @@ export default {
           'cool-feature': {
             childViewIndex: 1,
             childViewConstructor: () => new CoolFeature56MainView()
+          },
+          'cool-feature-2': {
+            childViewIndex: 2,
+            childViewConstructor: () => new CoolFeature56MainView2()
           }
         }
       }
     )
-
-
+    
     application.getLayout().on("afterAppendView", async view => {
-      //   view.addChildViewInstances()
-      //   const m = new MineModel()
-      //   const r = await m.magick(2)
-      //   ReactLike.renderDOM(document.body, Main)
-      //   // alert(`Hello fomr TS: ${r}`)
     })
   }
 }
