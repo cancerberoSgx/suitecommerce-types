@@ -84,5 +84,53 @@ describe('first', ()=>{
     \`
     console.log(c)`)
   })
+
+  xit('code inside string template with new lines', ()=>{
+    const code = `
+
+    type _un2_iQu3_<I=any,J=any,K=any,L=any,M=any>=any
+    type BackboneView<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+    type BackboneModel<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+    type PluginContainer<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+    type ReactLike<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+    type JSXTemplate<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+    type JSXView<I=(any|_un2_iQu3_),J=(any|_un2_iQu3_),K=(any|_un2_iQu3_),L=(any|_un2_iQu3_),M=(any|_un2_iQu3_)>=any|_un2_iQu3_
+    
+    import { TemplateContext, Plugin } from 'sc-types-frontend'
+    define('JSXView', ['Backbone.View', 'Backbone.Model', 'PluginContainer', 'ReactLike', 'JSXTemplate'], function(BackboneView: any, BackboneModel: any, PluginContainer: any, ReactLike: any, JSXTemplate: any){
+      function isJSXView(view: any): view is JSXView<any, any> {
+      return (view as any).jsxTemplate
+    }
+    
+      return  class JSXView<Model extends BackboneModel, Context extends TemplateContext> extends BackboneView<Model, Context> {
+      template = (...args: any[]) => ''
+      jsxTemplate: JSXTemplate<Context>
+      initialize(options: any) {
+        super.initialize(options)
+        if (!this.preRenderPlugins) {
+          this.preRenderPlugins = new PluginContainer<JQuery<HTMLElement>, [BackboneView]>()
+        }
+        this.preRenderPlugins.install({
+          name: 'jsx',
+          execute($fragment, view) {
+            debugger
+            if (isJSXView(view)) {
+              ReactLike.renderDOM($fragment.get(0), view.jsxTemplate(view.getContext()))
+            }
+            return $fragment
+          }
+        })
+      }
+    }
+    })
+    `
+    const p = new Project()
+    const f = p.createSourceFile('f.ts', code)
+    fixSourceFileErrors(f)
+    console.log(p.getSourceFile('f.ts').getText());
+    
+  })
+
+
 })
 

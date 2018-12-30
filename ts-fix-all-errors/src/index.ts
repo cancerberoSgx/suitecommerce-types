@@ -2,15 +2,25 @@ import {Project, Diagnostic, Node, SourceFile, SyntaxKind} from 'ts-simple-ast'
 import {getPreviousMatchingPos, changeText} from 'misc-utils-of-mine'
 
 export interface Config {
-  tsConfigFilePath: string
+  tsConfigFilePath?: string
+  project?: Project
+  debug?: boolean
 }
 
 export function fixProjectErrors(config:Config) {
-  const project = new Project({
+  const project = config.tsConfigFilePath  ? new Project({
     tsConfigFilePath: config.tsConfigFilePath, 
     addFilesFromTsConfig: true
-  })
+  }) : config.project
+
+  if(!project){
+    throw new Error('No project not tsConfigFilePath given, aborting. ')
+  }
+
   project.getSourceFiles().forEach(f=>{
+    if(config.debug){
+      console.log('Fixing errors of '+f.getBaseName())
+    }
     fixSourceFileErrors(f)
   })
   project.saveSync()
@@ -19,10 +29,12 @@ export function fixProjectErrors(config:Config) {
 export function fixSourceFileErrors(f: SourceFile) {
   const changes = []
   const s = f.getFullText()
-  f.getPreEmitDiagnostics().forEach(d=>{
+  const diagnostics = f.getPreEmitDiagnostics()
+  diagnostics.forEach(d=>{
     let pos = getPreviousMatchingPos(s, d.getStart(), '\n')
     let toAdd = `\n${comment}`
-    const templateSpanAncestor = f.getDescendantAtPos(d.getStart()).getFirstAncestorByKind(SyntaxKind.TemplateSpan)
+    const descendant = f.getDescendantAtPos(d.getStart())
+    const templateSpanAncestor = descendant && descendant.getFirstAncestorByKind(SyntaxKind.TemplateSpan)
     if(templateSpanAncestor) {
       pos = templateSpanAncestor.getStart()
       toAdd = `\n${comment}\n`
@@ -30,8 +42,10 @@ export function fixSourceFileErrors(f: SourceFile) {
     }
     changes.push({pos, toAdd})
   })
-  debugger
-  const newText = changeText(s, changes)
-  f.replaceWithText(newText)
+  // debugger
+  if(diagnostics.length){
+    const newText = changeText(s, changes)
+    f.replaceWithText(newText)
+  }
 }
 const comment = `//@ts-ignore`

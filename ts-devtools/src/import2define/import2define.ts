@@ -6,6 +6,7 @@ import { import2defineOne, Import2DefineOneResult } from "./import2defineOne";
 import { import2DefineOnePrintResult } from "./import2DefineOnePrintResult";
 import { linkInputProjectFiles } from "../util/linkInputProjectFiles";
 import { JsxEmit } from "typescript";
+import {fixProjectErrors, fixSourceFileErrors} from 'ts-fix-all-errors'
 
 export interface Import2DefineConfig extends AbstractConfig {
   customImportSpecifiers?: CustomImportSpecifier[]
@@ -34,7 +35,7 @@ export function import2define(config: Import2DefineConfig): Import2DefineResult 
     //   jsx: JsxEmit.React},
     addFilesFromTsConfig: true,
   })
-  const tsConfigFolder = dirname(resolve(config.tsconfigFilePath))
+    const tsConfigFolder = dirname(resolve(config.tsconfigFilePath))
   const result = import2defineProject({ ...config, project, tsconfigFilePath: config.tsconfigFilePath })
   if (!result.errors.length && config.outputFolder) {
     mkdir('-p', config.outputFolder)
@@ -49,10 +50,25 @@ export function import2define(config: Import2DefineConfig): Import2DefineResult 
       const p = resolve(r.sourceFile.getFilePath())
       const name = join(config.outputFolder, p.substring(tsConfigFolder.length + 1, p.length))
       const file = project2.createSourceFile(name, import2DefineOnePrintResult(r), { overwrite: true })
+      if(config.debug){
+        console.log('Fixing all TS errors of '+file.getFilePath());
+      }
+      fixSourceFileErrors(file)
       file.saveSync()
     })
     project2.saveSync()
-
+  // fixProjectErrors({project, debug: config.debug})
+  // project2.getSourceFiles().forEach((f=>{
+  //   if(f.isFromExternalLibrary()||f.isDeclarationFile()||f.isInNodeModules()){
+  //     return 
+  //   }
+  //   if(config.debug){
+  //     console.log('Fixing all TS errors of '+f.getFilePath());
+  //   }
+  //   fixSourceFileErrors(f)
+  //   f.saveSync()
+  // }))
+  // project.saveSync()
     linkInputProjectFiles(config)
   }
 
@@ -66,6 +82,7 @@ export function import2defineProject(config: Import2DefineConfig & { project: Pr
     errors: [],
     perFileResults: []
   }
+  
   result.perFileResults = config.project.getSourceFiles()
 
     .filter(f => {

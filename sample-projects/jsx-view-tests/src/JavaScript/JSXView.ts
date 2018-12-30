@@ -2,9 +2,8 @@ import { TemplateContext, BackboneView, BackboneModel, PluginContainer, Plugin }
 import ReactLike  from './ReactLike';
 import { JSXTemplate } from './JSXTemplate';
 
-
 export default class JSXView<Model extends BackboneModel, Context extends TemplateContext> extends BackboneView<Model, Context> {
-  template = (...args: any[]) => ''
+  template = (...args: any[]) => `<div></div>`
   jsxTemplate: JSXTemplate<Context>
   initialize(options: any) {
     super.initialize(options)
@@ -14,9 +13,8 @@ export default class JSXView<Model extends BackboneModel, Context extends Templa
     this.preRenderPlugins.install({
       name: 'jsx',
       execute($fragment, view) {
-        debugger
         if (isJSXView(view)) {
-          ReactLike.renderDOM($fragment.get(0), view.jsxTemplate(view.getContext()))
+          ReactLike.renderJQuery($fragment, view.jsxTemplate(view.getContext()))
         }
         return $fragment
       }

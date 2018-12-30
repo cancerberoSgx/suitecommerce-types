@@ -4,14 +4,13 @@ import JSXView from './JSXView';
 import { View, BackboneModel, underscore } from 'sc-types-frontend';
 
 export default class extends JSXView<BackboneModel, CoolFeature56MainViewContext>{
-  // jsxTemplate = (context: CoolFeature56MainViewContext) =><div>{context.name}</div>
   jsxTemplate = CoolFeature56MainViewTemplate
   events = {
     '[data-action="validate"]': 'customValidation',
     '[data-action="change"]': 'changed'
   } as any
   getContext(): CoolFeature56MainViewContext {
-    return {...super.getContext()||{}, name: 'seba'}
+    return {...super.getContext()||{}, name: 'seba', dreams: [{name: 'Fooo', description: 'babaababa'}]}
   }
   model = new CoolFeature56Model()
   async customValidation(e?: MouseEvent): Promise<number> {
@@ -21,9 +20,3 @@ export default class extends JSXView<BackboneModel, CoolFeature56MainViewContext
   }
   changed= underscore.throttle(e=>{}, 1000)
 }
-
-
-
-// export default interface IJSXView extends View<BackboneModel, CoolFeature56MainViewContext> {
-  
-// }

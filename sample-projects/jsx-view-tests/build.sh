@@ -7,12 +7,14 @@
 # npm run build
 # cd $CWD
 
-OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/MyCoolModule@1.0.0
+# OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/MyCoolModule@1.0.0
+OUTPUT_FOLDER=/home/sg/awa/ext/Workspace/Test3/Modules/MyCoolModule
+
 rm -rf $OUTPUT_FOLDER/* && \
 npm run clean && \
 npx tsc && \
 mkdir -p  $OUTPUT_FOLDER && \
-node node_modules/.bin/sc-tsc --tsconfigFilePath ./tsconfig.json --debug \
+node node_modules/.bin/sc-tsc --tsconfigFilePath ./tsconfig.json \
   --addTslibJsInFolder $OUTPUT_FOLDER/ --outputFolder  $OUTPUT_FOLDER && \
 mv $OUTPUT_FOLDER/src/* $OUTPUT_FOLDER && \
 rm -rf $OUTPUT_FOLDER/src/

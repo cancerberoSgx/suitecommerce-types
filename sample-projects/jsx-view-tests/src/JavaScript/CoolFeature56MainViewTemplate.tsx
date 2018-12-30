@@ -1,13 +1,22 @@
-import ReactLike  from './ReactLike';
+import ReactLike from './ReactLike';
 
-export default (context:CoolFeature56MainViewContext): JSX.Element =>
+export default (context: CoolFeature56MainViewContext): JSX.Element =>
   <div className="jojojo">
     <p>name: {context.name}</p>
-    
+    <ul>
+      {context.dreams.map(dream =>
+        <li><strong>{dream.name}</strong>: {dream.description}</li>
+      )}
+    </ul>
   </div>
 
 
 export interface CoolFeature56MainViewContext {
-  name: string;
+  name: string
+  dreams: Dream[]
 }
 
+export interface Dream {
+  name: string
+  description: string
+}

@@ -3,7 +3,7 @@ const ReactLike_ ={
     /**
      * React-like createElement function so we can use JSX in our TypeScript/JavaScript code.
      */
-     createElement (tag: string, attrs: any, children: any): HTMLElement {
+     createElement (tag: string, attrs: any = {}, ...children: any[]): HTMLElement {
         var element: HTMLElement = document.createElement(tag);
         for (let name in attrs) {
             if (name && attrs.hasOwnProperty(name)) {
@@ -18,25 +18,24 @@ const ReactLike_ ={
                 }
             }
         }
-        for (let i:number = 2; i < arguments.length; i++) {
-            let child:any = arguments[i];
-            element.appendChild(
-                child.nodeType == null ?
-                    document.createTextNode(child.toString()) : child);
-        }
+        children.forEach(child=>{
+            if(typeof child === 'string'){
+                element.appendChild(document.createTextNode(child.toString()))
+            }
+            else {
+                const asArray = Array.isArray(child) ? child : [child]
+                asArray.forEach(c=>element.appendChild(c))
+            }
+        })
         return element;
     }, 
     renderDOM(parent: HTMLElement, el: JSX.Element):void{
       parent.appendChild(el as any)
     },
-    // renderJQuery(parent: JQuery<HTMLElement>, el: JSX.Element):void{
-    //   parent.append(el as any)
-    // }
+    renderJQuery(parent: JQuery<HTMLElement>, el: JSX.Element|JQuery):void{
+      parent.append(jQuery(el as any))
+    }
 };
-
-// export function isJQuery($el: any): $el is JQuery<HTMLElement> {
-//     return $el.append && $el.wrap && $el.el.length && $el.parent
-// }
 
 (self as any).ReactLike = ReactLike_
 
