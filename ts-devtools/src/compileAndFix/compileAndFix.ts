@@ -1,9 +1,9 @@
-import { readFileSync, writeFileSync, fstat } from "fs";
+import { readFileSync, writeFileSync } from "fs";
+import { resolve } from "path";
 import { fixJsFileAmdTslib } from "../fixAmdTslib/fixJsFileAmdTslib";
 import { FixAmdTslibResult } from "../fixAmdTslib/types";
 import { compileTsProject } from "../util/compileTsProject";
 import { addTslibAmd } from "./addTslibAmd";
-import { resolve } from "path";
 
 export interface AbstractConfig {
   /** assumes tsconfig.json file is in the root project path. The project must have typescript installed locally and that will be used to compile */
@@ -39,7 +39,7 @@ export interface CompileAndFixConfig extends AbstractConfig {
 export interface AbstractResult {
   errors: string[]
   emittedFileNames?: string[]
-  tslibFinalDest?:string
+  tslibFinalDest?: string
 }
 
 export interface CompileAndFixResult extends AbstractResult {
@@ -57,21 +57,23 @@ export interface CompileAndFixResult extends AbstractResult {
  * Notice that input project can import only types (ie: sc-types-frontend)
  */
 export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult {
-  config.tsconfigFilePath=resolve(config.tsconfigFilePath)
-  config.outputFolder=config.outputFolder?resolve(config.outputFolder) : config.outputFolder
+  config.tsconfigFilePath = resolve(config.tsconfigFilePath)
+  config.outputFolder = config.outputFolder ? resolve(config.outputFolder) : config.outputFolder
+
   const result = compileTsProject(config)
-  if(result.errors.length){
-    return {...result}
+  if (result.errors.length) {
+    return { ...result }
   }
+
   let error = false
   const filesWithErrors: string[] = []
-  let errors : string[]=[]
+  let errors: string[] = []
   const postProcessResults = result.emittedFileNames
     .map(fileName => {
       const result = fixJsFileAmdTslib({
         inputCode: readFileSync(fileName).toString()
       })
-      errors=errors.concat(result.errors) 
+      errors = errors.concat(result.errors)
       if (error || config.breakOnFirstError && result.errors.length) {
         error = true
         filesWithErrors.push(fileName)
@@ -83,17 +85,19 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
       return { ...result, fileName }
     })
     .filter(r => r)
+
   const tslibFinalDest = addTslibAmd(config)
+  
   return {
-    errors: errors.concat( error ?[`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : []), 
+    errors: errors.concat(error ? [`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : []),
     tscFinalCommand: result.tscFinalCommand,
     emittedFileNames: result.emittedFileNames,
-    postProcessResults, 
+    postProcessResults,
     tslibFinalDest
   }
 }
 
-function postProcessEmittedJs(s:string):string{
+function postProcessEmittedJs(s: string): string {
   s = removeObjectDefineTopDeclaration(s)
   s = removeRequireScTypesTopDeclaration(s)
   return s
@@ -102,12 +106,12 @@ function postProcessEmittedJs(s:string):string{
 function removeObjectDefineTopDeclaration(s: string): string {
   //removing ts commonsjs module Object.define... statemnt since it breaks with 'exports' is not defined in the browser since we are not bundling
   // TODO: do this better / quotes/format might change and this fails
-  const toRemove=`Object.defineProperty(exports, "__esModule", { value: true });`
+  const toRemove = `Object.defineProperty(exports, "__esModule", { value: true });`
   return s.replace(toRemove, ``)
 }
 function removeRequireScTypesTopDeclaration(s: string): string {
   //removing require("sc-types-frontend") declarations that might be still there and break SC
   // TODO: do this better / quotes/format might change and this fails
-  const lines = s.split('\n').filter(line=>!(line.includes(`require("sc-types`)||line.includes(`require('sc-types`)))
+  const lines = s.split('\n').filter(line => !(line.includes(`require("sc-types`) || line.includes(`require('sc-types`)))
   return lines.join('\n')
 }

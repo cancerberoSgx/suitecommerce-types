@@ -18,7 +18,7 @@ describe('compileAndFix', () => {
       outputFolder, tsconfigFilePath,
       breakOnFirstError: true,
       addTslibJsInFolder: `src`,
-      debug: true
+    //   debug: true
     }
     const result = compileAndFix(config)
     expect(result.errors).toEqual([])
@@ -47,7 +47,7 @@ describe('compileAndFix', () => {
     rm('-rf', outputFolder)
     const result = compileAndFix({
       outputFolder,
-      debug: true,
+    //   debug: true,
       tsconfigFilePath: `${inputFolder}/tsconfig.json`,
       breakOnFirstError: true,
       addTslibJsInFolder: `src`
@@ -56,6 +56,8 @@ describe('compileAndFix', () => {
     const aFile = readFileSync(`${outputFolder}/src/FrontEndSimple1.ListView.js`).toString()
     expectCodeToContain(aFile, `
     "use strict";
+    //@ts-ignore 
+    //@ts-ignore
     define('FrontEndSimple1.ListView', ['frontend_simple1_listview.tpl', 'Backbone.Model', 'Backbone.View', "tslib"], function (template, BackboneModel, BackboneView, tslib_1) {
         var v = 1234;
         return BackboneView.extend({

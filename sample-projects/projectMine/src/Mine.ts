@@ -10,4 +10,30 @@ export default {
         alert(`Hello fomr TS: ${r}`)
       })
     }
-}
+} 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 
+
+; console.log('end'); 

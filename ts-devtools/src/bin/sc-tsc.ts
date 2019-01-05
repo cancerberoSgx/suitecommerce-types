@@ -5,11 +5,11 @@ import { help } from './help';
 export function main() {
   const args = minimist((process.argv.slice(2)))
   const config: AllConfig = args as any
-//   if (config.debug) {
-//     console.log(`Config: 
-// ${JSON.stringify(config)}
-// `);
-  // }
+  if (config.debug) {
+    console.log(`Config: 
+${JSON.stringify(config)}
+`);
+  }
   if (!checkRequiredParams(config)) {
     exit('Invalid call, insufficient arguments. ', 1, true)
   }
@@ -43,7 +43,7 @@ export function main() {
 ${result.errors.map(e => e).join('\n')}`, 1)
   }
   else {
-    exit(`Sucessfully generated JS project "${config.outputFolder}"`, 0)
+    exit(`Successfully generated JS project "${config.outputFolder}"`, 0)
   }
 }
 

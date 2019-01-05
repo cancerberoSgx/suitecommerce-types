@@ -194,7 +194,7 @@ export interface CoolFeature56MainViewContext {
       const result = import2define({
         tsconfigFilePath: getPathRelativeToProjectFolder(`spec/fixtures/project1/tsconfig.json`),
         outputFolder: outputFolder,
-        debug: true
+        // debug: true
       })
       expect(result.errors).toEqual([])
       expect(test(`-f`, `${outputFolder}/src/FrontEndSimple1.ListView.ts`)).toBe(true)
@@ -208,7 +208,7 @@ export interface CoolFeature56MainViewContext {
       const result = import2define({
         tsconfigFilePath: getPathRelativeToProjectFolder(`spec/fixtures/tsxTest/tsconfig.json`),
         outputFolder: outputFolder,
-        debug: true
+        // debug: true
       })
       result.perFileResults.forEach(f => {
         if (f.imports.length) {
@@ -218,7 +218,7 @@ export interface CoolFeature56MainViewContext {
     })
 
 
-    fit('strongly typed projects', () => {
+    it('strongly typed projects', () => {
       mkdir('-p', 'tmp/')
       let inputFolder = getPathRelativeToProjectFolder('../sample-projects/jsx-view-tests')
       let outputFolder = getPathRelativeToProjectFolder('tmp/jxs-view-tests_ts_out')
@@ -231,7 +231,7 @@ export interface CoolFeature56MainViewContext {
       const p = new Project({ tsConfigFilePath: `${outputFolder}/tsconfig.json` })
       const s = p.getPreEmitDiagnostics().map(d => `${d.getCode()} ${d.getCategory()} ${d.getMessageText()} ${d.getSourceFile().getBaseName()}`).join('\n')
       // console.log(s);
-
+      //TODO: check compile errors in output and output code
     })
 
 

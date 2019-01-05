@@ -1,17 +1,18 @@
-import { exec, rm, test, mkdir } from "shelljs";
+import { exec, rm, test, mkdir, config } from "shelljs";
 import { readFileSync,  } from "fs";
 import { expectCodeToContain, expectCodeNotToContain } from "../testUtil";
 import { getPathRelativeToProjectFolder } from "../../src/util/misc";
 
+config.silent=true
 
 describe('CLI bin', () => {
 
-  it('minimun params should work', () => {
+  it('minimum params should work', () => {
     const outputFolder =getPathRelativeToProjectFolder('tmp/foo1233')
     const tsconfig = getPathRelativeToProjectFolder('spec/fixtures/project1/tsconfig.json')
     rm('-rf', outputFolder)
     mkdir('-p', outputFolder)
-    const cmd = `node bin/sc-tsc --tsconfigFilePath ${tsconfig} --outputFolder ${outputFolder} --debug --addTslibJsInFolder src`
+    const cmd = `node bin/sc-tsc --tsconfigFilePath ${tsconfig} --outputFolder ${outputFolder} --addTslibJsInFolder`
     const p = exec(cmd)
     expect(p.code).toBe(0)
     expect(test('-f',`${outputFolder}/src/FrontEndSimpleEntry.js`)).toBe(true)
