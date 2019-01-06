@@ -5,7 +5,7 @@ import { writeFileSync } from "fs";
 import { unique } from "./testUtil";
 
 config.silent=true
-describe('first', ()=>{
+describe('fixSourceFileErrors', ()=>{
   beforeAll(()=>{
     rm('-rf', 'tmp')
   })
@@ -14,7 +14,6 @@ describe('first', ()=>{
     p.createSourceFile(fileName, code)
     expect(p.getSourceFile(fileName).getPreEmitDiagnostics().length).toBeGreaterThan(0)
     fixSourceFileErrors(p.getSourceFile(fileName))
-    // console.log(p.getSourceFile(fileName).getText());
     expect(p.getSourceFile(fileName).getPreEmitDiagnostics().length).toBe(0)
     
     const emitted = p.getSourceFile(fileName).emit()

@@ -16,7 +16,8 @@
     "license": "ISC",
     "dependencies": {
         "sc-tsc": "file:../../ts-devtools",
-        "sc-types-frontend": "file:../../sc-types-frontend"
+        "sc-types-frontend": "file:../../sc-types-frontend",
+        "tslib": "^1.9.3"
     },
     "devDependencies": {
         "typescript": "^3.2.2"

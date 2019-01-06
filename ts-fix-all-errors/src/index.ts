@@ -1,5 +1,5 @@
-import {Project, Diagnostic, Node, SourceFile, SyntaxKind} from 'ts-simple-ast'
-import {getPreviousMatchingPos, changeText} from 'misc-utils-of-mine'
+import { Project, Diagnostic, Node, SourceFile, SyntaxKind } from 'ts-simple-ast'
+import { getPreviousMatchingPos, changeText } from 'misc-utils-of-mine'
 
 export interface Config {
   tsConfigFilePath?: string
@@ -7,19 +7,17 @@ export interface Config {
   debug?: boolean
 }
 
-export function fixProjectErrors(config:Config) {
-  const project = config.tsConfigFilePath  ? new Project({
-    tsConfigFilePath: config.tsConfigFilePath, 
+export function fixProjectErrors(config: Config) {
+  const project = config.tsConfigFilePath ? new Project({
+    tsConfigFilePath: config.tsConfigFilePath,
     addFilesFromTsConfig: true
   }) : config.project
-
-  if(!project){
+  if (!project) {
     throw new Error('No project not tsConfigFilePath given, aborting. ')
   }
-
-  project.getSourceFiles().forEach(f=>{
-    if(config.debug){
-      console.log('Fixing errors of '+f.getBaseName())
+  project.getSourceFiles().forEach(f => {
+    if (config.debug) {
+      console.log('Fixing errors of ' + f.getBaseName())
     }
     fixSourceFileErrors(f)
   })
@@ -30,20 +28,19 @@ export function fixSourceFileErrors(f: SourceFile) {
   const changes = []
   const s = f.getFullText()
   const diagnostics = f.getPreEmitDiagnostics()
-  diagnostics.forEach(d=>{
+  diagnostics.forEach(d => {
     let pos = getPreviousMatchingPos(s, d.getStart(), '\n')
     let toAdd = `\n${comment}`
     const descendant = f.getDescendantAtPos(d.getStart())
     const templateSpanAncestor = descendant && descendant.getFirstAncestorByKind(SyntaxKind.TemplateSpan)
-    if(templateSpanAncestor) {
+    if (templateSpanAncestor) {
       pos = templateSpanAncestor.getStart()
       toAdd = `\n${comment}\n`
-      // return // this is working but I'm so afraid
+      // TODO: review and test more
     }
-    changes.push({pos, toAdd})
+    changes.push({ pos, toAdd })
   })
-  // debugger
-  if(diagnostics.length){
+  if (diagnostics.length) {
     const newText = changeText(s, changes)
     f.replaceWithText(newText)
   }

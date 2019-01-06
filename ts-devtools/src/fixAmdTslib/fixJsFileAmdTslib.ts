@@ -7,15 +7,7 @@ export function fixJsFileAmdTslib(config: FixAmdTslibConfig): FixAmdTslibResult 
   if (result1.errors.length) {
     return result1
   }
-
-  // console.log(`
-  
-  // ${JSON.stringify({config, result1}, null, 2)}
-  
-  // `);
-  
   const result2 = addTslibAmdDependency({ variableName: result1.variableName, inputCode: result1.outputCode })
-
-  //TODO verify that the output code compiles wihtout errors
+  //TODO verify that the output code compiles without errors
   return result2
 }
