@@ -17,15 +17,19 @@ export interface AbstractConfig {
   //   target: 'es5' | 'es6' //TODO
   // }
   cleanOutputFolder?: boolean
-  breakOnFirstError?: boolean
+
+  /** if true will abort on any error */
+  breakOnFirstError?: boolean // TODO: test
 
   /** if outputFolder is declared then all input project files like node_modules, package.json, etc need to be present in the new project for it work. Set this to true to not do it so. */
   skipLinkInputProjectFiles?: boolean;
 
-  /**if true will run `npx eslint --fix` before writing the files using the target project cwd. 
-   * Note that the target project needs to have support for eslint (all dependencies installed locally)
-   * and have a tslintrc file available since the project will be defining indentation style.*/
-  eslintFix?: boolean,
+  // /**
+  //  * if true will run `npx eslint --fix` before writing the files using the target project cwd. 
+  //  * Note that the target project needs to have support for eslint (all dependencies installed locally)
+  //  * and have a tslintrc file available since the project will be defining indentation style.
+  //  * */
+  // eslintFix?: boolean,
 
   debug?: boolean
 }
@@ -34,6 +38,8 @@ export interface CompileAndFixConfig extends AbstractConfig {
   /** if set, it will add tslib.js (AMD module) in given path that must be relative to `tsconfigJsonPath`*/
   addTslibJsInFolder?: string
   outputFolder: string
+  /** if true it will format generated .js output files using TypeScript formatting API */
+  formatJsOutput?: boolean
 }
 
 export interface AbstractResult {
@@ -71,7 +77,8 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
   const postProcessResults = result.emittedFileNames
     .map(fileName => {
       const result = fixJsFileAmdTslib({
-        inputCode: readFileSync(fileName).toString()
+        inputCode: readFileSync(fileName).toString(),
+        formatJsOutput: config.formatJsOutput
       })
       errors = errors.concat(result.errors)
       if (error || config.breakOnFirstError && result.errors.length) {

@@ -10,7 +10,7 @@ export function addTslibAmdDependency(config: FixAmdTslibConfig): FixAmdTslibRes
     variableName: undefined
   }
   // TODO: perhaps reusing the same project instead of creating is faster 
-  //TODO: virtual ffs ?
+  // TODO: virtual fs ?
   const project = new Project();
   const sourceFile = project.createSourceFile('input2.js', config.inputCode)
   const callExpression = sourceFile.getFirstDescendant(node =>
@@ -37,7 +37,7 @@ export function addTslibAmdDependency(config: FixAmdTslibConfig): FixAmdTslibRes
   if(config.formatJsOutput){
     // TODO: format settings
     sourceFile.formatText() 
-    sourceFile.organizeImports()
+    // sourceFile.organizeImports()
   }
   return {
     ...result,

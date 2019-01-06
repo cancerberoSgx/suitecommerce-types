@@ -15,8 +15,8 @@
     "esModuleInterop": true,
     // "sourceMap": true,
     "skipDefaultLibCheck": true,
-    "skipLibCheck": true
-    
+    "skipLibCheck": true,
+    // "emitDecoratorMetadata": true,
     // "declaration": true,
   },
   "include":["src"],
