@@ -3,7 +3,7 @@ import { resolve } from "path";
 import { fixJsFileAmdTslib } from "../fixAmdTslib/fixJsFileAmdTslib";
 import { FixAmdTslibResult } from "../fixAmdTslib/types";
 import { compileTsProject } from "../util/compileTsProject";
-import { addTslibAmd } from "./addTslibAmd";
+import { addTslibJsInFolder } from "./addTslibJsInFolder";
 
 export interface AbstractConfig {
   /** assumes tsconfig.json file is in the root project path. The project must have typescript installed locally and that will be used to compile */
@@ -86,8 +86,8 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
     })
     .filter(r => r)
 
-  const tslibFinalDest = addTslibAmd(config)
-  
+  const tslibFinalDest = addTslibJsInFolder(config)
+
   return {
     errors: errors.concat(error ? [`There were errors processing ${filesWithErrors.length} files, see postProcessResults`] : []),
     tscFinalCommand: result.tscFinalCommand,
@@ -99,7 +99,7 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
 
 function postProcessEmittedJs(s: string): string {
   s = removeObjectDefineTopDeclaration(s)
-  s = removeRequireScTypesTopDeclaration(s)
+  s = removeRequireScTypesTopDeclarationAndTsIgnoreComment(s)
   return s
 }
 
@@ -107,11 +107,22 @@ function removeObjectDefineTopDeclaration(s: string): string {
   //removing ts commonsjs module Object.define... statemnt since it breaks with 'exports' is not defined in the browser since we are not bundling
   // TODO: do this better / quotes/format might change and this fails
   const toRemove = `Object.defineProperty(exports, "__esModule", { value: true });`
+
   return s.replace(toRemove, ``)
+
+  //TODO: remove these strings: 
+  // /*return*/
+  // /** @class */
+  // //@ts-ignore
+  //  /*yield*/
+
 }
-function removeRequireScTypesTopDeclaration(s: string): string {
+
+function removeRequireScTypesTopDeclarationAndTsIgnoreComment(s: string): string {
   //removing require("sc-types-frontend") declarations that might be still there and break SC
   // TODO: do this better / quotes/format might change and this fails
-  const lines = s.split('\n').filter(line => !(line.includes(`require("sc-types`) || line.includes(`require('sc-types`)))
+  const lines = s.split('\n')
+    .filter(line => !(line.includes(`require("sc-types`) || line.includes(`require('sc-types`) || line.match(/^\s*\/\/\s*@ts\-ignore\s*$/)))
   return lines.join('\n')
 }
+

@@ -1,8 +1,7 @@
-import { BackboneModel, underscore } from 'sc-types-frontend';
-import CoolFeature56Model from './CoolFeature56Model';
-import JSXView from './JSXView';
-import ReactLike from './ReactLike';
-import { JSXTemplate } from './JSXTemplate';
+import { BackboneModel } from 'sc-types-frontend'
+import { JSXTemplate } from './JSXTemplate'
+import JSXView from './JSXView'
+import ReactLike from './ReactLike'
 
 export default class extends JSXView<BackboneModel, CoolFeature56MainViewContext2>{
 
@@ -32,7 +31,7 @@ export default class extends JSXView<BackboneModel, CoolFeature56MainViewContext
   }
   
   change(e: JQuery.ChangeEvent<any, any, HTMLInputElement>) {
-    console.log('asdas', e.currentTarget.value);
+    console.log('asdas', e.currentTarget.value)
   }
 
   getContext(): CoolFeature56MainViewContext2 {

@@ -14,3 +14,9 @@ SuiteCommerce types, globals, SCA, components:
  * https://github.com/cancerberoSgx/suitecommerce-types/tree/master/sc-types-frontend-core
  * https://github.com/cancerberoSgx/suitecommerce-types/tree/master/sc-types-frontend-globals
 
+
+## Code examples: 
+
+ * Entry point: https://github.com/cancerberoSgx/suitecommerce-types/blob/master/sample-projects/jsx-view-tests/src/JavaScript/CoolFeature56.ts
+ * View using JSX for template: https://github.com/cancerberoSgx/suitecommerce-types/blob/master/sample-projects/jsx-view-tests/src/JavaScript/CoolFeature56MainView2.tsx
+ * Backbone.Model https://github.com/cancerberoSgx/suitecommerce-types/blob/master/sample-projects/jsx-view-tests/src/JavaScript/CoolFeature56Model.ts

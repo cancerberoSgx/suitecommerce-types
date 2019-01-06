@@ -11,3 +11,5 @@ export default {
       })
     }
 } 
+
+; console.log('end'); 

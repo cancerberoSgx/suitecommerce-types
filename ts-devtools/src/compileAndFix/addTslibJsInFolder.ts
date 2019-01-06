@@ -6,7 +6,7 @@ import { getNodeModulesFolderPath } from "../util/misc";
 /**
  * @returns the final path where tslib.js was added in the output
  */
-export function addTslibAmd(config: CompileAndFixConfig): string | undefined {
+export function addTslibJsInFolder(config: CompileAndFixConfig): string | undefined {
   shellconfig.silent = !config.debug
   if (!config.addTslibJsInFolder) {
     return

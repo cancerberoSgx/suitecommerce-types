@@ -11,6 +11,9 @@ export function removeVariableDeclaration(config: FixAmdTslibConfig): FixAmdTsli
   }
   const project = new Project();
   const sourceFile = project.createSourceFile('input.js', config.inputCode)
+  if(config.formatJsOuptut) {
+    sourceFile.formatText()
+  }
   const callExpression = sourceFile.getFirstDescendant(node =>
     TypeGuards.isCallExpression(node) &&
     node.getText() === `require("tslib")`) as CallExpression
@@ -18,7 +21,6 @@ export function removeVariableDeclaration(config: FixAmdTslibConfig): FixAmdTsli
   if (!callExpression) {
     // this means the file is not using any helper / feature
     return { ...result, outputCode: sourceFile.getText()
-      // errors: ['no require("tslib") CallExpression found']
      }
   }
 
