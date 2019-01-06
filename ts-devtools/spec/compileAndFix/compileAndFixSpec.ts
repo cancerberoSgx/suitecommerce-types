@@ -56,8 +56,6 @@ describe('compileAndFix', () => {
     const aFile = readFileSync(`${outputFolder}/src/FrontEndSimple1.ListView.js`).toString()
     expectCodeToContain(aFile, `
     "use strict";
-    //@ts-ignore 
-    //@ts-ignore
     define('FrontEndSimple1.ListView', ['frontend_simple1_listview.tpl', 'Backbone.Model', 'Backbone.View', "tslib"], function (template, BackboneModel, BackboneView, tslib_1) {
         var v = 1234;
         return BackboneView.extend({

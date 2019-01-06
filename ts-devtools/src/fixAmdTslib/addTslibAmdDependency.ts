@@ -34,6 +34,11 @@ export function addTslibAmdDependency(config: FixAmdTslibConfig): FixAmdTslibRes
     dependencyNames.addElement(`"${config.tslibDependencyName || 'tslib'}"`)
     dependencyHandler.addParameter({ name: config.variableName })
   }
+  if(config.formatJsOutput){
+    // TODO: format settings
+    sourceFile.formatText() 
+    sourceFile.organizeImports()
+  }
   return {
     ...result,
     variableName: config.variableName,

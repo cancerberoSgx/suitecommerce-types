@@ -1,8 +1,8 @@
-import { Project, TypeGuards, CallExpression, SyntaxKind, SourceFile } from "ts-simple-ast";
+import { CallExpression, Project, SyntaxKind, TypeGuards } from "ts-simple-ast";
 import { FixAmdTslibConfig, FixAmdTslibResult } from "./types";
 
 
-/** will remove first statement `var $VARNAME = require("tslib")` found anbd return $VARNAME */
+/** will remove first statement `var $VARNAME = require("tslib")` found anb return $VARNAME */
 export function removeVariableDeclaration(config: FixAmdTslibConfig): FixAmdTslibResult {
   const result: FixAmdTslibResult = {
     errors: [],
@@ -11,7 +11,7 @@ export function removeVariableDeclaration(config: FixAmdTslibConfig): FixAmdTsli
   }
   const project = new Project();
   const sourceFile = project.createSourceFile('input.js', config.inputCode)
-  if(config.formatJsOuptut) {
+  if (config.formatJsOutput) {
     sourceFile.formatText()
   }
   const callExpression = sourceFile.getFirstDescendant(node =>
@@ -20,8 +20,10 @@ export function removeVariableDeclaration(config: FixAmdTslibConfig): FixAmdTsli
 
   if (!callExpression) {
     // this means the file is not using any helper / feature
-    return { ...result, outputCode: sourceFile.getText()
-     }
+    return {
+      ...result,
+      outputCode: sourceFile.getText()
+    }
   }
 
   const variableDeclaration = callExpression.getFirstAncestorByKind(SyntaxKind.VariableDeclaration)
@@ -40,6 +42,10 @@ export function removeVariableDeclaration(config: FixAmdTslibConfig): FixAmdTsli
   }
   parent.removeStatement(variableDeclarationStatement.getChildIndex())
 
-  return { ...result, variableName, outputCode: parent.getText() }
+  return {
+    ...result,
+    variableName,
+    outputCode: parent.getText()
+  }
 }
 

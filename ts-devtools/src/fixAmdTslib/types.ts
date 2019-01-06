@@ -2,8 +2,8 @@
 export interface FixAmdTslibConfig {
   inputCode: string
   variableName?: string
-  tslibDependencyName?: string,
-  formatJsOuptut?: boolean
+  tslibDependencyName?: string
+  formatJsOutput?: boolean
 }
 export interface FixAmdTslibResult {
   errors: string[]

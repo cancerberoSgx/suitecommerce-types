@@ -79,7 +79,7 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
         filesWithErrors.push(fileName)
         return undefined
       }
-      // call a post process chain for a last modification and save it
+      // post-process output code for clean-up and we are done:
       result.outputCode = postProcessEmittedJs(result.outputCode)
       writeFileSync(fileName, result.outputCode)
       return { ...result, fileName }
