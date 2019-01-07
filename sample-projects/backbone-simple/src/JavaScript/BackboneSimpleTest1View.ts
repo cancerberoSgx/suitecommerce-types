@@ -1,6 +1,6 @@
-import template from 'backbone_simple_test1_view.tpl';
-import { BackboneView, TemplateContext } from 'sc-types-frontend';
-import BackboneSimpleTest1Model from './BackboneSimpleTest1Model';
+import template from 'backbone_simple_test1_view.tpl'
+import { BackboneView, TemplateContext } from 'sc-types-frontend'
+import BackboneSimpleTest1Model from './BackboneSimpleTest1Model'
 
 export default class extends BackboneView<BackboneSimpleTest1Model, ViewContext> {
 
@@ -20,7 +20,6 @@ export default class extends BackboneView<BackboneSimpleTest1Model, ViewContext>
   }
 
   change(e: JQuery.TriggeredEvent<any, any, any, HTMLButtonElement>) {
-    // change(e: JQuery.ChangeEvent<any, any, any, HTMLButtonElement>) {
       this.model.set('value', e.target.value)
   }
 

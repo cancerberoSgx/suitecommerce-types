@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "type": "extension",
     "target": "SCA,SCS",
-    "description": "My cool extension does magic!",
+    "description": "Backbone simple module using suitecommerce-types",
     "skins": [],
     "assets": {
         "img": {
@@ -14,11 +14,6 @@
         "fonts": {
             "files": []
         }
-    },
-    "configuration": {
-        "files": [
-            "Modules/BackboneSimpleTest1/ns.package.json"
-        ]
     },
     "sass": {
         "entry_points": {
@@ -32,7 +27,8 @@
         "application": {
             "shopping": {
                 "files": [
-                    "Modules/BackboneSimpleTest1/Templates/backbone_simple_test1_view.tpl"
+                    "Modules/BackboneSimpleTest1/Templates/backbone_simple_test1_view.tpl",
+                    "Modules/BackboneSimpleTest1/Templates/backbone_simple_test1_list_view.tpl"
                 ]
             }
         }
@@ -48,7 +44,9 @@
                     "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1.js",
                     "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1Model.js",
                     "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1View.js",
-                    "Modules/BackboneSimpleTest1/Tests/BackboneSimpleTest1EntryPointTest.js"
+                    "Modules/BackboneSimpleTest1/Tests/BackboneSimpleTest1EntryPointTest.js",
+                    "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1Collection.js",
+                    "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1ListView.js"
                 ]
             }
         }

@@ -6,14 +6,14 @@ Related projects:
 
 # Requirements:
 
- * User able to write TypeScript project 
+ * User able to write TypeScript project using latest standards, tsc, npm, etc
    * .js emitted code is :
-   * valid AMD modules just like the rest of SCA
-   * support es5
-   * output .js code is clean (no helper/ pollyfill overhead ) - so if decided project could be maintained from that output .js code and ts code discarded if decided.
+     * valid AMD modules just like the rest of SCA
+     * support es5
+     * clean (no helper/ polly-fill overhead ) - so if decided project could be maintained from that output .js code and ts code discarded if decided. 
+       * Heads up: async/await/generators, es5 output code is not so clean but acceptable. This could be alleviated by emitting / maintaining es6 (and other tool transpile it to es5) - is an inherent consequence of supporting es5... 
    * there should be no performance impact (cannot repeat helpers on each file)
-   * only extra code in separate tslib AMD file required as dependency.
-
+   * only allowed to emit extra helpers/polly-fills in separate tslib AMD file required as dependency so helpers code is not repeated.
 
 # status
 
@@ -38,46 +38,11 @@ Related projects:
 
  # TODO
 
- * import2define copy .tpl, .scss, etc files to output ?
- * generate ns.package.json ?
- * watch mode so it compiles .ts files on change WIP
- * compileTsProject should be executed programmatically now spawning tsc
- * preserve indentation (probably we need to ask the user for a eslintrc and reindent) / or let ts/simple/ast infer it from input ?
-
-
-
-
-# OLD - Possible solution:
-
-1) * compile using:
-
-```
- "target": "es5",
-    "module": "commonjs",
- "noEmitHelpers": true,
- "importHelpers": true,
-```
-
-2) postprocess .js file and change it from this:
-
-```
-
-var tslib_1 = require("tslib");
-define('FrontEndSimpleEntry', ['FrontEndSimple1.ListView'], function (Simple1ListViewConstructor) { return ({
-    mountToApp: function (application) {
-        var _this = this;
-        application.getLayout().on('afterAppendView', function (view) { return tslib_1.__awaiter(_this, void 0, void 0, 
-        ```
-to this:
-
-```
-var tslib_1 = require("tslib");
-define('FrontEndSimpleEntry', ['FrontEndSimple1.ListView', 'tslib'], function (Simple1ListViewConstructor, tslib_1) { return ({
-    mountToApp: function (application) {
-        var _this = this;
-        application.getLayout().on('afterAppendView', function (view) { return tslib_1.__awaiter(_this, void 0, void 0, 
-```
-
-3) pack tslib as a SC module or just a .js file so is easy for users to include it in their SC builds.
-Note: tslib is amd/umd compatible https://github.com/Microsoft/tslib/blob/master/tslib.js so we should publish it as SC module. 
+ * watch mode so it compiles .ts files on change (WIP)
+ * config.nsPackageJson so all other resources like .tpl, .scss, etc declared there are copied to output JS project ?
+   * or generate ns.package.json ?
+ * PERFORMANCE: compileTsProject should be executed programmatically now spawning tsc
+ * PERFORMANCE: we are creating Project and SourceFile on each function - probably we can reuse project / source file instances
+ * PERFORMANCE: Project with virtualFileSystem ? 
+ * preserve indentation (probably we need to ask the user for a eslintrc and re-indent) / or let ts/simple/ast infer it from input ?
 

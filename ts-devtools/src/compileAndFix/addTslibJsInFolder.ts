@@ -2,6 +2,8 @@ import { isAbsolute, join, resolve } from 'path'
 import { config as shellConfig, cp, mkdir } from 'shelljs'
 import { getNodeModulesFolderPath } from '../util/misc'
 import { CompileAndFixConfig } from './compileAndFix'
+import { appendFileSync } from 'fs';
+import { suiteCommerceExtraModules } from '../import2define/import2defineDefaults';
 
 /**
  * @returns the final path where tslib.js was added in the output
@@ -18,5 +20,16 @@ export function addTslibJsInFolder(config: CompileAndFixConfig): string | undefi
     console.log(`--addTslibJsInFolder - copying from '${tslibJsPath}' to '${finalDest}'`)
   }
   cp(tslibJsPath, finalDest)
+
+  // Heads up : adding suiteCommerce extra modules like Backbone.Collection and Backbone.Router so when they are 
+  // required by those names the correct object is returned
+  const tslibDest = join(finalDest, 'tslib.js')
+  suiteCommerceExtraModules.forEach(extraModule => {
+    appendFileSync(tslibDest, `\n${extraModule.text}\n`)
+    if (config.debug) {
+      console.log(`appended suiteCommerceExtraModule '${extraModule.name}' to '${tslibDest}'`)
+    }
+  })
+
   return finalDest
 }

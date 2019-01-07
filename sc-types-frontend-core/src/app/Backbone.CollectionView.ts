@@ -1,26 +1,44 @@
-import { BackboneView, Template, BackboneModel } from "../thirdParty";
-import { Context } from "vm";
-import { ViewOptions } from "backbone";
+import { BackboneView, Template, BackboneModel, TemplateContext, BackboneViewOptions, BackboneCollection } from "../thirdParty";
 
 /**
-A collection view is a concrete tool view for showing a collection of items all of the same type.
-We just create a collection view instance and give it the collection of items (array or backbone collection)
-and the view class used for rendering each item.
-
-It support the high level concept of rows and cells to group / grid the items and let use custom templates
-for cells and rows.
+ * A collection view is a concrete tool view for showing a collection of items all of the same type.
+ * We just create a collection view instance and give it the collection of items (array or backbone collection)
+ * and the view class used for rendering each item.
+ * 
+ * It support the high level concept of rows and cells to group / grid the items and let use custom 
+ * templates for cells and rows.
 */
-export class BackboneCollectionView<m extends BackboneModel=BackboneModel, c extends Context = {}> extends BackboneView<m, c> {
+export class BackboneCollectionView<CustomContext extends TemplateContext = TemplateContext, Model extends BackboneModel = BackboneModel, Context extends (BackboneCollectionViewContext & CustomContext) = (BackboneCollectionViewContext & CustomContext)> extends BackboneView<Model, Context> {
 
-  initialize(options: BackboneCollectionViewOptions<m>): void{
+  initialize(options?: BackboneCollectionViewOptions<Model, CustomContext>): void {
     throw new Error("Method not implemented.");
   }
 
+  /** Generates the context used by the row template. This method is aimed to be overridden */
+  generateRowContext() {
+    throw new Error("Method not implemented.");
+  }
+
+  /** generates the context used by the cell template . can be overridden */
+  generateCellContext(child_view_instance: BackboneView): (any & { spanSize: number }) {
+    throw new Error("Method not implemented.");
+  }
+
+  calculateSpanSize(): number {
+    throw new Error("Method not implemented.");
+  }
+
+  childCells: BackboneView[]
 }
 
-export interface BackboneCollectionViewOptions <m extends BackboneModel=BackboneModel>extends ViewOptions<m>{
+export interface BackboneCollectionViewContext<m extends BackboneModel=BackboneModel> extends TemplateContext {
+  collection: BackboneCollection<m>
+  showCells: boolean
+}
 
-  /**childView the View class of this collection view children */
+export interface BackboneCollectionViewOptions<m extends BackboneModel=BackboneModel, CustomContext extends TemplateContext = TemplateContext> extends BackboneViewOptions<m> {
+
+  /**The View class of this collection view children */
   childView: typeof BackboneView
   /**the options to be passed to children views */
   childViewOptions: any
@@ -29,26 +47,17 @@ export interface BackboneCollectionViewOptions <m extends BackboneModel=Backbone
   rowsCount: number
   /**Template used to override the default child view template */
   childTemplate: Template
+  /**Template used to override the default cell template */
   cellTemplate: Template
+  /**Template used to override the default row template */
   rowTemplate: Template
-  /**Defines the data type values used to find the container element of the cells in a row */
-  cellsContainerId: string
-
-
-
-// 		// @property  {String} cellsContainerId Defines the data type values used to find the container element of the cells in a row
-// 	,	cellsContainerId: 'backbone.collection.view.cells'
-
-// 		// @property  {String} cellContainerId Defines the data type values used to find the container elements of the child view in a cell
-// 	,	cellContainerId: 'backbone.collection.view.cell'
-
-// 		// @property  {String} rowsContainerId Defines the data type values used to find the container elements of the rows in a template
-// 	,	rowsContainerId: 'backbone.collection.view.rows'
-
-// 		// @property {Object} allows the user to define a custom context.
-// 	,	context: {}
-  context: Context
+  /**Defines the data type values used to find the container element of the cells in a row . default: backbone.collection.view.cells*/
+  cellsContainerId: string  
+  /** allows the user to define a custom context.*/
+  context: CustomContext
+  /**Defines the data type values used to find the container elements of the child view in a cell. default: 'backbone.collection.view.cell'*/
   cellContainerId: string
+  /**Defines the data type values used to find the container elements of the rows in a template. default:  'backbone.collection.view.rows'*/
   rowsContainerId: string
 }
 
@@ -290,7 +299,7 @@ export interface BackboneCollectionViewOptions <m extends BackboneModel=Backbone
 // 			,	showCells: !!this.collection.length
 // 			};
 
-// 			return _.extend(context, this.context);
+// 			return _|tend(context, this.context);
 // 		}
 // 	});
 // });

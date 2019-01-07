@@ -30,7 +30,7 @@ export function addTslibAmdDependency(config: FixAmdTslibConfig): FixAmdTslibRes
     if (!TypeGuards.isFunctionExpression(dependencyHandler)) {
       return { ...result, errors: ['define() dependencyHandler argument is not isFunctionExpression'] }
     }
-    //TODO> could be arrow, or even a variable name referencing a function !
+    // TODO: could be arrow, or even a variable name referencing a function !
     dependencyNames.addElement(`"${config.tslibDependencyName || 'tslib'}"`)
     dependencyHandler.addParameter({ name: config.variableName })
   }

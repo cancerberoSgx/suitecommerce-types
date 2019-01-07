@@ -6,7 +6,7 @@ export const defaultCustomImportSpecifiers: CustomImportSpecifier[] = [
   // when user import {Foo} from 'sc-types-frontend' it could be two things: just a type in which case we ignore the import by returning undefined, or some special names that really return SC objects
   {
     predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText() === 'sc-types-frontend',
-    getImportSpecifier: (id: ImportDeclaration, ni: string) => suitecommerceSpecifiers[ni]
+    getImportSpecifier: (id: ImportDeclaration, ni: string) => suiteCommerceSpecifiers[ni]
   },
 
   // // when user import {Foo} from 'suitecommerce' he wants a native SC type like 'Item.Model'. Is the only way of obtatining these in case 'ts-types-frontend' layer don-t support it.
@@ -24,7 +24,8 @@ export const defaultCustomImportSpecifiers: CustomImportSpecifier[] = [
       return name.substring(name.lastIndexOf('/') + 1, name.length);
     }
   }
-];
+]
+
 export const defaultIgnoreImportSpecifiers: IgnoreImportSpecifier[] = [
   // {
   //   predicate: (id: ImportDeclaration) => id.getModuleSpecifier().getLiteralText() === 'sc-types-frontend'
@@ -32,13 +33,28 @@ export const defaultIgnoreImportSpecifiers: IgnoreImportSpecifier[] = [
 ];
 
 
-const suitecommerceSpecifiers: {[name: string]: string} = {
+const suiteCommerceSpecifiers: { [name: string]: string } = {
   'Utils': 'Utils',
-  'BackboneView':'Backbone.View',
+  'BackboneView': 'Backbone.View',
   'BackboneModel': 'Backbone.Model',
   'BackboneCollection': 'Backbone.Collection',
   'BackboneRouter': 'Backbone.Router',
+  'BackboneCachedCollection': 'Backbone.CachedCollection',
+  'BackboneCachedModel': 'Backbone.CachedModel',
   'jQuery': 'jQuery',
-  'underscore': 'underscore', 
-   'PluginContainer': 'PluginContainer'
+  'underscore': 'underscore',
+  'PluginContainer': 'PluginContainer'
 }
+
+export const suiteCommerceExtraModules = [
+  {
+    name: 'Backbone.Collection', 
+    text: `define('Backbone.Collection', ['Backbone'], function(Backbone) {
+  return Backbone.Collection
+})`},
+  {
+    name: 'Backbone.Router', 
+    text: `define('Backbone.Router', ['Backbone'], function(Backbone) {
+  return Backbone.Router
+})`}
+]

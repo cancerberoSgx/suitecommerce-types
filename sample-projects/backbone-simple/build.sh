@@ -16,16 +16,14 @@ npx tsc && \
 mkdir -p  $OUTPUT_FOLDER && \
 node node_modules/.bin/sc-tsc \
   --tsconfigFilePath ./tsconfig.json \
-  --addTslibJsInFolder $OUTPUT_FOLDER/src/JavaScript \
+  --addTslibJsInFolder $OUTPUT_FOLDER \
   --outputFolder $OUTPUT_FOLDER \
-  # --debug \
-  --copyNsPackageJsonResources ./src/ns.package.json \
   && \
-  
 mv $OUTPUT_FOLDER/src/* $OUTPUT_FOLDER && \
 rm -rf $OUTPUT_FOLDER/src/  && \
 cp -r src/ns.package.json src/Sass src/Templates $OUTPUT_FOLDER && \
-# mv $OUTPUT_FOLDER/tslib.js $OUTPUT_FOLDER/JavaScript && \
+mv $OUTPUT_FOLDER/tslib.js $OUTPUT_FOLDER/JavaScript && \
+rm -rf $OUTPUT_FOLDER/../../manifest.json && \
 cp ./manifest.json $OUTPUT_FOLDER/../.. && \
 echo "end" && \
 echo $?

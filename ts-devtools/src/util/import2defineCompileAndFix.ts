@@ -55,13 +55,12 @@ export function import2defineCompileAndFix(config: AllConfig): AllResult {
   if (!config.debug && !config.watch) {
     rm('-rf', outputFolderFirst)
   }
-  // if(config.watch){
+
   startWatch({
     ...config,
-    watch: true,
     filesToWatch: import2defineResult.perFileResults.map(r => r.sourceFile.getFilePath())
   })
-  // }
+
   return { ...import2defineResult, ...result }
 }
 
