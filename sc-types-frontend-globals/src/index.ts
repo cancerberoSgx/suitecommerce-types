@@ -22,9 +22,10 @@ declare var SC: any
  * @param {String} path a relative path to an asset or service
  * @return {String}
  */
- declare var getExtensionAssetsPath: (path:string)=>string
+declare var getExtensionAssetsPath: (path: string) => string
 
- declare module "*.tpl" {
-  const value: (context:any)=>string;
+declare module "*.tpl" {
+  // HEADS up: copied from View.ts since we cannot import if we are declaring ambient modules
+  const value: ((<Context=any> (c: Context) => string) & { Name?: string })
   export default value;
 }

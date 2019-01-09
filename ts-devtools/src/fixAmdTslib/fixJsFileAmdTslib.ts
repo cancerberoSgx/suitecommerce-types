@@ -7,7 +7,13 @@ export function fixJsFileAmdTslib(config: FixAmdTslibConfig): FixAmdTslibResult 
   if (result1.errors.length) {
     return result1
   }
-  const result2 = addTslibAmdDependency({ variableName: result1.variableName, inputCode: result1.outputCode, formatJsOutput: config.formatJsOutput })
+  const result2 = addTslibAmdDependency({ 
+    variableName: result1.variableName, 
+    inputCode: result1.outputCode, 
+    formatJsOutput: config.formatJsOutput, 
+    addExtraAmdDependendenciesForSCAUnitTests: config.addExtraAmdDependendenciesForSCAUnitTests,
+    debug: config.debug
+  })
   //TODO verify that the output code compiles without errors
   return result2
 }

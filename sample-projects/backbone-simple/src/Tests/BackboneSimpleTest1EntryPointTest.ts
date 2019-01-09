@@ -3,16 +3,14 @@ import BackboneSimpleTest1View from '../JavaScript/BackboneSimpleTest1View';
 
 export default describe('CoolFeature view', ()=>{
   it('should render', async done =>{
-    expect(document.querySelector('.jojojo')).toBeFalsy()
-    expect( jQuery('.jojojo').length).toBe(0)
-
+    const selector = '.change'
+    expect(document.querySelector(selector)).toBeFalsy()
+    expect( jQuery(selector).length).toBe(0)
     const view = new BackboneSimpleTest1View()
     view.$el = jQuery('body')
     view.render()
-
-    // ReactLike.renderDOM(document.body, Main)
-    expect(document.querySelector('.jojojo')).toBeTruthy()
-    const c = jQuery('.jojojo')
+    expect(document.querySelector(selector)).toBeTruthy()
+    const c = jQuery(selector)
    expect( c.length).toBe(1)
     done()
   })

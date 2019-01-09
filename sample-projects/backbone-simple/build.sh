@@ -7,8 +7,17 @@
 # npm run build
 # cd $CWD
 
-# OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/BackboneSimpleTest1@1.0.0
-OUTPUT_FOLDER=/home/sg/awa/ext/Workspace/Test3/Modules/BackboneSimpleTest1
+
+# for SCA gulp-local or gulp- unit-test:
+# example gulp-unit-test command:  npx gulp unit-test --modules BackboneSimpleTest1 --dont-exit
+OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/BackboneSimpleTest1@1.0.0
+EXTRA_SCTSC_PARAMS="--addExtraAmdDependendenciesForSCAUnitTests --formatJsOutput"
+
+
+# for SCA production or extensions:
+# OUTPUT_FOLDER=/home/sg/awa/ext/Workspace/Test3/Modules/BackboneSimpleTest1
+# EXTRA_SCTSC_PARAMS=" "
+
 
 rm -rf $OUTPUT_FOLDER/* && \
 npm run clean && \
@@ -18,6 +27,7 @@ node node_modules/.bin/sc-tsc \
   --tsconfigFilePath ./tsconfig.json \
   --addTslibJsInFolder $OUTPUT_FOLDER \
   --outputFolder $OUTPUT_FOLDER \
+  $EXTRA_SCTSC_PARAMS \
   && \
 mv $OUTPUT_FOLDER/src/* $OUTPUT_FOLDER && \
 rm -rf $OUTPUT_FOLDER/src/  && \

@@ -40,6 +40,10 @@ export interface CompileAndFixConfig extends AbstractConfig {
   outputFolder: string
   /** if true it will format generated .js output files using TypeScript formatting API */
   formatJsOutput?: boolean
+
+  /** will add extra AMD dependencies to the end of the list on each file. This is a workaround so SCA gulp local and gulp unit-test works since SCA issue regarding not requiring necessary dependencies automatically */
+  addExtraAmdDependendenciesForSCAUnitTests?: boolean
+
 }
 
 export interface AbstractResult {
@@ -78,7 +82,8 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
     .map(fileName => {
       const result = fixJsFileAmdTslib({
         inputCode: readFileSync(fileName).toString(),
-        formatJsOutput: config.formatJsOutput
+        formatJsOutput: config.formatJsOutput,
+        addExtraAmdDependendenciesForSCAUnitTests: config.addExtraAmdDependendenciesForSCAUnitTests
       })
       errors = errors.concat(result.errors)
       if (error || config.breakOnFirstError && result.errors.length) {

@@ -8,10 +8,16 @@
     ],
     "outDir": "./dist",
     "rootDir": ".",
-    "strict": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
+    // "strict": true,
+    // "strictNullChecks": false,
+    // "noImplicitAny": false,
     
+    "noStrictGenericChecks": true,
+    "strictBindCallApply": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+
+
     "noEmitHelpers": true,
     "importHelpers": true,
     "esModuleInterop": true,

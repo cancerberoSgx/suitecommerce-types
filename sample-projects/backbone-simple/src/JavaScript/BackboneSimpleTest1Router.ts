@@ -1,27 +1,14 @@
-// import { BackboneRouter } from 'sc-types-frontend'
-// import BackboneSimpleTest1ListView from './BackboneSimpleTest1ListView';
-// export default class extends BackboneRouter {
+import { BackboneRouter } from 'sc-types-frontend';
+import BackboneSimpleTest1LandingView from './BackboneSimpleTest1LandingView';
 
-// 	routes = {
-// 		'page/:id': 'page'
-// 	}
+export default class extends BackboneRouter {
 
-// 	initialize(application) {
-// 		this.routes
-// 		this.application = application;
-// 	}
-// 	page(id: string) {
-// 		const view = new BackboneSimpleTest1ListView()
+  routes = {
+    'page/:id': 'page'
+  }
 
-// 		// var model = this.collection.get(id);
-
-// 		// var view = new test22EditView({
-// 		// 	application: this.application
-// 		// ,	collection: this.collection
-// 		// ,	model: model
-// 		// ,	mode: 'edit'
-// 		// });
-
-// 		view.showContent();
-// 	}
-// }
+  page(id: string) {
+    const view = new BackboneSimpleTest1LandingView({ id })
+    view.showContent();
+  }
+}

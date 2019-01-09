@@ -33,16 +33,16 @@ export interface View<Context extends TemplateContext = TemplateContext> {
 	 */
   getContext(): Context
 
-	/**
-	 * 
-	 */
-  destroy(): void
+  // /**
+  //  * 
+  //  */
+  // destroy(): void
 
-  
+
   /** triggered after a view is rendered */
-  on(name: 'afterViewRender', handler: (view: BackboneView)=> void): void
+  on(name: 'afterViewRender', handler: (view: BackboneView) => void): void
   /** triggered when a view's children finish rendering in the DOM */
-  on(name: 'afterCompositeViewRender', handler: (view: BackboneView)=> void): void
+  on(name: 'afterCompositeViewRender', handler: (view: BackboneView) => void): void
 }
 
 export interface BackboneViewOptions<M extends BackboneModel> extends Backbone.ViewOptions<M> {
@@ -58,9 +58,9 @@ export class BackboneView<VModel extends Backbone.Model=BackboneModel, Context e
   getContext(): Context {
     throw new Error("Method not implemented.");
   }
-  destroy(): void {
-    throw new Error("Method not implemented.");
-  }
+  // destroy(): void {
+  //   throw new Error("Method not implemented.");
+  // }
 
   /** instance plugin container that can act on the jquery document fragment just before it's appended to this.$el. */
   preRenderPlugins?: PluginContainer<JQuery<HTMLElement>, [BackboneView]>
@@ -91,127 +91,110 @@ export class BackboneView<VModel extends Backbone.Model=BackboneModel, Context e
   /**notifies when any view was called its initialize() method . TODO: PluginContainer generics*/
   static afterInitialize: PluginContainer<TODO, TODO>
 
-
+  /** internal unique id for this view instance */
   cid: string
 
-  
-  // @property {String} errorMessage Default error message, usally overwritten by server response on error
+  // @property {String} errorMessage Default error message, usually overwritten by server response on error
   errorMessage: string
 
-  // @method showContent @param {Boolean} dont_scroll will eventually be changed to an object literal
-  // @return {jQuery.Deferred}
-  showContent(dont_scroll){
-
-  }
-  
-  // @method showInModal @param {Object} options @return {jQuery.Deferred}
-	showInModal(options){
-
+  /**
+  @param dont_scroll preserve current scroll after showing the view 
+   */
+  showContent(dont_scroll?: boolean): Deferred<void> {
+    throw new Error("Method not implemented.");
   }
 
-  // @method showInPush @param {Object} options @return {jQuery.Deferred}
-	showInPush(options){
-
+  /**@param options We trigger the plugin, it can be passed custom options
+ http://twitter.github.com/bootstrap/javascript.html#modals*/
+  showInModal(options: ShowInModalOptions): Deferred<void> {
+    throw new Error("Method not implemented.");
   }
 
-  // @method getMetaDescription Get view's SEO attributes @return {String}
-	getMetaDescription(): string{
-
+  showInPush(options: ShowInPushOptions): void {
+    throw new Error("Method not implemented.");
   }
 
-  // @method getMetaKeywords @return {String}
-	getMetaKeywords(): string{
-    
-  }
-  {
-    return this.metaKeywords;
+
+  /** Get view's SEO attributes */
+  getMetaDescription(): string {
+    throw new Error("Method not implemented.");
   }
 
-  // @method getAddToHead @return {String}
-	getAddToHead()
-  {
-    return this.addToHead;
+  getMetaKeywords(): string {
+    throw new Error("Method not implemented.");
   }
 
-  // @method getMetaTags @return {Array<HTMLElement>}
-	getMetaTags()
-  {
-    return jQuery('<head/>').html(this.metaTags || '').children('meta');
+  getAddToHead() {
+    throw new Error("Method not implemented.");
   }
 
-  //@method getTitle @returns {String} the document's title to show when this view is active.
-	getTitle()
-  {
-    // @property {String} title this view title. The default behavior is to set the document's title using view.title when calling view.showContent()
-    return this.title;
+  getMetaTags(): JQuery<HTMLMetaElement> {
+    throw new Error("Method not implemented.");
   }
 
-  // @method getPageDescription returns a text describing the page this view is implemented in the case is rendered as a main view with Layout.showContent()
-	getPageDescription()
-  {
-    return this.attributes ? (this.attributes.id || this.attributes['class'] || '') : '';
+
+  /** @returns the document's title to show when this view is active. */
+  getTitle(): string {
+
+    throw new Error("Method not implemented.");
   }
 
-  //@method getCanonical @return {String}
-	getCanonical()
-  {
-    var canonical = window.location.protocol + '//' + window.location.hostname + '/' + Backbone.history.fragment
-    ,	index_of_query = canonical.indexOf('?');
+  /**  title this view title. The default behavior is to set the document's title using view.title when calling view.showContent() */
+  title: string
 
-    // !~ means: indexOf == -1
-    return !~index_of_query ? canonical : canonical.substring(0, index_of_query);
+  /** returns a text describing the page this view is implemented in the case is rendered as a main view with Layout.showContent()*/
+  getPageDescription(): string {
+    throw new Error("Method not implemented.");
   }
 
-  // @method getRelPrev For paginated pages, subclasses should implement this operations to return the url of the previous and next pages
-	getRelPrev: jQuery.noop
-
-  // @method getRelNext For paginated pages, subclasses should implement this operations to return the url of the previous and next pages
-	getRelNext: jQuery.noop
-
-  // @method _destroy "private", shouldn't be overwritten if a custom destroy method is required override the destroy method. This method should still be called
-  // @param {Boolean} softDestroy decides if the view should be empty instead of removed
-	_destroy()
-  {
-
+  getCanonical(): string {
+    throw new Error("Method not implemented.");
   }
 
-  // @method destroy
-	destroy(softDestroy)
-  {
-    this._destroy(softDestroy);
+  /**For paginated pages, subclasses should implement this operations to return the url of the previous and next pages */
+  getRelPrev(): string {
+    throw new Error("Method not implemented.");
   }
 
-  // @method showConfirmationMessage @param {String} message
-	showConfirmationMessage(message, fixed: boolean)
-  {
-    var confirmation_message = this.$('[data-confirm-message]')
-    ,	global_view_message = new GlobalViewsMessageView({
-        message: message
-      ,	type: 'success'
-      ,	closable: true
-    });
-
-    confirmation_message.html(global_view_message.render().$el.html());
-
-    if (!fixed)
-    {
-      setTimeout(function()
-      {
-        confirmation_message.fadeOut(3000);
-      }, 5000);
-    }
+  /** For paginated pages, subclasses should implement this operations to return the url of the previous and next pages*/
+  getRelNext(): string {
+    throw new Error("Method not implemented.");
+  }
+  /**  Shouldn't be overwritten if a custom destroy method is required override the destroy method. This method should /**till be called
+    @param softDestroy decides if the view should be empty instead of removed
+    */
+  protected _destroy(softDestroy?: boolean): void {
+    throw new Error("Method not implemented.");
   }
 
-  // @method showWarningMessage @param {String} message
-	showWarningMessage(message)
-  // @method disableElementsOnPromise Disables and re-enables a given set of elements based on a promise
-  // @param {jQuery.Deferred} promise @param {String} selector
-	disableElementsOnPromise(promise, selector)
+  /** calls backbone.view destroy method and also unregister SC private listeners 
+   * @param softDestroy decides if the view should be empty instead of removed
+  */
+  destroy(softDestroy?: boolean): void {
+    throw new Error("Method not implemented.");
+  }
 
-// ,	getContext: function()
+  /**
+   * 
+   * @param message 
+   * @param fixed if not true the message will be hidden after a few seconds
+   */
+  showConfirmationMessage(message: string, fixed?: boolean): void {
+    throw new Error("Method not implemented.");
+  }
+
+  showWarningMessage(message: string): void {
+    throw new Error("Method not implemented.");
+  }
+  /**  Disables and re-enables a given set of elements based on a promise*/
+  disableElementsOnPromise(promise: Deferred<any>, selector: string): void {
+    throw new Error("Method not implemented.");
+  }
+
+  // ,	getContext: function()
 
 
-// },	SCCancelableEvents);
+  // },	SCCancelableEvents);
 
   //@method addExtraEventHandler Adds an extra event handler to the current view
   //@param {String} event_selector Event specification to be added into the list of event handled by the current view
@@ -219,19 +202,29 @@ export class BackboneView<VModel extends Backbone.Model=BackboneModel, Context e
   //@return {Void}
   //@static
   //@public
-addExtraEventHandler: function addExtraEventHandler (event_selector, callback)
+  addExtraEventHandler(event_selector, callback) {
+
+  }
 
   //@method removeExtraEventHandler Removes an extra event handler of the current view
   //@param {String} event_selector Event specification to be added into the list of event handled by the current view
   //@return {Void}
   //@static
   //@public
-  static removeExtraEventHandler(event_selector: string): void{
+  static removeExtraEventHandler(event_selector: string): void {
 
   }
 
-
-
+  /**
+    Validates is the passed in selector follows the format/standard required by SC Views and used to validate in addExtraEventHandler and removeExtraEventHandler. can be overriden to change this behavior. 
+    
+    format: '<event_name> [data=action="<event_handlerName>"]'
+    
+    @param  event_selector Selector to be validates
+     */
+  protected static _isEventSelectorValid(event_selector): boolean {
+    throw new Error("Method not implemented.");
+  }
 
   /**
    Add childViews to this View
@@ -250,7 +243,7 @@ addExtraEventHandler: function addExtraEventHandler (event_selector, callback)
     throw new Error("Method not implemented.");
   }
 
-  getChildViewInstance(childViewName: string): BackboneView|undefined {
+  getChildViewInstance(childViewName: string): BackboneView | undefined {
     throw new Error("Method not implemented.");
   }
 
@@ -258,9 +251,9 @@ addExtraEventHandler: function addExtraEventHandler (event_selector, callback)
     throw new Error("Method not implemented.");
   }
 
-  contextData: {[contextName: string]: any}
+  contextData: { [contextName: string]: any }
 
-  getContextData(contextNames: string[]): {[contextName: string]: any}{
+  getContextData(contextNames: string[]): { [contextName: string]: any } {
     throw new Error("Method not implemented.");
   }
 
@@ -354,7 +347,7 @@ export type ChildViewDefinition = {
 }
 
 
-export type ChildViewConstructor<V extends BackboneView = BackboneView> = Fn<V, any[]>|typeof BackboneView
+export type ChildViewConstructor<V extends BackboneView = BackboneView> = Fn<V, any[]> | typeof BackboneView
 
 
 /**
@@ -397,4 +390,12 @@ export declare type ChildViewsDefinition = { [containerName: string]: { [id: str
 
 export type TemplateContext = {}
 
-export type Template<Context=TemplateContext> = Fn<string, [Context]>& {Name: string}
+export type Template<Context=TemplateContext> = Fn<string, [Context]> & { Name?: string }
+
+export interface ShowInModalOptions {
+  modalOptions?: TODO
+  className?: string
+}
+export interface ShowInPushOptions {
+  no_destroy?: boolean
+}

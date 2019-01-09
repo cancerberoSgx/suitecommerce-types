@@ -1,6 +1,6 @@
 import { Application } from 'sc-types-frontend'
-import BackboneSimpleTest1View from './BackboneSimpleTest1View'
 import BackboneSimpleTest1ListView from './BackboneSimpleTest1ListView'
+import BackboneSimpleTest1Router from './BackboneSimpleTest1Router';
 
 export default {
   mountToApp(application: Application) {
@@ -18,7 +18,7 @@ export default {
         }
       }
     )
-    
+    new BackboneSimpleTest1Router()
     application.getLayout().on("afterAppendView", async view => {
     })
   }
