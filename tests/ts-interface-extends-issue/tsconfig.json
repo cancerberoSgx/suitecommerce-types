@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution":"node",
+    "lib": [
+      "es2018", "dom","es2018.promise"
+    ],
+    "outDir": "./dist",
+    "rootDir": ".",
+    "strict": false,
+    "esModuleInterop": true,
+    "noStrictGenericChecks": true,
+    "strictBindCallApply": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strictPropertyInitialization": false,
+    // "stripInternal": false,
+    "noImplicitAny": false
+  },
+  "include":["src"],
+  "exclude": ["node_modules", "dist"]
+}

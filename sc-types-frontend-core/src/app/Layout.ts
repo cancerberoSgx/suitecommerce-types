@@ -15,12 +15,13 @@ import { BackboneView } from "../thirdParty";
  * 
  * Managed by {@link Application} host.
  */
-export interface Layout extends View<{}> {
+export interface Layout extends View {
 
   /**
    * Sets the current view
    */
-  showContent(view: View, dont_scroll?: boolean): Deferred
+  showContent(view: View, dont_scroll?: boolean): Deferred<void>
+  showContent(dont_scroll?: boolean): Deferred<void>
 
   /**
    * Gets the current view.
@@ -30,7 +31,8 @@ export interface Layout extends View<{}> {
   /**
    * Shows given view in a modal
    */
-  showInModal(view: View, options?: any): Deferred
+  showInModal(view: View, options?: any): Deferred<void>
+  showInModal(options?: any): Deferred<void>
 
   /**
    * Closes the current opened modal, if any
@@ -38,15 +40,13 @@ export interface Layout extends View<{}> {
   closeModal(): void
 
   /** triggered before this layout view is appended to the DOM. This is NOT a cancelable event! */
-  on(name: 'beforeAppendToDom', handler: Fn): any
+  on(name: 'beforeAppendToDom', handler: (layout: Layout) => void): any
   /** Triggered after this layout view is appended to the DOM */
-  on(name: 'afterAppendToDom', handler: Fn): any
+  on(name: 'afterAppendToDom', handler: (layout: Layout) => void): any
   /** Triggered before the user navigates (current view changes). This is NOT a cancelable event! */
-  on(name: 'beforeAppendView', handler: Fn<void, [BackboneView]>): any
+  on(name: 'beforeAppendView', handler: (view: BackboneView) => void): any
   /** Triggered after the user navigates (current view changes)*/
-  on(name: 'afterAppendView', handler: Fn<void, [BackboneView]>): any
-  /** triggered after a view is rendered */
-  on(name: 'afterViewRender', handler: (view: BackboneView) => void): void
-  /** triggered when a view's children finish rendering in the DOM */
-  on(name: 'afterCompositeViewRender', handler: (view: BackboneView) => void): void
+  on(name: 'afterAppendView', handler: (view: BackboneView) => void): any
+  on(eventName: string, callback?: (...args: any[]) => void, context?: any): any;
+  on(eventMap: Backbone.EventsHash): any;
 }

@@ -1,0 +1,22 @@
+{
+    "name": "ts-devtools-sample-ts-project-mine",
+    "version": "1.0.0",
+    "private": true,
+    "description": "SuiteCommerce Development Tools to develop new themes or extensions",
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
+    "typings": "dist/src/index.d.ts",
+    "scripts": {
+        "build": "npm run clean && tsc &&  node node_modules/.bin/sc-tsc --tsconfigFilePath ./tsconfig.json --addTslibJsInFolder . --outputFolder /Users/sebastiangurin/awa/bundles/18_2_sources/Modules/mine/Mine@1.0.0/ --debug && mv /Users/sebastiangurin/awa/bundles/18_2_sources/Modules/mine/Mine@1.0.0/src /Users/sebastiangurin/awa/bundles/18_2_sources/Modules/mine/Mine@1.0.0/JavaScript",
+        "build-watch": "tsc -w",
+        "clean": "rm -rf dist && rm -rf /Users/sebastiangurin/awa/bundles/18_2_sources/Modules/mine/Mine@1.0.0*"
+    },
+    "keywords": [],
+    "author": "sg",
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {
+        "ts-simple-ast": "^20.0.0",
+        "typescript": "^3.2.2"
+    }
+}
