@@ -43,7 +43,9 @@ const suiteCommerceSpecifiers: { [name: string]: string } = {
   'BackboneCachedModel': 'Backbone.CachedModel',
   'jQuery': 'jQuery',
   'underscore': 'underscore',
-  'PluginContainer': 'PluginContainer'
+  'PluginContainer': 'PluginContainer',
+  'SCAUnitTestHelper': 'UnitTestHelper',
+  'SCAUnitTestHelperPreconditions': 'UnitTestHelper.Preconditions'
 }
 
 export const suiteCommerceExtraModules = [
