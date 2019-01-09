@@ -3,7 +3,7 @@ export interface FixAmdTslibConfig {
   variableName?: string
   tslibDependencyName?: string
   formatJsOutput?: boolean
-  addExtraAmdDependendenciesForSCAUnitTests?: boolean
+  addExtraAmdDependendenciesForSCAUnitTests?: string
   debug?: boolean
 }
 export interface FixAmdTslibResult {

@@ -11,7 +11,7 @@
 # for SCA gulp-local or gulp- unit-test:
 # example gulp-unit-test command:  npx gulp unit-test --modules BackboneSimpleTest1 --dont-exit
 OUTPUT_FOLDER=/home/sg/awa/kilimanjaro/Modules/suitecommerce/BackboneSimpleTest1@1.0.0
-EXTRA_SCTSC_PARAMS="--addExtraAmdDependendenciesForSCAUnitTests --formatJsOutput"
+EXTRA_SCTSC_PARAMS="--addExtraAmdDependendenciesForSCAUnitTests Backbone.View.Plugin.DebugTemplateName --formatJsOutput"
 
 
 # for SCA production or extensions:

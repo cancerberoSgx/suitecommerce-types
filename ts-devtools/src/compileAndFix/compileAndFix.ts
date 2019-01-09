@@ -41,8 +41,8 @@ export interface CompileAndFixConfig extends AbstractConfig {
   /** if true it will format generated .js output files using TypeScript formatting API */
   formatJsOutput?: boolean
 
-  /** will add extra AMD dependencies to the end of the list on each file. This is a workaround so SCA gulp local and gulp unit-test works since SCA issue regarding not requiring necessary dependencies automatically */
-  addExtraAmdDependendenciesForSCAUnitTests?: boolean
+  /** comma separated of extra SCA AMD dependencies that will be added to the end of the list on each file. This is a workaround so SCA gulp local and gulp unit-test works since SCA issue regarding not requiring necessary dependencies automatically */
+  addExtraAmdDependendenciesForSCAUnitTests?: string
 
 }
 

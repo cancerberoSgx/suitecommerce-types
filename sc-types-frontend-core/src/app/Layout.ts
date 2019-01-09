@@ -47,6 +47,10 @@ export interface Layout extends View {
   on(name: 'beforeAppendView', handler: (view: BackboneView) => void): any
   /** Triggered after the user navigates (current view changes)*/
   on(name: 'afterAppendView', handler: (view: BackboneView) => void): any
+  /** triggered after a view is rendered */
+  on(name: 'afterViewRender', handler?: (view: BackboneView) => any, context?: this): any
+  /** triggered when a view's children finish rendering in the DOM */
+  on(name: 'afterCompositeViewRender', handler?: (view: BackboneView) => any, context?: this): any
   on(eventName: string, callback?: (...args: any[]) => void, context?: any): any;
   on(eventMap: Backbone.EventsHash): any;
 }

@@ -1,7 +1,5 @@
-import { Project, TypeGuards, CallExpression, SyntaxKind, SourceFile } from "ts-simple-ast";
-import { FixAmdTslibResult, FixAmdTslibConfig } from "./types";
-import { suiteCommerceExtraDependencies } from "../import2define/import2defineDefaults";
-import { quote } from "../util/misc";
+import { CallExpression, Project, TypeGuards } from "ts-simple-ast";
+import { FixAmdTslibConfig, FixAmdTslibResult } from "./types";
 
 
 /** will remove first statement `var $VARNAME = require("tslib")` found anbd return $VARNAME */
@@ -37,17 +35,17 @@ export function addTslibAmdDependency(config: FixAmdTslibConfig): FixAmdTslibRes
     dependencyHandler.addParameter({ name: config.variableName })
 
     // add extra dependency (SCA issue for running tests). TODO: this shouldn't be here- kind of a hack for gulp unit-test to work on SCA
-    if(config.addExtraAmdDependendenciesForSCAUnitTests){
-      if(config.debug){
-        console.log('addExtraAmdDependendenciesForSCAUnitTests adds: ', suiteCommerceExtraDependencies.map(e=>`'${e}'`));
+    if (config.addExtraAmdDependendenciesForSCAUnitTests) {
+      if (config.debug) {
+        console.log('addExtraAmdDependendenciesForSCAUnitTests adds: ', config.addExtraAmdDependendenciesForSCAUnitTests);
       }
-      dependencyNames.addElements(suiteCommerceExtraDependencies.map(e=>`'${e}'`))
+      dependencyNames.addElements(config.addExtraAmdDependendenciesForSCAUnitTests.split(',').filter(e => e).map(e => `'${e}'`))
     }
 
   }
-  if(config.formatJsOutput){
+  if (config.formatJsOutput) {
     // TODO: format settings
-    sourceFile.formatText() 
+    sourceFile.formatText()
     // sourceFile.organizeImports()
   }
   return {

@@ -1,4 +1,4 @@
-import { jQuery, SCAUnitTestHelper, SCAUnitTestHelperPreconditions } from 'sc-types-frontend';
+import { jQuery, SCAUnitTestHelper, SCAUnitTestHelperPreconditions, ModuleEntryPoint } from 'sc-types-frontend';
 import BackboneSimpleTest1View from '../JavaScript/BackboneSimpleTest1View';
 
 export default describe('Test1View', () => {
@@ -18,8 +18,13 @@ export default describe('Test1View', () => {
   })
 
   it('should render in an application\'s layout', async done => {
+
+    // heads up we know the module is loaded locally with --addExtraAmdDependendenciesForSCAUnitTests - since these tests run locally
+    const DebugTemplateNamePluginModule = require<ModuleEntryPoint>('Backbone.View.Plugin.DebugTemplateName')
+
     const helper = new SCAUnitTestHelper({
-      startApplication: true
+      startApplication: true,
+      mountModules: [DebugTemplateNamePluginModule]
     })
     const view = new BackboneSimpleTest1View()
 
@@ -27,20 +32,21 @@ export default describe('Test1View', () => {
     expect(document.querySelector(selector)).toBeFalsy()
     expect(jQuery(selector).length).toBe(0)
 
-    helper.application.getLayout().on('afterAppendToDom', (...args: any[])=>{
-      console.log('layout afterAppendToDom args', args)
+    // testing Layout events typings
+    helper.application.getLayout().on('afterAppendToDom', layout=>{
+      console.log('layout afterAppendToDom args', layout, layout.getCurrentView().template.Name)
     })
-    helper.application.getLayout().on('afterViewRender', (...args: any[])=>{
-      console.log('layout afterViewRender view id', args)
+    helper.application.getLayout().on('beforeAppendToDom', layout=>{
+      console.log('layout beforeAppendToDom args', layout, layout.getCurrentView().template.Name)
     })
-    helper.application.getLayout().on('beforeAppendToDom', (...args: any[])=>{
-      console.log('layout beforeAppendToDom args', args)
+    helper.application.getLayout().on('afterViewRender',view=>{
+      console.log('layout afterViewRender', view, view.template.Name)
     })
-    helper.application.getLayout().on('beforeAppendView', (...args: any[])=>{
-      console.log('layout beforeAppendView args', args)
+    helper.application.getLayout().on('beforeAppendView', view=>{
+      console.log('layout beforeAppendView args', view, view.template.Name)
     })
-    helper.application.getLayout().on('afterAppendView', (...args: any[])=>{
-      console.log('layout afterAppendView args', args)
+    helper.application.getLayout().on('afterAppendView', view=>{
+      console.log('layout afterAppendView args', view, view.template.Name)
     })
 
     helper.application.getLayout().showContent(view)

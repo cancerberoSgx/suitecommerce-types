@@ -61,5 +61,5 @@ export const suiteCommerceExtraModules = [
 })`}
 ]
 
-/**hack so SCA unit tests works - workaround for SCA issue with missing dependencies. addTslibAmdDependency() will add this extra SCA dependencies to all modules at the end so we make sure they are loaded / on gulp local / gulp unit-test on SCA */
-export const suiteCommerceExtraDependencies = ['Backbone.View.render']
+// /**hack so SCA unit tests works - workaround for SCA issue with missing dependencies. addTslibAmdDependency() will add this extra SCA dependencies to all modules at the end so we make sure they are loaded / on gulp local / gulp unit-test on SCA */
+// export const suiteCommerceExtraDependencies = ['Backbone.View.render']
