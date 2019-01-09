@@ -45,6 +45,7 @@
                     "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1Model.js",
                     "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1View.js",
                     "Modules/BackboneSimpleTest1/Tests/BackboneSimpleTest1EntryPointTest.js",
+                    "Modules/BackboneSimpleTest1/Tests/BackboneSimpleTest1View1Test.js",
                     "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1Collection.js",
                     "Modules/BackboneSimpleTest1/JavaScript/BackboneSimpleTest1ListView.js"
                 ]

@@ -1,7 +1,7 @@
-this is a sample extension using ts-devtools and sc-types-frontend that accomplishes two nice things:
+## Using TSX / JSX (react like syntax but no framework) to write view's templates
 
-first is using JavaScript/ReactList.ts utility to render JSX (see JavaScript/Main.tsx) - is not react, just tsx/jsx rendering. needs @types/react for bindings. 
-
-Then its able to run in SCA unit-tests, see build.sh, basically can be compiled into a SCA module folder using ts-devtools. It has a ns.package.json and Tests/ files with an entry point. Tests verify that JSX and Deferred with await/async works in the real browser 
-
-See sample-projects/tsx-test/SCA_module_output/MyCoolModule@1.0.0 for the output generated code
+ * build file: [build.sh](build.sh)
+ * [jsOuput](jsOutput)
+ * Entry point: https://github.com/cancerberoSgx/suitecommerce-types/blob/master/sample-projects/jsx-view-tests/src/JavaScript/CoolFeature56.ts
+ * View using JSX for template: https://github.com/cancerberoSgx/suitecommerce-types/blob/master/sample-projects/jsx-view-tests/src/JavaScript/CoolFeature56MainView2.tsx
+ * Backbone.Model https://github.com/cancerberoSgx/suitecommerce-types/blob/master/sample-projects/jsx-view-tests/src/JavaScript/CoolFeature56Model.ts
