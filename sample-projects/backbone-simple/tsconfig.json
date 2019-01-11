@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    // "moduleResolution":"node",
+    "moduleResolution":"node",
     "lib": [
       "es2018", "dom","es2018.promise"
     ],
@@ -23,7 +23,7 @@
     "esModuleInterop": true,
     // "sourceMap": true,
     // "skipDefaultLibCheck": true,
-    "skipLibCheck": true,
+    // "skipLibCheck": true,
     "jsx": "react",
     "jsxFactory": "ReactLike.createElement",
     // "target": "es5",
