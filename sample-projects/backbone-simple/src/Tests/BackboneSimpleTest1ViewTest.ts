@@ -5,6 +5,7 @@ export default describe('Test1View', () => {
   beforeEach(()=>{
     SCAUnitTestHelperPreconditions.setDefaultEnvironment()
   })
+  
   it('should render alone', async done => {
     const selector = '.change'
     expect(document.querySelector(selector)).toBeFalsy()
@@ -50,7 +51,6 @@ export default describe('Test1View', () => {
     })
 
     helper.application.getLayout().showContent(view)
-    helper.application.getLayout().$
     expect(document.querySelector(selector)).toBeTruthy()
     expect(jQuery(selector).length).toBe(1)
     done()

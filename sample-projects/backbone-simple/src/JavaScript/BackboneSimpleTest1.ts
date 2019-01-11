@@ -18,7 +18,8 @@ export default {
         }
       }
     )
-    new BackboneSimpleTest1Router()
+    const r = new BackboneSimpleTest1Router()
+    r.application = application
     application.getLayout().on("afterAppendView", async view => {
     })
   }

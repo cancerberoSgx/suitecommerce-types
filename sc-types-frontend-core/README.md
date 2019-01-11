@@ -26,3 +26,8 @@ Note: in so there are some special cases when there are also class declarations 
  * TODO the rest
 
 When you require these, they will be replaced with SC native objects, for example "BackboneView" will bring "Backbone.View" SCA module
+
+# TODO
+
+ * SCA module with unit tests testing *core APIs
+ * issue to deftyped/backbone because Router routes property should be a ,ethod (it needs to be in the prottype for it to work at least on our backbone.js version) .  Just like View events() is a method - I think is the same thing...

@@ -1,56 +1,51 @@
-import { ModuleEntryPoint, Backbone, SCAUnitTestHelper, SCAUnitTestHelperPreconditions } from 'sc-types-frontend';
+import { Backbone, SCAUnitTestHelper } from 'sc-types-frontend';
+import BackboneSimpleTest1Router from '../JavaScript/BackboneSimpleTest1Router';
 
-export default describe('Test1Router', () => {
-  beforeEach(()=>{
-    SCAUnitTestHelperPreconditions.setDefaultEnvironment()
-    try {Backbone.history.start();}catch(ex){}
+export default describe('BackboneSimpleTest1Router', () => {
+
+  it('handle page/1', async done => {
+    let s = ''
+    Backbone.history.stop()
+    const r = new BackboneSimpleTest1Router()
+    r.debugRouteListener= (page, args)=>{
+      s = page + args.join(', ')
+    }
+    Backbone.history.start()
+    Backbone.history.navigate('nonExistent', { trigger: true })
+    Backbone.history.navigate('page/1', { trigger: true })
+    expect(s).toContain('page1')
+    Backbone.history.navigate('page/2', { trigger: true })
+    expect(s).toContain('page2')
+    Backbone.history.stop()
+    Backbone.history.navigate('', { trigger: true })
+    done()
   })
 
-  afterEach(function(){
-    Backbone.history.navigate('', {trigger: false});
-    try
-    {
-      Backbone.history.stop();
-    }
-    catch(e)
-    {
-      console.log(e);
-    }
-  });
+  it('instantiated in application module shows view', async done => {
+    Backbone.history.stop()
+    new SCAUnitTestHelper({
+      startApplication: app=>{
+        expect(jQuery('#content #1').length).toBe(0)
+        Backbone.history.start()
+        Backbone.history.navigate('nonExistent', { trigger: true })
+        Backbone.history.navigate('page/1', { trigger: true })
+        expect(jQuery('#content #1').length).toBe(1)
+        Backbone.history.navigate('page/2', { trigger: true })
+        expect(jQuery('#content #1').length).toBe(0)
+        expect(jQuery('#content #2').length).toBe(1)
+        Backbone.history.stop()
+        Backbone.history.navigate('', { trigger: true })
+        done()
 
-  it('show View1 when navigating to page/$id', async done => {
-    const helper = new SCAUnitTestHelper({
-      startApplication: true,
-      mountModules: [require<ModuleEntryPoint>('BackboneSimpleTest1')]
+      },
+      mountModules: [{
+        mountToApp(app){
+          const r = new BackboneSimpleTest1Router()
+          r.application = app
+        }
+      }]
     })
-    // Backbone.
-    // const view = new BackboneSimpleTest1View()
-    // const selector = '#main #layout #content .change'
-    // expect(document.querySelector(selector)).toBeFalsy()
-    // expect(jQuery(selector).length).toBe(0)
-
-    // testing Layout events typings
-    helper.application.getLayout().on('afterAppendToDom', layout=>{
-      console.log('layout afterAppendToDom args', layout, layout.getCurrentView().template.Name)
-    })
-    helper.application.getLayout().on('beforeAppendToDom', layout=>{
-      console.log('layout beforeAppendToDom args', layout, layout.getCurrentView().template.Name)
-    })
-    helper.application.getLayout().on('afterViewRender',view=>{
-      console.log('layout afterViewRender', view, view.template.Name)
-    })
-    helper.application.getLayout().on('beforeAppendView', view=>{
-      console.log('layout beforeAppendView args', view, view.template.Name)
-    })
-    helper.application.getLayout().on('afterAppendView', view=>{
-      console.log('layout afterAppendView args', view, view.template.Name)
-    })
-
-    // helper.application.getLayout().showContent(view)
-    // helper.application.getLayout().$
-    // expect(document.querySelector(selector)).toBeTruthy()
-    // expect(jQuery(selector).length).toBe(1)
-    done()
+    
   })
 
 })
