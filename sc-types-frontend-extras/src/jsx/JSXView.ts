@@ -19,7 +19,7 @@ export default class JSXView<Model extends BackboneModel, Context extends Templa
       execute($fragment, view) {
         if (isJSXView(view)) {
           const rendered = view.jsxTemplate(view.getContext());
-          if(ReactLike.searchFor__this && view.supportsFunctionAttributes){            
+          if(ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes){            
             (rendered as any).__this = view
           }
           ReactLike.renderJQuery($fragment, rendered)

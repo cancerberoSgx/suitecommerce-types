@@ -1,3 +1,4 @@
+
 const ReactLike_ = {
   /**
    * React-like createElement function so we can use JSX in our TypeScript/JavaScript code.
@@ -11,8 +12,13 @@ const ReactLike_ = {
           element.setAttribute(name, name)
         }
         else if (typeof value === 'function') {
-          // see JSXView.render if supportsFunctionAttributes=== true there could be some parent that could have the _this view context as property. 
-          element.setAttribute(name, `var _this =  (ReactLike.searchFor__this && ReactLike.searchFor__this(this)) || this; (${value.toString()}).apply(_this, arguments)`)
+          if (ReactLike_.supportFunctionAttributes) {
+            // see JSXView.render if supportsFunctionAttributes=== true there could be some parent that could have the _this view context as property. 
+            element.setAttribute(name, `var _this = ReactLike._searchForThisView(this) || this; (${value.toString()}).apply(_this, arguments)`)
+          }
+          else {
+            element.setAttribute(name, `(${value.toString()}).apply(this, arguments)`)
+          }
         }
         else if (value !== false && value != null) {
           if (name === 'className') {
@@ -42,15 +48,18 @@ const ReactLike_ = {
     parent.append(jQuery(el as any))
   },
 
-  /** partial support for attribute functions like events, Experimental, not recommended, set it to falsy to disable at all , or just use backbone's view events. */
-  searchFor__this: function (el: HTMLElement) {
-    return el && ((el as any).__this || ReactLike_.searchFor__this(el.parentElement))
-  }
-  
+  _searchForThisView: function (el: HTMLElement) {
+    return el && ((el as any).__this || ReactLike_._searchForThisView(el.parentElement))
+  },
+
+  /** partial support for JSX attribute functions like event handlers. 
+   * Experimental!, not recommended, set it to falsy to disable at all, or just use backbone's view events. 
+   * If true, handlers will only have access to attributes and this, but they won't be able to reference 
+   * other variables in the scope of the JSX. Also there could be some performance impact on event handling. 
+   * */
+  supportFunctionAttributes: false
 };
 
 (self as any).ReactLike = ReactLike_
-
-
 
 export default ReactLike_;

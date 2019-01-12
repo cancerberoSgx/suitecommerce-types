@@ -26,7 +26,7 @@ define('JSXView', ['Backbone.Model', 'Backbone.View', 'PluginContainer', 'ReactL
                 execute: function ($fragment, view) {
                     if (isJSXView(view)) {
                         var rendered = view.jsxTemplate(view.getContext());
-                        if (ReactLike.searchFor__this && view.supportsFunctionAttributes) {
+                        if (ReactLike.supportFunctionAttributes && view.supportsFunctionAttributes) {
                             rendered.__this = view;
                         }
                         ReactLike.renderJQuery($fragment, rendered);
