@@ -49,7 +49,7 @@ export function import2defineCompileAndFix(config: AllConfig): AllResult {
     ...config,
     tsconfigFilePath: `${inputFolder}/tsconfig.json`,
     breakOnFirstError: true,
-    addTslibJsInFolder: `src`
+    addTslibJsInFolder: config.addTslibJsInFolder && `src`
   })
 
   if (!config.debug && !config.watch) {

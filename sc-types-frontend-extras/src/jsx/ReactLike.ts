@@ -18,7 +18,7 @@ const ReactLike_ = {
         }
       }
     }
-    children.forEach(child => {
+    children.filter(c=>c).forEach(child => {
       if (typeof child === 'string') {
         element.appendChild(document.createTextNode(child.toString()))
       }

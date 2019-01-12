@@ -1,20 +1,23 @@
 import { ImportDeclaration } from "ts-simple-ast";
 import { CustomImportSpecifier, IgnoreImportSpecifier } from "./import2define";
+import { parseJSONFile } from "misc-utils-of-mine";
+import { join, dirname } from "path";
+import { getPathRelativeToProjectFolder } from "../util/misc";
+import { ls } from "shelljs";
+import { readFileSync } from "fs";
 
 export const defaultCustomImportSpecifiers: CustomImportSpecifier[] = [
 
   // when user import {Foo} from 'sc-types-frontend' it could be two things: just a type in which case we ignore the import by returning undefined, or some special names that really return SC objects
   {
-    predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText() === 'sc-types-frontend',
+    predicate: (id: ImportDeclaration, ni: string) => ['sc-types-frontend', 'sc-types-frontend-core'].includes(id.getModuleSpecifier().getLiteralText()),
     getImportSpecifier: (id: ImportDeclaration, ni: string) => suiteCommerceSpecifiers[ni]
   },
 
-  // // when user import {Foo} from 'suitecommerce' he wants a native SC type like 'Item.Model'. Is the only way of obtatining these in case 'ts-types-frontend' layer don-t support it.
-  // // Important: is not possible to import a name with dots like import {'Item.Model'} from 'suitecommerce' so some man in the middle must map these names somehow... TODO. We could workaround somehow like this: import ItemModel from 'suitecommerce/ItemModel';
-  // {
-  //   predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText() === 'suitecommerce',
-  //   getImportSpecifier: (id: ImportDeclaration, ni: string) => ni
-  // },
+  {
+    predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText() === 'sc-types-frontend-extras',
+    getImportSpecifier: (id: ImportDeclaration, ni: string) => ni
+  },
 
   // when user import template from './some_template.tpl' we return just the file name 'some_template.tpl'
   {
@@ -49,18 +52,29 @@ const suiteCommerceSpecifiers: { [name: string]: string } = {
   'SCAUnitTestHelperPreconditions': 'UnitTestHelper.Preconditions'
 }
 
-export const suiteCommerceExtraModules = [
-  {
-    name: 'Backbone.Collection', 
-    text: `define('Backbone.Collection', ['Backbone'], function(Backbone) {
-  return Backbone.Collection
-})`},
-  {
-    name: 'Backbone.Router', 
-    text: `define('Backbone.Router', ['Backbone'], function(Backbone) {
-  return Backbone.Router
-})`}
-]
+let  suiteCommerceExtraModules : {name: string, text: string }[]
 
-// /**hack so SCA unit tests works - workaround for SCA issue with missing dependencies. addTslibAmdDependency() will add this extra SCA dependencies to all modules at the end so we make sure they are loaded / on gulp local / gulp unit-test on SCA */
-// export const suiteCommerceExtraDependencies = ['Backbone.View.render']
+
+/** if project has dependency 'sc-types-frontend-extras' then it will copy certain compiled extra modules from there to tslib.js like 'JSXView.js', 'ReactLike.js' */
+export function getSuiteCommerceExtraModules(): { name: string, text: string }[] {
+  if(suiteCommerceExtraModules){
+    return suiteCommerceExtraModules
+  }
+  const base = join('node_modules', 'sc-types-frontend-extras', 'compiled', 'src', 'jsx')
+  suiteCommerceExtraModules = ls(base)
+    .filter(f => f.endsWith('.js') && f !== 'index.js')
+    .map(name => ({ name, text: readFileSync(join(base, name)).toString() }))
+    .concat([
+      {
+        name: 'Backbone.Collection.js',
+        text: `define('Backbone.Collection', ['Backbone'], function(Backbone) {
+      return Backbone.Collection
+    })`},
+      {
+        name: 'Backbone.Router.js',
+        text: `define('Backbone.Router', ['Backbone'], function(Backbone) {
+      return Backbone.Router
+    })`}
+    ])
+    return suiteCommerceExtraModules
+}

@@ -35,7 +35,7 @@ export interface AbstractConfig {
 }
 
 export interface CompileAndFixConfig extends AbstractConfig {
-  /** if set, it will add tslib.js (AMD module) in given path that must be relative to `tsconfigJsonPath`*/
+  /** if set, it will add tslib.js (AMD module) and other extra modules, in given path. If path is relative it will be  relative to `tsconfigJsonPath`. If you don't pass the argument the value will be 'src'. Passing value '0' won't add any file (internal use) */
   addTslibJsInFolder?: string
   outputFolder: string
   /** if true it will format generated .js output files using TypeScript formatting API */
@@ -110,25 +110,25 @@ export function compileAndFix(config: CompileAndFixConfig): CompileAndFixResult 
 }
 
 function postProcessEmittedJs(s: string): string {
-  s = removeObjectDefineTopDeclaration(s)
+  // s = removeObjectDefineTopDeclaration(s)
   s = removeUnwantedLines(s)
   return s
 }
 
-function removeObjectDefineTopDeclaration(s: string): string {
-  //removing ts commonsjs module Object.define... statement since it breaks with 'exports' is not defined in the browser since we are not bundling
-  // TODO: do this better / quotes/format might change and this fails
-  const toRemove = `Object.defineProperty(exports, "__esModule", { value: true });`
+// function removeObjectDefineTopDeclaration(s: string): string {
+//   //removing ts commonsjs module Object.define... statement since it breaks with 'exports' is not defined in the browser since we are not bundling
+//   // TODO: do this better / quotes/format might change and this fails
+//   const toRemove = `Object.defineProperty(exports, "__esModule", { value: true });`
 
-  return s.replace(toRemove, ``)
+//   return s.replace(toRemove, ``)
 
-  //TODO: remove these strings: 
-  // /*return*/
-  // /** @class */
-  // //@ts-ignore
-  //  /*yield*/
+//   //TODO: remove these strings: 
+//   // /*return*/
+//   // /** @class */
+//   // //@ts-ignore
+//   //  /*yield*/
 
-}
+// }
 
 function removeUnwantedLines(s: string): string {
   //removing require("sc-types-frontend") declarations that might be still there and break SC
@@ -137,8 +137,10 @@ function removeUnwantedLines(s: string): string {
     .filter(line => !(
       line.includes(`require("sc-types`) ||
       line.includes(`require('sc-types`) ||
-      line.match(/^\s*\/\/\s*@ts\-ignore\s*$/)) ||
-      line.trim() === ('"use strict";')
+      line.match(/^\s*\/\/\s*@ts\-ignore\s*$/) ||
+      (line.trim() === '"use strict";') ||
+      (line.trim() === `Object.defineProperty(exports, "__esModule", { value: true });`)
+      )
     )
   return lines.join('\n')
 }

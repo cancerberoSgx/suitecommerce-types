@@ -6,12 +6,12 @@
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
-        "build": "tsc",
+        "build": "rm -rf dist && tsc && npm run sc-tsc",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist",
         "test-js": "npm run clean && npm run build && node dist/spec",
         "test": "ts-node spec",
-        "sc-tsc": "rm -rf compiled && npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder compiled"
+        "sc-tsc": "rm -rf compiled && npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder compiled --addTslibJsInFolder"
     },
     "repository": {
         "type": "git",
@@ -42,6 +42,7 @@
         "sc-tsc": "file:../ts-devtools",
         "shelljs": "^0.8.3",
         "ts-node": "^7.0.1",
+        "tslib": "^1.9.3",
         "typescript": "^3.2.2"
     }
 }

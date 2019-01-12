@@ -15,7 +15,7 @@ node node_modules/.bin/sc-tsc \
   && \
 mv $OUTPUT_FOLDER/src/* $OUTPUT_FOLDER && \
 rm -rf $OUTPUT_FOLDER/src/  && \
-cp -r src/ns.package.json src/Sass src/Templates $OUTPUT_FOLDER && \
-mv $OUTPUT_FOLDER/tslib.js $OUTPUT_FOLDER/JavaScript && \
+cp -r src/ns.package.json $OUTPUT_FOLDER && \
+mv $OUTPUT_FOLDER/*.js $OUTPUT_FOLDER/JavaScript && \
 echo "end" && \
 echo $?

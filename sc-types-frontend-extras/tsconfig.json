@@ -38,7 +38,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "jsx": "react",
-    "jsxFactory": "ReactLike.createElement"
+    "jsxFactory": "ReactLike.createElement",
+    "declaration": true
   },
   "include":["src"],
   "exclude": ["node_modules", "dist", "compiled"]

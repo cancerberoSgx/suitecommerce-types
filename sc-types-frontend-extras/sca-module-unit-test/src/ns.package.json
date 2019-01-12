@@ -7,7 +7,7 @@
             "Tests/**/*.js"
         ],
         "unit-test-entry-point": [
-            "Tests/EntryPointTest.js"
+            "Tests/SCTypesFrontendExtrasTests.js"
         ]
     }
 }

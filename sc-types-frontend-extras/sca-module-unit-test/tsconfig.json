@@ -2,28 +2,24 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    // "moduleResolution":"node",
     "lib": [
       "es6", "dom"
     ],
     "outDir": "./dist",
     "rootDir": ".",
-    "strict": true,
+
+    "noStrictGenericChecks": true,
+    "strictBindCallApply": false,
     "strictNullChecks": false,
-    "noImplicitAny": false,
+    "strictFunctionTypes": false,
+
     
     "noEmitHelpers": true,
     "importHelpers": true,
     "esModuleInterop": true,
-    // "sourceMap": true,
-    // "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "jsx": "react",
-    "jsxFactory": "ReactLike.createElement",
-    // "target": "es5",
-    // "module": "none",
-    
-    // "declaration": true,
+    "jsxFactory": "ReactLike.createElement"
   },
   "include":["src"],
   "exclude": ["node_modules", "dist"],

@@ -1,9 +1,5 @@
-"use strict";
-
 define('index', [], function () {
-    export * from './JSXTemplate';
-    export * from './JSXView';
-    export * from './JSXTemplate';
-    export * from './ReactLike';
+    export { default as JSXView } from './JSXView';
+    export { default as ReactLike } from './ReactLike';
     return undefined;
 });

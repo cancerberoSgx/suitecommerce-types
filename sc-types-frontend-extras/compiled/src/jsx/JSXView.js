@@ -1,6 +1,4 @@
-"use strict";
-
-define('JSXView', ['Backbone.Model', 'Backbone.View', 'PluginContainer', 'JSXTemplate', 'ReactLike', "tslib"], function (BackboneModel, BackboneView, PluginContainer, JSXTemplate, ReactLike, tslib_1) {
+define('JSXView', ['Backbone.Model', 'Backbone.View', 'PluginContainer', 'ReactLike', "tslib"], function (BackboneModel, BackboneView, PluginContainer, ReactLike, tslib_1) {
     function isJSXView(view) {
         return view.jsxTemplate;
     }

@@ -1,34 +1,46 @@
-import { dirname } from "path";
-import { cat, cd, exec, pwd, rm } from "shelljs";
+import { dirname, join } from "path";
+import { cat, cd, exec, pwd, rm, config } from "shelljs";
 import { getPathRelativeToProjectFolder } from "../../src/util/misc";
+import { readFile, readFileSync } from "fs";
 
-describe('addTslibJsInFolder', () => {
+fdescribe('addTslibJsInFolder', () => {
 
-  let cwd: string, tslib: string
+  let cwd: string, tslib: string, tslibOutputFolder: string, p: any
   
   beforeAll(() => {
     cwd = pwd()
     const outputFolder = getPathRelativeToProjectFolder('tmp/using-sc-types-frontend-extras')
     const tsconfigFilePath = getPathRelativeToProjectFolder(`spec/fixtures/using-sc-types-frontend-extras/tsconfig.json`)
+    tslibOutputFolder = getPathRelativeToProjectFolder('tmp/using-sc-types-frontend-extras-tslib')
     rm('-rf', outputFolder)
+    rm('-rf', tslibOutputFolder)
     cd(dirname(tsconfigFilePath))
-    const p = exec(`npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder ${outputFolder}`)
-    expect(p.code).toBe(0)
-    tslib = cat(`${outputFolder}/src/tslib.js`).toString()
+    // config.silent=false
+    p = exec(`npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder ${outputFolder} --addTslibJsInFolder ${tslibOutputFolder} --debug`)
+    // tslib = cat(`${outputFolder}/src/tslib.js`).toString()
   })
 
   afterAll(() => {
     cd(cwd)
   })
 
+
+  it('Should not throw errors', () => {
+    expect(p.code).toBe(0)
+  })
+
+  it('Should add tslib.js', () => {
+    expect(readFileSync(join(tslibOutputFolder, 'Backbone.Collection.js')).toString()).toBeDefined()
+  })
+
   it('Should add extra modules', () => {
-    expect(tslib).toContain(`define('Backbone.Collection'`)
-    expect(tslib).toContain(`define('Backbone.Router'`)
+    expect(readFileSync(join(tslibOutputFolder, 'Backbone.Collection.js')).toString()).toContain(`define('Backbone.Collection'`)
+    expect(readFileSync(join(tslibOutputFolder, 'Backbone.Router.js')).toString()).toContain(`define('Backbone.Router'`)
   })
 
   it('Should add sc-types-frontend-extras modules', () => {
-    expect(tslib).toContain(`define('ReactLike'`)
-    expect(tslib).toContain(`define('JSXView'`)
+    expect(readFileSync(join(tslibOutputFolder, 'ReactLike.js')).toString()).toContain(`define('ReactLike'`)
+    expect(readFileSync(join(tslibOutputFolder, 'JSXView.js')).toString()).toContain(`define('JSXView'`)
   })
 
 })

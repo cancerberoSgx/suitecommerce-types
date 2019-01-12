@@ -241,11 +241,3 @@ var __importDefault;
     exporter("__importStar", __importStar);
     exporter("__importDefault", __importDefault);
 });
-
-define('Backbone.Collection', ['Backbone'], function(Backbone) {
-  return Backbone.Collection
-})
-
-define('Backbone.Router', ['Backbone'], function(Backbone) {
-  return Backbone.Router
-})

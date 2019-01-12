@@ -1,5 +1,3 @@
-"use strict";
-
 define('ReactLike', [], function () {
     var ReactLike_ = {
         /**
@@ -26,7 +24,7 @@ define('ReactLike', [], function () {
                     }
                 }
             }
-            children.forEach(function (child) {
+            children.filter(function (c) { return c; }).forEach(function (child) {
                 if (typeof child === 'string') {
                     element.appendChild(document.createTextNode(child.toString()));
                 }
