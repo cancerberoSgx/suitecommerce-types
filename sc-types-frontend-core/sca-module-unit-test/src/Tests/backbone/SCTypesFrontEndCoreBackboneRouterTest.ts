@@ -196,7 +196,6 @@ export default describe('sc-types-frontend-core Backbone.Router', () => {
         Backbone.history.stop()
         Backbone.history.navigate('', { trigger: true })
         done()
-
       },
       mountModules: [{
         mountToApp(app){

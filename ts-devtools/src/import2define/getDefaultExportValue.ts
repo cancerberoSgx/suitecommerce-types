@@ -1,6 +1,6 @@
 import { Node, SourceFile, Statement, SyntaxKind, TypeGuards } from "ts-simple-ast";
-import { shorter } from "../util/misc";
 import { Import2DefineConfig } from "./import2define";
+import { shorter } from "misc-utils-of-mine";
 
 
 export function getDefaultExportValue(f: SourceFile, config?: Import2DefineConfig): DefaultExportInfo {

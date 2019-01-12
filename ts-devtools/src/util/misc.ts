@@ -10,10 +10,3 @@ export function getPathRelativeToProjectFolder(s: string): string {
   return resolve(join(getNodeModulesFolderPath(), '..', s))
 }
 
-export function shorter(text: string, much: number = 10): string {
-  return text.trim().substring(0, Math.min(text.length, much)) + '...'
-}
-
-export function quote(s:string, q:string='"'):string {
-  return q+s.replace(new RegExp(q, 'g'), '\\'+q)+q
-}

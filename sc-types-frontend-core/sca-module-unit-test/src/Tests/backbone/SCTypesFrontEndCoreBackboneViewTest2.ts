@@ -72,11 +72,12 @@ export default describe('View', () => {
     })
   })
 
-  xdescribe('events', () => {
+  fdescribe('events', () => {
     it('model events', async done => {
       let f: string
       // debugger
       class View5 extends BackboneView<BackboneModel>{
+        template=(context)=>`<div></iv>`
         foo(arg0: number): any {
           this.model.set('foo', arg0)
         }

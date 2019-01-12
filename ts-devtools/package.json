@@ -33,6 +33,7 @@
     "homepage": "https://github.com/cancerberoSgx/suitecommerce-types",
     "dependencies": {
         "minimist": "^1.2.0",
+        "misc-utils-of-mine": "file:../../misc-utils-of-mine",
         "shelljs": "^0.8.3",
         "ts-fix-all-errors": "file:../ts-fix-all-errors",
         "ts-simple-ast": "^20.0.0",

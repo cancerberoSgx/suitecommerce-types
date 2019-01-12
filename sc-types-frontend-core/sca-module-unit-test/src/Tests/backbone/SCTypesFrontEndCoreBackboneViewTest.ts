@@ -33,23 +33,6 @@ export default describe('sc-types-frontend-core Backbone.View', () => {
     expect(document.querySelector(selector)).toBeFalsy()
     expect(jQuery(selector).length).toBe(0)
 
-    // // testing Layout events typings
-    // helper.application.getLayout().on('afterAppendToDom', layout=>{
-    //   console.log('layout afterAppendToDom args', layout, layout.getCurrentView().template.Name)
-    // })
-    // helper.application.getLayout().on('beforeAppendToDom', layout=>{
-    //   console.log('layout beforeAppendToDom args', layout, layout.getCurrentView().template.Name)
-    // })
-    // helper.application.getLayout().on('afterViewRender',view=>{
-    //   console.log('layout afterViewRender', view, view.template.Name)
-    // })
-    // helper.application.getLayout().on('beforeAppendView', view=>{
-    //   console.log('layout beforeAppendView args', view, view.template.Name)
-    // })
-    // helper.application.getLayout().on('afterAppendView', view=>{
-    //   console.log('layout afterAppendView args', view, view.template.Name)
-    // })
-
     helper.application.getLayout().showContent(view)
     expect(document.querySelector(selector)).toBeTruthy()
     expect(jQuery(selector).length).toBe(1)
