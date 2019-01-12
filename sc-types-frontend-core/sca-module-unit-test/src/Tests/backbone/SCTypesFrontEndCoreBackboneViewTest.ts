@@ -1,5 +1,5 @@
 import { jQuery, SCAUnitTestHelper, SCAUnitTestHelperPreconditions, ModuleEntryPoint } from 'sc-types-frontend';
-import BackboneSimpleTest1View from '../JavaScript/SCTypesFrontEndCoreView';
+import BackboneSimpleTest1View from '../../JavaScript/backbone/SCTypesFrontEndCoreView';
 
 export default describe('sc-types-frontend-core Backbone.View', () => {
   beforeEach(()=>{

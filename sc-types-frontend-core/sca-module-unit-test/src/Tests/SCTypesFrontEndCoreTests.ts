@@ -1,6 +1,7 @@
-// import BackboneSimpleTest1ViewTest from './SCTypesFrontEndCoreViewTest';
-// import BackboneSimpleTest1RouterTest from './BackboneSimpleTest1RouterTest';
-import BackboneRouterTest from './SCTypesFrontEndCoreBackboneRouterTest';
-import SCTypesFrontEndCoreBackboneViewTest from './SCTypesFrontEndCoreBackboneViewTest';
+import BackboneRouterTest from './backbone/SCTypesFrontEndCoreBackboneRouterTest';
+import SCTypesFrontEndCoreBackboneViewTest from './backbone/SCTypesFrontEndCoreBackboneViewTest';
+import SCTypesFrontEndCoreApplicationTest from './application/SCTypesFrontEndCoreApplicationTest';
+import SCTypesFrontEndCoreBackboneViewTest2 from './backbone/SCTypesFrontEndCoreBackboneViewTest2';
+import SCTypesFrontEndCoreDeferredTest from './application/SCTypesFrontEndCoreDeferredTest';
 
-export default [SCTypesFrontEndCoreBackboneViewTest, BackboneRouterTest]
+export default [SCTypesFrontEndCoreBackboneViewTest, BackboneRouterTest, SCTypesFrontEndCoreApplicationTest, SCTypesFrontEndCoreBackboneViewTest2, SCTypesFrontEndCoreDeferredTest]

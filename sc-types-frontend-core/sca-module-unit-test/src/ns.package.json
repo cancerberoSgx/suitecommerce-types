@@ -1,7 +1,7 @@
 {
     "gulp": {
         "javascript": [
-            "JavaScript/*.js"
+            "JavaScript/**/*.js"
         ],
         "sass": [
             "Sass/**/*.scss"
@@ -10,7 +10,7 @@
             "Templates/*.tpl"
         ],
         "unit-test-files": [
-            "Tests/*.js"
+            "Tests/**/*.js"
         ],
         "unit-test-entry-point": [
             "Tests/SCTypesFrontEndCoreTests.js"
