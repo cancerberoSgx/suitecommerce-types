@@ -3,8 +3,15 @@ const ReactLike_ = {
   /**
    * React-like createElement function so we can use JSX in our TypeScript/JavaScript code.
    */
-  createElement(tag: string, attrs: any = {}, ...children: any[]): HTMLElement {
-    var element: HTMLElement = document.createElement(tag)
+  createElement(tag: any, attrs: any = {}, ...children: any[]): HTMLElement {
+    var element: HTMLElement
+    if (typeof tag === 'string') {
+      element = document.createElement(tag)
+    }
+    else {
+      element = tag(attrs)
+      attrs = {} // custom tags cannot declare html attirbutes, only ther own props, so we are removing them in order not to add them as html attrs in the following code
+    }
     for (let name in attrs) {
       if (name && attrs.hasOwnProperty(name)) {
         var value: any = attrs[name]
@@ -20,21 +27,32 @@ const ReactLike_ = {
             element.setAttribute(name, `(${value.toString()}).apply(this, arguments)`)
           }
         }
-        else if (value !== false && value != null) {
+        else if (value !== false && value != null && typeof value !== 'object') {
           if (name === 'className') {
             name = 'class'
           }
           element.setAttribute(name, value.toString())
         }
+        // else {
+        //   console.log('ignoring attribute type ', typeof value, value);
+        // }
       }
     }
+
     children.filter(c => c).forEach(child => {
-      if (typeof child === 'string') {
-        element.appendChild(document.createTextNode(child.toString()))
+      if (child.nodeType) {
+        element.appendChild(child)
+      }
+      else if (Array.isArray(child)) {
+        child.forEach(c => {
+          // if (!c.nodeType) {
+          //   debugger
+          // }
+          element.appendChild(c)
+        })
       }
       else {
-        const asArray = Array.isArray(child) ? child : [child]
-        asArray.forEach(c => element.appendChild(c))
+        element.appendChild(document.createTextNode(child.toString()))
       }
     })
     return element
