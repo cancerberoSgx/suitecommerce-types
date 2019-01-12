@@ -4,7 +4,7 @@ import { getNodeModulesFolderPath } from '../util/misc'
 import { CompileAndFixConfig } from './compileAndFix'
 import { appendFileSync, readFileSync } from 'fs';
 import { suiteCommerceExtraModules } from '../import2define/import2defineDefaults';
-import {parseJSONFile} from 'misc-utils-of-mine'
+import { parseJSONFile } from 'misc-utils-of-mine'
 
 /**
  * @returns the final path where tslib.js was added in the output
@@ -34,15 +34,13 @@ export function addTslibJsInFolder(config: CompileAndFixConfig): string | undefi
   return finalDest
 }
 
-function getExtraModules(config: CompileAndFixConfig): {name: string, text: string}[] {
-  // const a: {name: string, text: string}[] = []
-  // const package = readFileSync(join(dirname(config.tsconfigFilePath), 'package.json')).toString()
+/** if project has dependency 'sc-types-frontend-extras' then it will copy certain compiled extra modules from there to tslib.js like 'JSXView.js', 'ReactLike.js' */
+function getExtraModules(config: CompileAndFixConfig): { name: string, text: string }[] {
   const packageJson = parseJSONFile(join(dirname(config.tsconfigFilePath), 'package.json'))
-  if(packageJson && (Object.keys(packageJson.devDependencies).includes('sc-types-frontend-extras') || Object.keys(packageJson.dependencies).includes('sc-types-frontend-extras'))) {
+  if (packageJson && (Object.keys(packageJson.devDependencies).includes('sc-types-frontend-extras') || Object.keys(packageJson.dependencies).includes('sc-types-frontend-extras'))) {
     const base = join(dirname(config.tsconfigFilePath), 'node_modules', 'sc-types-frontend-extras', 'compiled', 'src', 'jsx')
-    const names = ['JSXView.js',  'ReactLike.js']
-    return names.map(name=>({name, text: readFileSync(join(base, name)).toString()}))
+    const names = ['JSXView.js', 'ReactLike.js']
+    return names.map(name => ({ name, text: readFileSync(join(base, name)).toString() }))
   }
   return []
-  // return a
 }

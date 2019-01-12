@@ -1,8 +1,8 @@
 {
-    "name": "SCTypesFrontEndCoreSCAUnitTest",
+    "name": "Susing-sc-types-frontend-extras",
     "version": "1.0.0",
     "private": true,
-    "description": "sample plain SCA backbone sample project",
+    "description": "using-sc-types-frontend-extras",
     "main": "dist/src/index.js",
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
@@ -15,12 +15,11 @@
     "author": "sg",
     "license": "ISC",
     "dependencies": {
-        "sc-types-frontend": "file:../../sc-types-frontend",
-        "sc-types-frontend-extras": "file:../../sc-types-frontend-extras"
+        "sc-types-frontend": "file:../../../../sc-types-frontend",
+        "sc-types-frontend-extras": "file:../../../../sc-types-frontend-extras"
     },
     "devDependencies": {
-        "sc-tsc": "file:../../ts-devtools",
-        "@types/jasmine": "^3.3.5",
+        "sc-tsc": "file:../../..",
         "@types/react": "^16.7.18",
         "tslib": "^1.9.3",
         "typescript": "^3.2.2"

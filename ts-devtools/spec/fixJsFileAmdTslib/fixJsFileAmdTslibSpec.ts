@@ -2,7 +2,7 @@ import { fixJsFileAmdTslib } from "../../src/fixAmdTslib/fixJsFileAmdTslib";
 
 describe('addTslibAmdDependency', () => {
 
-    it('custom dependencyName and other variablename', () => { //failing
+    it('custom dependencyName and other variable name', () => { //failing
         const inputCode = `
 var tslib_2 = require("tslib");
 define('a', ['b'],function (b) { 
@@ -51,7 +51,6 @@ define('FrontEndSimple1.ListView', ['frontend_simple1_listview.tpl', 'Backbone']
     return result;
 });
 //# sourceMappingURL=FrontEndSimple1.ListView.js.map
-
                 `
         const result = fixJsFileAmdTslib({
             inputCode
