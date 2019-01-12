@@ -3,7 +3,7 @@ import { dirname, join } from "path";
 import { cd, exec, pwd, rm, config } from "shelljs";
 import { getPathRelativeToProjectFolder } from "../../src/util/misc";
 
-fdescribe('addTslibJsInFolder', () => {
+describe('addTslibJsInFolder', () => {
 
   let cwd: string, tslibOutputFolder: string, p: any
   
@@ -15,7 +15,7 @@ fdescribe('addTslibJsInFolder', () => {
     rm('-rf', outputFolder)
     rm('-rf', tslibOutputFolder)
     cd(dirname(tsconfigFilePath))
-    config.silent=false
+    // config.silent=false
     p = exec(`npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder ${outputFolder} --addTslibJsInFolder ${tslibOutputFolder} --debug`)
   })
 
