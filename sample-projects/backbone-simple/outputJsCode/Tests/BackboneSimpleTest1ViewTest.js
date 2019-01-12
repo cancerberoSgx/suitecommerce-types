@@ -53,7 +53,6 @@ define('BackboneSimpleTest1ViewTest', ['jQuery', 'UnitTestHelper', 'UnitTestHelp
                         console.log('layout afterAppendView args', view, view.template.Name);
                     });
                     helper.application.getLayout().showContent(view);
-                    helper.application.getLayout().$;
                     expect(document.querySelector(selector)).toBeTruthy();
                     expect(jQuery(selector).length).toBe(1);
                     done();

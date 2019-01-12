@@ -16,7 +16,8 @@ define('BackboneSimpleTest1', ['BackboneSimpleTest1ListView', 'BackboneSimpleTes
                     }
                 }
             });
-            new BackboneSimpleTest1Router();
+            var r = new BackboneSimpleTest1Router();
+            r.application = application;
             application.getLayout().on("afterAppendView", function(view) {
                 return tslib_1.__awaiter(_this, void 0, void 0, function() {
                     return tslib_1.__generator(this, function(_a) {
