@@ -7,7 +7,7 @@
     "types": "dist/src/index.d.ts",
     "typings": "dist/src/index.d.ts",
     "scripts": {
-        "build": "sh build.sh",
+        "build": "cd .. && npm run build && cd sca-module-unit-test && sh build.sh ",
         "build-watch": "tsc -w",
         "clean": "rm -rf dist"
     },

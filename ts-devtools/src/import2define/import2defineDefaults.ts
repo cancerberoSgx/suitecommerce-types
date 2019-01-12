@@ -17,6 +17,12 @@ export const defaultCustomImportSpecifiers: CustomImportSpecifier[] = [
   {
     predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText() === 'sc-types-frontend-extras',
     getImportSpecifier: (id: ImportDeclaration, ni: string) => ni
+  },  
+  
+  // user can use react types like ChangeEvent - in that case we import a dummy module
+  {
+    predicate: (id: ImportDeclaration, ni: string) => id.getModuleSpecifier().getLiteralText() === 'react',
+    getImportSpecifier: (id: ImportDeclaration, ni: string) => 'Backbone'
   },
 
   // when user import template from './some_template.tpl' we return just the file name 'some_template.tpl'

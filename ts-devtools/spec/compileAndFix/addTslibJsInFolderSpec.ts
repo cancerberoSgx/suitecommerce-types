@@ -1,11 +1,11 @@
+import { readFileSync } from "fs";
 import { dirname, join } from "path";
-import { cat, cd, exec, pwd, rm, config } from "shelljs";
+import { cd, exec, pwd, rm, config } from "shelljs";
 import { getPathRelativeToProjectFolder } from "../../src/util/misc";
-import { readFile, readFileSync } from "fs";
 
 fdescribe('addTslibJsInFolder', () => {
 
-  let cwd: string, tslib: string, tslibOutputFolder: string, p: any
+  let cwd: string, tslibOutputFolder: string, p: any
   
   beforeAll(() => {
     cwd = pwd()
@@ -15,22 +15,20 @@ fdescribe('addTslibJsInFolder', () => {
     rm('-rf', outputFolder)
     rm('-rf', tslibOutputFolder)
     cd(dirname(tsconfigFilePath))
-    // config.silent=false
+    config.silent=false
     p = exec(`npx sc-tsc --tsconfigFilePath ./tsconfig.json --outputFolder ${outputFolder} --addTslibJsInFolder ${tslibOutputFolder} --debug`)
-    // tslib = cat(`${outputFolder}/src/tslib.js`).toString()
   })
 
   afterAll(() => {
     cd(cwd)
   })
 
-
   it('Should not throw errors', () => {
     expect(p.code).toBe(0)
   })
 
   it('Should add tslib.js', () => {
-    expect(readFileSync(join(tslibOutputFolder, 'Backbone.Collection.js')).toString()).toBeDefined()
+    expect(readFileSync(join(tslibOutputFolder, 'tslib.js')).toString()).toBeDefined()
   })
 
   it('Should add extra modules', () => {

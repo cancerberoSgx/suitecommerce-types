@@ -6,6 +6,8 @@ export default class JSXView<Model extends BackboneModel, Context extends Templa
   template = (...args: any[]) => `<div></div>`
 
   jsxTemplate: JSXTemplate<Context>
+
+  supportsFunctionAttributes?: boolean = false
   
   initialize(options: any) {
     super.initialize(options)
@@ -16,7 +18,11 @@ export default class JSXView<Model extends BackboneModel, Context extends Templa
       name: 'jsx',
       execute($fragment, view) {
         if (isJSXView(view)) {
-          ReactLike.renderJQuery($fragment, view.jsxTemplate(view.getContext()))
+          const rendered = view.jsxTemplate(view.getContext());
+          if(ReactLike.searchFor__this && view.supportsFunctionAttributes){            
+            (rendered as any).__this = view
+          }
+          ReactLike.renderJQuery($fragment, rendered)
         }
         return $fragment
       }

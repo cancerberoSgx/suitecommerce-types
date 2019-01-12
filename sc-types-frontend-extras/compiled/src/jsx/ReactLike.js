@@ -16,6 +16,10 @@ define('ReactLike', [], function () {
                     if (value === true) {
                         element.setAttribute(name_1, name_1);
                     }
+                    else if (typeof value === 'function') {
+                        // see JSXView.render if supportsFunctionAttributes=== true there could be some parent that could have the _this view context as property. 
+                        element.setAttribute(name_1, "var _this =  (ReactLike.searchFor__this && ReactLike.searchFor__this(this)) || this; (" + value.toString() + ").apply(_this, arguments)");
+                    }
                     else if (value !== false && value != null) {
                         if (name_1 === 'className') {
                             name_1 = 'class';
@@ -40,6 +44,10 @@ define('ReactLike', [], function () {
         },
         renderJQuery: function (parent, el) {
             parent.append(jQuery(el));
+        },
+        /** partial support for attribute functions like events, Experimental, not recommended, set it to falsy to disable at all , or just use backbone's view events. */
+        searchFor__this: function (el) {
+            return el && (el.__this || ReactLike_.searchFor__this(el.parentElement));
         }
     };
     self.ReactLike = ReactLike_;

@@ -9,13 +9,13 @@ npx tsc && \
 mkdir -p  $OUTPUT_FOLDER && \
 node node_modules/.bin/sc-tsc \
   --tsconfigFilePath ./tsconfig.json \
-  --addTslibJsInFolder $OUTPUT_FOLDER \
+  --addTslibJsInFolder $OUTPUT_FOLDER/extra \
   --outputFolder $OUTPUT_FOLDER \
   $EXTRA_SCTSC_PARAMS \
   && \
 mv $OUTPUT_FOLDER/src/* $OUTPUT_FOLDER && \
-rm -rf $OUTPUT_FOLDER/src/  && \
 cp -r src/ns.package.json $OUTPUT_FOLDER && \
-mv $OUTPUT_FOLDER/*.js $OUTPUT_FOLDER/JavaScript && \
+mv $OUTPUT_FOLDER/extra/*.js $OUTPUT_FOLDER/JavaScript && \
+rm -rf $OUTPUT_FOLDER/src/ $OUTPUT_FOLDER/extra && \
 echo "end" && \
 echo $?

@@ -13,6 +13,7 @@ define('JSXView', ['Backbone.Model', 'Backbone.View', 'PluginContainer', 'ReactL
                 }
                 return "<div></div>";
             };
+            _this.supportsFunctionAttributes = false;
             return _this;
         }
         JSXView.prototype.initialize = function (options) {
@@ -24,7 +25,11 @@ define('JSXView', ['Backbone.Model', 'Backbone.View', 'PluginContainer', 'ReactL
                 name: 'jsx',
                 execute: function ($fragment, view) {
                     if (isJSXView(view)) {
-                        ReactLike.renderJQuery($fragment, view.jsxTemplate(view.getContext()));
+                        var rendered = view.jsxTemplate(view.getContext());
+                        if (ReactLike.searchFor__this && view.supportsFunctionAttributes) {
+                            rendered.__this = view;
+                        }
+                        ReactLike.renderJQuery($fragment, rendered);
                     }
                     return $fragment;
                 }
