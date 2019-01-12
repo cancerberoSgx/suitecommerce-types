@@ -1,3 +1,4 @@
 import JSXViewTest from './JSXViewTest';
+import JSXAndBackboneEvents from './JSXAndBackboneEventsTest';
 
-export default[JSXViewTest]
+export default[JSXViewTest, JSXAndBackboneEvents]
